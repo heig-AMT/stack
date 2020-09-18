@@ -1,0 +1,9 @@
+version: '3'
+services:
+  payara:
+    build: ../../images/payara
+    environment:
+     - ADMIN_PASSWORD=adminadmin
+    ports:
+     - "8080:8080"
+     - "4848:4848"
