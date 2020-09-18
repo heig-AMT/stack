@@ -1,0 +1,15 @@
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <servlet-name>QuoteServlet</servlet-name>
+    <servlet-class>ch.heigvd.amt.mvcsimple.presentation.QuoteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QuoteServlet</servlet-name>
+    <url-pattern>/quotes</url-pattern>
+  </servlet-mapping>
+</web-app>
