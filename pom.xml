@@ -6,10 +6,10 @@
 
   <groupId>ch.heigvd.amt</groupId>
   <artifactId>mvc-simple</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>mvc-simple Maven Webapp</name>
+  <name>StackUnderflow</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
