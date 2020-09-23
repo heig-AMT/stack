@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx codeceptjs run --steps"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "heig-AMT group",
+  "license": "Copyright",
+  "private": true,
   "devDependencies": {
     "codeceptjs": "^2.6.11",
     "puppeteer": "^5.3.1"
