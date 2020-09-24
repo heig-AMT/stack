@@ -17,7 +17,7 @@
    </span>
 </div>
 <div class="flex justify-center">
-    <form action="register.do"
+    <form action="login.do"
           method="POST"
           class="max-w-xl w-full bg-white rounded-lg shadow-md p-6">
         <div class="flex flex-col -mx-3 mb-6">
