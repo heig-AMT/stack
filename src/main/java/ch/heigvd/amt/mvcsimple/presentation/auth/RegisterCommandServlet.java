@@ -23,10 +23,14 @@ public class RegisterCommandServlet extends HttpServlet {
         if (!repository.registered(username)) {
             repository.set(username, password);
             String redirect = (String) req.getSession().getAttribute("redirectUrl");
-            redirect = (redirect != null) ? redirect : "/questions";
+            redirect = (redirect != null)
+                    ? redirect
+                    : getServletContext().getContextPath() + "/questions";
             resp.sendRedirect(redirect);
         } else {
-            req.getRequestDispatcher("/WEB/pages/login.jsp").forward(req, resp);
+            req.getRequestDispatcher(
+                    getServletContext().getContextPath() + "/WEB/pages/login.jsp")
+                    .forward(req, resp);
         }
     }
 }
