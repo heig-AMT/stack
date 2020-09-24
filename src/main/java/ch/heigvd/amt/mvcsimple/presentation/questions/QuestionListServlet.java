@@ -1,9 +1,9 @@
-package ch.heigvd.amt.mvcsimple.presentation;
+package ch.heigvd.amt.mvcsimple.presentation.questions;
 
-import ch.heigvd.amt.mvcsimple.business.QuestionRepository;
+import ch.heigvd.amt.mvcsimple.business.api.QuestionRepository;
 import ch.heigvd.amt.mvcsimple.model.Question;
 
-import javax.servlet.ServletConfig;
+import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,13 +15,8 @@ import java.util.List;
 @WebServlet(name = "QuestionListServlet", urlPatterns = "/questions")
 public class QuestionListServlet extends HttpServlet {
 
+    @EJB
     private QuestionRepository repository;
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        this.repository = new QuestionRepository();
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
