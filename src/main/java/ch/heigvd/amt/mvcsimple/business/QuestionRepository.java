@@ -12,12 +12,14 @@ public class QuestionRepository {
 
     static {
         questions.add(Question.builder()
-                .title("My first title")
-                .description("My first description")
+                .title("Why doesn't this program run ?")
+                .description("I made the following program : <html></html>, but it displays nothing. Is it expected ? I'm using Opera btw.")
+                .author("admin")
                 .build());
         questions.add(Question.builder()
-                .title("Something else")
-                .description("Something even different.")
+                .title("Can we inject an EJB in a JSP ?")
+                .description("I have a semester project at HEIG-VD and still have not fully understood how beans work.")
+                .author("admin")
                 .build());
     }
 
