@@ -5,6 +5,7 @@
     <jsp:param name="pageTitle" value="Home"/>
 </jsp:include>
 <body>
+<jsp:include page="WEB-INF/navigation.jsp"/>
 <h2>Hello World!</h2>
 </body>
 </html>

@@ -6,6 +6,7 @@
     <jsp:param name="pageTitle" value="Register"/>
 </jsp:include>
 <body>
+<jsp:include page="../navigation.jsp"/>
 <form action="register.do"
       method="POST"
       class="bg-white m-auto shadow p-8">

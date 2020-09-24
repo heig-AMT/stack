@@ -5,6 +5,7 @@
     <jsp:param name="pageTitle" value="Questions"/>
 </jsp:include>
 <body>
+<jsp:include page="../navigation.jsp"/>
 <div class="bg-white w-full">
         <table class="w-full">
             <thead>
