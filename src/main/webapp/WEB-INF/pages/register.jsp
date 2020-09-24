@@ -2,11 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-<head>
-    <title>Register</title>
-</head>
+<jsp:include page="../header.jsp">
+    <jsp:param name="pageTitle" value="Register"/>
+</jsp:include>
 <body>
-<form action="register.do" method="POST">
+<form action="register.do"
+      method="POST"
+      class="bg-white m-auto shadow p-8">
     <input type="email" name="username" placeholder="Username"/>
     <input type="password" name="password" placeholder="Password"/>
     <input type="submit" value="Register"/>
