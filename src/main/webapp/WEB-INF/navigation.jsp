@@ -23,10 +23,8 @@
         </form>
         <%} else {%>
         <div>
-            <a class="rounded border border-gray-400 bg-transparent p-2 mr-4 hover:bg-gray-100 hover:text-gray-700"
-               href="${pageContext.request.contextPath}/login">Login</a>
-            <a class="rounded bg-blue-600 p-2 text-white hover:bg-blue-500"
-               href="${pageContext.request.contextPath}/register">Register</a>
+            <a class="rounded border border-gray-400 bg-white p-2 mr-4 hover:bg-gray-100 hover:text-gray-700" href="${pageContext.request.contextPath}/login">Login</a>
+            <a class="rounded bg-blue-600 p-2 text-white hover:bg-blue-500" href="${pageContext.request.contextPath}/register">Register</a>
         </div>
         <%}%>
     </div>
