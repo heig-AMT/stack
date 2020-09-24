@@ -11,7 +11,7 @@
     </h1>
     <span class="text-sm">
         or
-        <a href="${pageContext.request.contextPath}/login" class="text-blue-500">
+        <a href="${pageContext.request.contextPath}/register" class="text-blue-500">
             register an account
         </a>
    </span>
@@ -41,9 +41,4 @@
     </form>
 </div>
 </body>
-<form action="login.do" method="POST">
-    <input type="email" name="username" placeholder="Username"/>
-    <input type="password" name="password" placeholder="Password"/>
-    <input type="submit" value="Log in"/>
-</form>
 </html>
