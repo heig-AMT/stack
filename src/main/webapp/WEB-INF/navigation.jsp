@@ -18,7 +18,9 @@
             boolean loggedIn = username != null && username.isPresent();
         %>
         <% if (loggedIn) {%>
-        <a class="rounded border border-gray-400 bg-transparent p-2 mr-4 hover:bg-gray-100 hover:text-gray-700">Log out</a>
+        <form action="logout.do" method="POST" class="rounded border border-gray-400 bg-transparent p-2 mr-4 hover:bg-gray-100 hover:text-gray-700">
+            <input type="submit" value="Log out"/>
+        </form>
         <%} else {%>
         <div>
             <a class="rounded border border-gray-400 bg-transparent p-2 mr-4 hover:bg-gray-100 hover:text-gray-700"
