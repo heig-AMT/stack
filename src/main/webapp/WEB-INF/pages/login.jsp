@@ -6,4 +6,9 @@
 <body>
 <jsp:include page="../navigation.jsp"/>
 </body>
+<form action="login.do" method="POST">
+    <input type="email" name="username" placeholder="Username"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <input type="submit" value="Log in"/>
+</form>
 </html>
