@@ -6,6 +6,7 @@ import lombok.Value;
 @Builder
 @Value
 public class Question {
+    String author;
     String title;
     String description;
 }
