@@ -18,7 +18,7 @@ This repository contains our version of the first project of the AMT class of HE
 | Alexandre Piveteau 				     | alexandre.piveteau@heig-vd.ch    |
 | Guy-Laurent Subri                      | guy-laurent.subri@heig-vd.ch     |
 
-## Running the app (locally)
+## Running the app (locally)
 
 Assuming you have Docker installed locally, you can run the following scripts to get the app running on your `8080` port :
 
