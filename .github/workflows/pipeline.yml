@@ -30,3 +30,4 @@ jobs:
           sh ./publish-image-heroku.sh
         env:
           TOKEN_GITHUB: ${{ secrets.TOKEN_GITHUB }}
+          TOKEN_HEROKU: ${{ secrets.TOKEN_HEROKU }}
