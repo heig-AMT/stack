@@ -4,4 +4,4 @@ LABEL maintainer="alexandre@piveteau.email"
 
 ADD mvc-simple.war $DEPLOY_DIR
 
-ENTRYPOINT java -Xmx175m -XX:+UseContainerSupport -XX:MaxRAMPercentage=90.0 -jar payara-micro.jar --deploymentDir /opt/payara/deployments --port $PORT
+ENTRYPOINT "java -Xmx175m -XX:+UseContainerSupport -XX:MaxRAMPercentage=90.0 -jar payara-micro.jar --deploymentDir /opt/payara/deployments --port $PORT"
