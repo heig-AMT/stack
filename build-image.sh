@@ -1,0 +1,1 @@
+docker build -t ghcr.io/heig-amt/stack docker/images/payara
