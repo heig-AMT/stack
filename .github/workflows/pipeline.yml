@@ -33,8 +33,8 @@ jobs:
           TOKEN_HEROKU: ${{ secrets.TOKEN_HEROKU }}
       
       - name: Release to Heroku
-          run: |
-            heroku container:login
-            heroku container:release -a heig-amt-stackunderflow web
-          env: 
-            HEROKU_API_KEY: ${{ secrets.TOKEN_HEROKU }}
+        run: |
+          heroku container:login
+          heroku container:release -a heig-amt-stackunderflow web
+        env:
+          HEROKU_API_KEY: ${{ secrets.TOKEN_HEROKU }}
