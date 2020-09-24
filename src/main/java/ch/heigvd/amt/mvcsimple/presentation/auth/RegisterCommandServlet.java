@@ -1,6 +1,7 @@
 package ch.heigvd.amt.mvcsimple.presentation.auth;
 
 import ch.heigvd.amt.mvcsimple.business.api.CredentialRepository;
+import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
 
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -14,23 +15,31 @@ import java.io.IOException;
 public class RegisterCommandServlet extends HttpServlet {
 
     @EJB
-    CredentialRepository repository;
+    CredentialRepository credentialRepository;
+
+    @EJB
+    SessionRepository sessionRepository;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         final String username = req.getParameter("username");
         final String password = req.getParameter("password");
-        if (!repository.registered(username)) {
-            repository.set(username, password);
+
+        // Start by clearing the eventually set session.
+        sessionRepository.unlink(req.getSession());
+
+        if (!credentialRepository.registered(username)) {
+
+            // We can add this user in our store, as well as link its identifier to our session store.
+            credentialRepository.set(username, password);
+            sessionRepository.link(req.getSession(), username);
             String redirect = (String) req.getSession().getAttribute("redirectUrl");
             redirect = (redirect != null)
                     ? redirect
                     : getServletContext().getContextPath() + "/questions";
             resp.sendRedirect(redirect);
         } else {
-            req.getRequestDispatcher(
-                    getServletContext().getContextPath() + "/WEB/pages/login.jsp")
-                    .forward(req, resp);
+            resp.sendRedirect(getServletContext().getContextPath() + "/login");
         }
     }
 }

@@ -4,6 +4,6 @@
     <jsp:param name="pageTitle" value="Login"/>
 </jsp:include>
 <body>
-
+<jsp:include page="../navigation.jsp"/>
 </body>
 </html>
