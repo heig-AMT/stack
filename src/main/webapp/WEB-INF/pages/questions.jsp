@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
-<head>
-    <title>Title</title>
-</head>
+<jsp:include page="../header.jsp">
+    <jsp:param name="pageTitle" value="Questions"/>
+</jsp:include>
 <body>
 <ul>
     <c:forEach items="${questions}" var="question">
