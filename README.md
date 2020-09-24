@@ -17,3 +17,12 @@ This repository contains our version of the first project of the AMT class of HE
 | David Dupraz                           | david.dupraz@heig-vd.ch          |
 | Alexandre Piveteau 				     | alexandre.piveteau@heig-vd.ch    |
 | Guy-Laurent Subri                      | guy-laurent.subri@heig-vd.ch     |
+
+## Running the app (locally)
+
+Assuming you have Docker installed locally, you can run the following scripts to get the app running on your `8080` port :
+
+```bash
+sh ./build-image.sh
+sh ./run-image.sh
+```
