@@ -23,11 +23,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       
-      - name: Build with Maven
-        run: mvn clean package
-        
       - name: Build Docker image (with mvn clean package)
         run: |
           echo ${{ secrets.TOKEN_GITHUB }} | docker login https://docker.pkg.github.com -u heig-AMT-bot --password-stdin
-          docker build -t docker.pkg.github.com/heig-amt/stack/payara ./docker/images/payara
-          docker push docker.pkg.github.com/heig-amt/stack/payara
+          sh ./build-image.sh
+          sh ./publish-image.sh
