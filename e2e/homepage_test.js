@@ -1,6 +1,6 @@
 Feature('homepage');
 
-Scenario('Test that the homepage displays correctly', (I) => {
+Scenario('Visiting the homepage', (I) => {
   I.amOnPage("http://localhost:8080/mvc-simple/");
 
   I.see("stackunderflow");
