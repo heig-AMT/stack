@@ -15,6 +15,19 @@ public class InMemoryQuestionRepository implements QuestionRepository {
 
     private final Map<QuestionId, Question> store = new ConcurrentHashMap<>();
 
+    public InMemoryQuestionRepository() {
+        save(Question.builder()
+                .title("Why doesn't this program run ?")
+                .description("I made the following program : <html></html>, but it displays nothing. Is it expected ? I'm using Opera btw.")
+                .author("admin")
+                .build());
+        save(Question.builder()
+                .title("Can we inject an EJB in a JSP ?")
+                .description("I have a semester project at HEIG-VD and still have not fully understood how beans work.")
+                .author("admin")
+                .build());
+    }
+
     @Override
     public void save(Question question) {
         store.put(question.getId(), question);

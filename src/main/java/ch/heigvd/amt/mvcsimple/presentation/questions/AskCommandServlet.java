@@ -1,9 +1,12 @@
 package ch.heigvd.amt.mvcsimple.presentation.questions;
 
 import ch.heigvd.amt.mvcsimple.Repositories;
-import ch.heigvd.amt.mvcsimple.business.api.QuestionRepository;
 import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
+import ch.heigvd.amt.stack.application.ServiceRegistry;
+import ch.heigvd.amt.stack.application.question.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.QuestionFacade;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,7 +18,13 @@ import java.util.Optional;
 @WebServlet(name = "AskCommandServlet", urlPatterns = "/ask.do")
 public class AskCommandServlet extends HttpServlet {
 
-    QuestionRepository questionRepository = Repositories.getInstance().getQuestionRepository();
+    QuestionFacade facade;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        facade = ServiceRegistry.getInstance().getQuestionFacade();
+    }
 
     SessionRepository sessionRepository = Repositories.getInstance().getSessionRepository();
 
@@ -27,7 +36,11 @@ public class AskCommandServlet extends HttpServlet {
         final Optional<String> username = sessionRepository.username(req.getSession());
 
         if (username.isPresent()) {
-            questionRepository.insert(username.get(), title, description);
+            facade.askQuestion(AskQuestionCommand.builder()
+                    .author(username.get())
+                    .title(title)
+                    .description(description)
+                    .build());
             String path = getServletContext().getContextPath() + "/questions";
             resp.sendRedirect(path);
         } else {

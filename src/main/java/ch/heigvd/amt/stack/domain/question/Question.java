@@ -10,6 +10,7 @@ public class Question implements Entity {
 
     @Builder.Default
     QuestionId id = QuestionId.create();
+    String author;
     String title;
     String description;
 }
