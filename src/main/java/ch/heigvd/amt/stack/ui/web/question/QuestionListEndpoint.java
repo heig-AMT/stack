@@ -1,7 +1,6 @@
 package ch.heigvd.amt.stack.ui.web.question;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
-import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.QuestionQuery;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 @WebServlet(name = "QuestionListEndpoint", urlPatterns = "/questions")
 public class QuestionListEndpoint extends HttpServlet {
