@@ -2,13 +2,11 @@ package ch.heigvd.amt.mvcsimple.business.impl;
 
 import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
 
-import javax.ejb.Singleton;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Singleton
 public class InMemorySessionRepository implements SessionRepository {
 
     private final Map<String, String> store = new HashMap<>();

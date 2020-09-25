@@ -2,12 +2,10 @@ package ch.heigvd.amt.mvcsimple.business.impl;
 
 import ch.heigvd.amt.mvcsimple.business.api.CredentialRepository;
 
-import javax.ejb.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-@Singleton
 public class InMemoryCredentialRepository implements CredentialRepository {
 
     private Map<String, String> credentials = new HashMap<>();

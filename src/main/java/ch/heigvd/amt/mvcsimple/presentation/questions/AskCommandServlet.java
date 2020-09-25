@@ -1,9 +1,9 @@
 package ch.heigvd.amt.mvcsimple.presentation.questions;
 
+import ch.heigvd.amt.mvcsimple.Repositories;
 import ch.heigvd.amt.mvcsimple.business.api.QuestionRepository;
 import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
 
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,11 +15,9 @@ import java.util.Optional;
 @WebServlet(name = "AskCommandServlet", urlPatterns = "/ask.do")
 public class AskCommandServlet extends HttpServlet {
 
-    @EJB
-    QuestionRepository questionRepository;
+    QuestionRepository questionRepository = Repositories.getInstance().getQuestionRepository();
 
-    @EJB
-    SessionRepository sessionRepository;
+    SessionRepository sessionRepository = Repositories.getInstance().getSessionRepository();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
