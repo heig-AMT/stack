@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.domain.question;
 
-import ch.heigvd.amt.stack.application.question.QuestionQuery;
+import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.Repository;
 
 import java.util.Collection;

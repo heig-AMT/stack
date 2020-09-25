@@ -1,9 +1,11 @@
 package ch.heigvd.amt.mvcsimple.presentation.auth;
 
-import ch.heigvd.amt.mvcsimple.Repositories;
-import ch.heigvd.amt.mvcsimple.business.api.CredentialRepository;
-import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
+import ch.heigvd.amt.stack.application.ServiceRegistry;
+import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
+import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
+import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,30 +16,31 @@ import java.io.IOException;
 @WebServlet(name = "RegisterCommandServlet", urlPatterns = "/register.do")
 public class RegisterCommandServlet extends HttpServlet {
 
-    CredentialRepository credentialRepository = Repositories.getInstance().getCredentialRepository();
-
-    SessionRepository sessionRepository = Repositories.getInstance().getSessionRepository();
+    private AuthenticationFacade authenticationFacade;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        final String username = req.getParameter("username");
-        final String password = req.getParameter("password");
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        this.authenticationFacade = ServiceRegistry.getInstance().getAuthenticationFacade();
+    }
 
-        // Start by clearing the eventually set session.
-        sessionRepository.unlink(req.getSession());
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            authenticationFacade.register(RegisterCommand.builder()
+                    .username(req.getParameter("username"))
+                    .password(req.getParameter("password"))
+                    .tag(req.getSession().getId())
+                    .build());
 
-        if (!credentialRepository.registered(username)) {
-
-            // We can add this user in our store, as well as link its identifier to our session store.
-            credentialRepository.set(username, password);
-            sessionRepository.link(req.getSession(), username);
             String redirect = (String) req.getSession().getAttribute("redirectUrl");
             redirect = (redirect != null)
                     ? redirect
                     : getServletContext().getContextPath() + "/questions";
             resp.sendRedirect(redirect);
-        } else {
-            resp.sendRedirect(getServletContext().getContextPath() + "/login");
+        } catch (AuthenticationFailedException exception) {
+            // Not matching username and password combination.
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
     }
 }

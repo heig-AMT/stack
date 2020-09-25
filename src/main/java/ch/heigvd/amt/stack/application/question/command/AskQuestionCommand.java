@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.application.question;
+package ch.heigvd.amt.stack.application.question.command;
 
 import lombok.Builder;
 import lombok.Value;

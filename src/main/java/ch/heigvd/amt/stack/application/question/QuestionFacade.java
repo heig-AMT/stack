@@ -1,7 +1,9 @@
 package ch.heigvd.amt.stack.application.question;
 
+import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
+import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 

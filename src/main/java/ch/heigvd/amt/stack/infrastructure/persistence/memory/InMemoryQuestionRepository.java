@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.memory;
 
-import ch.heigvd.amt.stack.application.question.QuestionQuery;
+import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;

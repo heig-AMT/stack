@@ -1,8 +1,10 @@
 package ch.heigvd.amt.mvcsimple.presentation.auth;
 
-import ch.heigvd.amt.mvcsimple.Repositories;
-import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
+import ch.heigvd.amt.stack.application.ServiceRegistry;
+import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
+import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,12 +15,18 @@ import java.io.IOException;
 @WebServlet(name = "LogoutCommandServlet", urlPatterns = "/logout.do")
 public class LogoutCommandServlet extends HttpServlet {
 
-    SessionRepository sessionRepository = Repositories.getInstance().getSessionRepository();
+    private AuthenticationFacade facade;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        facade = ServiceRegistry.getInstance().getAuthenticationFacade();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // Start by clearing the eventually set session.
-        sessionRepository.unlink(req.getSession());
+        facade.logout(LogoutCommand.builder().tag(req.getSession().getId()).build());
         String path = getServletContext().getContextPath() + "/";
         resp.sendRedirect(path);
     }

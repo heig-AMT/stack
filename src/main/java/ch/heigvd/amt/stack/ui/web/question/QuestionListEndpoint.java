@@ -2,7 +2,7 @@ package ch.heigvd.amt.stack.ui.web.question;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
-import ch.heigvd.amt.stack.application.question.QuestionQuery;
+import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 
 import javax.servlet.ServletConfig;

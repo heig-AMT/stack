@@ -3,7 +3,7 @@ package ch.heigvd.amt.mvcsimple.presentation.questions;
 import ch.heigvd.amt.mvcsimple.Repositories;
 import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
 import ch.heigvd.amt.stack.application.ServiceRegistry;
-import ch.heigvd.amt.stack.application.question.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
 
 import javax.servlet.ServletConfig;

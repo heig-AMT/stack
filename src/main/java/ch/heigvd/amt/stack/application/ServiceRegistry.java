@@ -1,7 +1,10 @@
 package ch.heigvd.amt.stack.application;
 
+import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
+import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryQuestionRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemorySessionRepository;
 
 public class ServiceRegistry {
 
@@ -14,12 +17,20 @@ public class ServiceRegistry {
         return instance;
     }
 
+    private final AuthenticationFacade authenticationFacade;
     private final QuestionFacade questionFacade;
 
     private ServiceRegistry() {
+        var credentialRepository = new InMemoryCredentialRepository();
+        var sessionRepository = new InMemorySessionRepository();
         var questionRepository = new InMemoryQuestionRepository();
 
+        this.authenticationFacade = new AuthenticationFacade(credentialRepository, sessionRepository);
         this.questionFacade = new QuestionFacade(questionRepository);
+    }
+
+    public AuthenticationFacade getAuthenticationFacade() {
+        return authenticationFacade;
     }
 
     public QuestionFacade getQuestionFacade() {
