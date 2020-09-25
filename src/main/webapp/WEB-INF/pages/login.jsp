@@ -22,14 +22,14 @@
           class="max-w-xl w-full bg-white rounded-lg shadow-md p-6">
         <div class="flex flex-col -mx-3 mb-6">
             <div class="w-full px-3 mb-6">
-                <label class="mb-2 block uppercase text-xs font-bold text-gray-700">Username</label>
-                <input class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                <label for="username" class="mb-2 block uppercase text-xs font-bold text-gray-700">Username</label>
+                <input id="username" class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                        type="email" name="username" placeholder="xX-MyKickAssName-Xx">
             </div>
 
             <div class="w-full md:w-full px-3 mb-6">
-                <label class="mb-2 block uppercase text-xs font-bold text-gray-700">Password</label>
-                <input class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                <label for="password" class="mb-2 block uppercase text-xs font-bold text-gray-700">Password</label>
+                <input id="password" class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                        type="password" name="username" placeholder="L33TSUPAH4X0R">
             </div>
 
