@@ -1,8 +1,8 @@
 package ch.heigvd.amt.mvcsimple.presentation.auth;
 
+import ch.heigvd.amt.mvcsimple.Repositories;
 import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
 
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,8 +13,7 @@ import java.io.IOException;
 @WebServlet(name = "LogoutCommandServlet", urlPatterns = "/logout.do")
 public class LogoutCommandServlet extends HttpServlet {
 
-    @EJB
-    SessionRepository sessionRepository;
+    SessionRepository sessionRepository = Repositories.getInstance().getSessionRepository();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

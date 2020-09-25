@@ -1,8 +1,8 @@
 package ch.heigvd.amt.mvcsimple.presentation.auth.filter;
 
+import ch.heigvd.amt.mvcsimple.Repositories;
 import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
 
-import javax.ejb.EJB;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +13,7 @@ public class ProvideAuthenticationUsernameFilter implements Filter {
 
     public static final String AUTHENTICATION_USERNAME = ProvideAuthenticationUsernameFilter.class.getName() + ".AUTHENTICATION_USERNAME";
 
-    @EJB
-    private SessionRepository repository;
+    private SessionRepository repository = Repositories.getInstance().getSessionRepository();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

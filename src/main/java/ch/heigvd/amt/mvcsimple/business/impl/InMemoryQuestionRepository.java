@@ -3,12 +3,10 @@ package ch.heigvd.amt.mvcsimple.business.impl;
 import ch.heigvd.amt.mvcsimple.business.api.QuestionRepository;
 import ch.heigvd.amt.mvcsimple.model.Question;
 
-import javax.ejb.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Singleton
 public class InMemoryQuestionRepository implements QuestionRepository {
 
     private final List<Question> questions = new ArrayList<>();

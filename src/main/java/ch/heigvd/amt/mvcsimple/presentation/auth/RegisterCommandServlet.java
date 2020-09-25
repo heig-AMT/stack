@@ -1,9 +1,9 @@
 package ch.heigvd.amt.mvcsimple.presentation.auth;
 
+import ch.heigvd.amt.mvcsimple.Repositories;
 import ch.heigvd.amt.mvcsimple.business.api.CredentialRepository;
 import ch.heigvd.amt.mvcsimple.business.api.SessionRepository;
 
-import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,11 +14,9 @@ import java.io.IOException;
 @WebServlet(name = "RegisterCommandServlet", urlPatterns = "/register.do")
 public class RegisterCommandServlet extends HttpServlet {
 
-    @EJB
-    CredentialRepository credentialRepository;
+    CredentialRepository credentialRepository = Repositories.getInstance().getCredentialRepository();
 
-    @EJB
-    SessionRepository sessionRepository;
+    SessionRepository sessionRepository = Repositories.getInstance().getSessionRepository();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

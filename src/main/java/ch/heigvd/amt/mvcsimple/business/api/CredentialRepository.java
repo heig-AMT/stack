@@ -1,8 +1,5 @@
 package ch.heigvd.amt.mvcsimple.business.api;
 
-import javax.ejb.Local;
-
-@Local
 public interface CredentialRepository {
 
     /**
