@@ -26,7 +26,7 @@ public class ServiceRegistry {
         var questionRepository = new InMemoryQuestionRepository();
 
         this.authenticationFacade = new AuthenticationFacade(credentialRepository, sessionRepository);
-        this.questionFacade = new QuestionFacade(questionRepository);
+        this.questionFacade = new QuestionFacade(credentialRepository, questionRepository, sessionRepository);
     }
 
     public AuthenticationFacade getAuthenticationFacade() {
