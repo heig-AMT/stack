@@ -29,6 +29,9 @@ public class InMemoryCredentialRepository implements CredentialRepository {
 
     @Override
     public boolean match(String username, String password) {
-        return Objects.equals(password, credentials.get(username));
+        if (username == null) username = "";
+        if (password == null) password = "";
+        return !username.equals("") && !password.equals("") &&
+                Objects.equals(password, credentials.get(username));
     }
 }
