@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvcsimple.presentation.auth;
+package ch.heigvd.amt.stack.ui.web.views.authentication;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "RegisterPageServlet", urlPatterns = "/register")
-public class RegisterPageServlet extends HttpServlet {
+@WebServlet(name = "RegisterPageView", urlPatterns = "/register")
+public class RegisterPageView extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

@@ -1,4 +1,4 @@
-<%@ page import="ch.heigvd.amt.mvcsimple.presentation.auth.filter.ProvideAuthenticationUsernameFilter" %>
+<%@ page import="ch.heigvd.amt.stack.ui.web.ProvideConnectedFilter" %>
 <%@ page import="java.util.Optional" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -14,7 +14,7 @@
         </div>
 
         <%
-            boolean connected = (Boolean) session.getAttribute(ProvideAuthenticationUsernameFilter.AUTHENTICATION_CONNECTED);
+            boolean connected = (Boolean) session.getAttribute(ProvideConnectedFilter.AUTHENTICATION_CONNECTED);
         %>
         <% if (connected) {%>
         <a class="rounded bg-blue-600 p-2 text-white hover:bg-blue-500"

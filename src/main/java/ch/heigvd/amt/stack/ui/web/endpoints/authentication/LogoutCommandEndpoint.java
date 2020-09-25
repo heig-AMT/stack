@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvcsimple.presentation.auth;
+package ch.heigvd.amt.stack.ui.web.endpoints.authentication;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "LogoutCommandServlet", urlPatterns = "/logout.do")
-public class LogoutCommandServlet extends HttpServlet {
+@WebServlet(name = "LogoutCommandEndpoint", urlPatterns = "/logout.do")
+public class LogoutCommandEndpoint extends HttpServlet {
 
     private AuthenticationFacade facade;
 

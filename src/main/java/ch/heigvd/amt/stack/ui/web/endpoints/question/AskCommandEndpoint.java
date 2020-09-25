@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvcsimple.presentation.questions;
+package ch.heigvd.amt.stack.ui.web.endpoints.question;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "AskCommandServlet", urlPatterns = "/ask.do")
-public class AskCommandServlet extends HttpServlet {
+@WebServlet(name = "AskCommandEndpoint", urlPatterns = "/ask.do")
+public class AskCommandEndpoint extends HttpServlet {
 
     QuestionFacade questionFacade;
 

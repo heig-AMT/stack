@@ -1,8 +1,8 @@
-package ch.heigvd.amt.mvcsimple.presentation.auth;
+package ch.heigvd.amt.stack.ui.web.endpoints.authentication;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
-import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
+import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 
 import javax.servlet.ServletConfig;
@@ -13,22 +13,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "LoginCommandServlet", urlPatterns = "/login.do")
-public class LoginCommandServlet extends HttpServlet {
+@WebServlet(name = "RegisterCommandEndpoint", urlPatterns = "/register.do")
+public class RegisterCommandEndpoint extends HttpServlet {
 
     private AuthenticationFacade authenticationFacade;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-
         this.authenticationFacade = ServiceRegistry.getInstance().getAuthenticationFacade();
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            authenticationFacade.login(LoginCommand.builder()
+            authenticationFacade.register(RegisterCommand.builder()
                     .username(req.getParameter("username"))
                     .password(req.getParameter("password"))
                     .tag(req.getSession().getId())

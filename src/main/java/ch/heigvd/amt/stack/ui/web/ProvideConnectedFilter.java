@@ -1,4 +1,4 @@
-package ch.heigvd.amt.mvcsimple.presentation.auth.filter;
+package ch.heigvd.amt.stack.ui.web;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @WebFilter("/*")
-public class ProvideAuthenticationUsernameFilter implements Filter {
+public class ProvideConnectedFilter implements Filter {
 
-    public static final String AUTHENTICATION_CONNECTED = ProvideAuthenticationUsernameFilter.class.getName() + ".AUTHENTICATION_CONNECTED";
+    public static final String AUTHENTICATION_CONNECTED = ProvideConnectedFilter.class.getName() + ".AUTHENTICATION_CONNECTED";
 
     private AuthenticationFacade authenticationFacade;
 

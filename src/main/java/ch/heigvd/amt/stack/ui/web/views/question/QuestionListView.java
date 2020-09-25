@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.ui.web.question;
+package ch.heigvd.amt.stack.ui.web.views.question;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "QuestionListEndpoint", urlPatterns = "/questions")
-public class QuestionListEndpoint extends HttpServlet {
+@WebServlet(name = "QuestionListView", urlPatterns = "/questions")
+public class QuestionListView extends HttpServlet {
 
     private QuestionFacade facade;
 
