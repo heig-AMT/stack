@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class Question implements Entity {
+public class Question implements Entity<QuestionId> {
 
     @Builder.Default
     QuestionId id = QuestionId.create();
