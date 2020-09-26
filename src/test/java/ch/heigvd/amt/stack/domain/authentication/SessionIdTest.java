@@ -1,7 +1,8 @@
 package ch.heigvd.amt.stack.domain.authentication;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class SessionIdTest {
 
@@ -10,6 +11,6 @@ public class SessionIdTest {
         var first = SessionId.create();
         var second = SessionId.create();
 
-        Assert.assertNotEquals(first, second);
+        assertNotEquals(first, second);
     }
 }
