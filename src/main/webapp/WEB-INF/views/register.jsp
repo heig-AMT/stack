@@ -2,11 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-<jsp:include page="../header.jsp">
+<jsp:include page="fragments/header.jsp">
     <jsp:param name="pageTitle" value="Register"/>
 </jsp:include>
 <body>
-<jsp:include page="../navigation.jsp"/>
+<jsp:include page="fragments/navigation.jsp"/>
 <div class="text-center mt-32">
     <h1 class="text-4xl">
         Register an account

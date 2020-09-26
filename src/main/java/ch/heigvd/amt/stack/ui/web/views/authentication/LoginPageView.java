@@ -13,6 +13,6 @@ public class LoginPageView extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // We do not alter the page for the moment.
-        req.getRequestDispatcher("WEB-INF/pages/login.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/views/login.jsp").forward(req, resp);
     }
 }

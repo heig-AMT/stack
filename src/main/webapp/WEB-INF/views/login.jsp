@@ -1,10 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../header.jsp">
+<jsp:include page="fragments/header.jsp">
     <jsp:param name="pageTitle" value="Login"/>
 </jsp:include>
 <body>
-<jsp:include page="../navigation.jsp"/>
+<jsp:include page="fragments/navigation.jsp"/>
 <div class="text-center mt-32">
     <h1 class="text-4xl">
         Login to your account
