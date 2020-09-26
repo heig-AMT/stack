@@ -28,6 +28,6 @@ public class QuestionListView extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         QuestionListDTO questions = facade.getQuestions(new QuestionQuery());
         req.setAttribute("questions", questions);
-        req.getRequestDispatcher("WEB-INF/pages/questions.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/views/questions.jsp").forward(req, resp);
     }
 }

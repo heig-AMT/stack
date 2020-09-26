@@ -4,11 +4,11 @@
 <jsp:useBean scope="request" id="questions" type="ch.heigvd.amt.stack.application.question.dto.QuestionListDTO"/>
 
 <html>
-<jsp:include page="../header.jsp">
+<jsp:include page="fragments/header.jsp">
     <jsp:param name="pageTitle" value="Questions"/>
 </jsp:include>
 <body>
-<jsp:include page="../navigation.jsp"/>
+<jsp:include page="fragments/navigation.jsp"/>
 <div class="bg-white w-full">
         <table class="w-full">
             <thead>
