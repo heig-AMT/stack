@@ -26,7 +26,12 @@ public class QuestionListView extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        QuestionListDTO questions = facade.getQuestions(new QuestionQuery());
+        var builder = QuestionQuery.builder();
+        var query = req.getParameter("search");
+        if (query != null) {
+            builder.shouldContain(query);
+        }
+        QuestionListDTO questions = facade.getQuestions(builder.build());
         req.setAttribute("questions", questions);
         req.getRequestDispatcher("WEB-INF/views/questions.jsp").forward(req, resp);
     }
