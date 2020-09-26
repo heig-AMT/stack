@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.ui.web;
+package ch.heigvd.amt.stack.ui.web.views;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
@@ -12,8 +12,6 @@ import java.io.IOException;
 @WebFilter("/*")
 public class ProvideConnectedFilter implements Filter {
 
-    public static final String AUTHENTICATION_CONNECTED = ProvideConnectedFilter.class.getName() + ".AUTHENTICATION_CONNECTED";
-
     private AuthenticationFacade authenticationFacade;
 
     @Override
@@ -23,10 +21,11 @@ public class ProvideConnectedFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        boolean connected = authenticationFacade.connected(SessionQuery.builder().tag(httpRequest.getSession().getId()).build())
-                .isConnected();
-        httpRequest.getSession().setAttribute(AUTHENTICATION_CONNECTED, connected);
+        var httpRequest = (HttpServletRequest) request;
+        var query = SessionQuery.builder()
+                .tag(httpRequest.getSession().getId())
+                .build();
+        httpRequest.setAttribute("connected", authenticationFacade.connected(query));
         chain.doFilter(request, response);
     }
 
