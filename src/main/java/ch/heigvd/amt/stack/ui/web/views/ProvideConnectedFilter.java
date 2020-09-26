@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.ui.web;
+package ch.heigvd.amt.stack.ui.web.views;
 
 import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
