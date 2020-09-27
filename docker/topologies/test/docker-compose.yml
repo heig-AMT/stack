@@ -9,5 +9,7 @@ services:
 
   openliberty:
     build: ../../images/openliberty
+    environment:
+      - PORT=1234
     ports:
-      - "8080:9080"
+      - "8080:1234"
