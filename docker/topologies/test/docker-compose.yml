@@ -3,7 +3,13 @@ services:
   payara:
     build: ../../images/payara
     environment:
-     - ADMIN_PASSWORD=adminadmin
+     - PORT=8080
     ports:
-     - "8080:8080"
-     - "4848:4848"
+     - "8081:8080"
+
+  openliberty:
+    build: ../../images/openliberty
+    environment:
+      - PORT=1234
+    ports:
+      - "8080:1234"
