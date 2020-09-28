@@ -1,8 +1,8 @@
 package ch.heigvd.amt.stack.domain.question;
 
-import ch.heigvd.amt.stack.domain.authentication.SessionId;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class QuestionIdTest {
 
@@ -11,6 +11,6 @@ public class QuestionIdTest {
         var first = QuestionId.create();
         var second = QuestionId.create();
 
-        Assert.assertNotEquals(first, second);
+        assertNotEquals(first, second);
     }
 }

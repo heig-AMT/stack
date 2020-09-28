@@ -1,7 +1,8 @@
 package ch.heigvd.amt.stack.domain.authentication;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CredentialTest {
 
@@ -12,7 +13,7 @@ public class CredentialTest {
                 .clearTextPassword("world")
                 .build();
 
-        Assert.assertNotNull(credential.getId());
+        assertNotNull(credential.getId());
     }
 
     @Test
@@ -20,7 +21,7 @@ public class CredentialTest {
         var first = Credential.builder().build();
         var second = Credential.builder().build();
 
-        Assert.assertNotEquals(first, second);
+        assertNotEquals(first, second);
     }
 
     @Test
@@ -29,6 +30,6 @@ public class CredentialTest {
         var first = Credential.builder().id(id).build();
         var second = Credential.builder().id(id).build();
 
-        Assert.assertEquals(first, second);
+        assertEquals(first, second);
     }
 }
