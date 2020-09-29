@@ -4,7 +4,7 @@
 <jsp:useBean scope="request" id="questions" type="ch.heigvd.amt.stack.application.question.dto.QuestionListDTO"/>
 
 <html>
-<jsp:include page="fragments/header.jsp">
+<jsp:include page="fragments/head.jsp">
     <jsp:param name="pageTitle" value="Questions"/>
 </jsp:include>
 <body>
