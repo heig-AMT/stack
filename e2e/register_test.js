@@ -1,7 +1,7 @@
 Feature('register');
 
 Scenario('user wants to register', (I) => {
-  I.amOnPage("http://localhost:8080/mvc-simple/register");
+  I.amOnPage("http://localhost:8080/register");
 
   I.see("Register an account");
 
