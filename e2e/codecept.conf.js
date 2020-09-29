@@ -16,6 +16,7 @@ exports.config = {
     I: './steps_file.js',
     loginPage: './pages/Login.js',
     registerPage: './pages/Register.js',
+    questionsPage: './pages/Questions.js',
   },
   bootstrap: null,
   mocha: {},
