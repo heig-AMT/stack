@@ -1,13 +1,11 @@
 Feature('register');
 
-Scenario('user wants to register', (I) => {
-  I.amOnPage("http://localhost:8080/register");
+const { I, registerPage } = inject();
 
-  I.see("Register an account");
+Scenario('user wants to register', (I, registerPage) => {
+  registerPage.register();
 
-  I.fillField("username", "mario2@gmail.com");
-  I.fillField("Password", "1234");
-  I.click("input[type=submit]");
+  I.amOnPage("http://localhost:8080/questions");
 
   I.see("Title");
   I.see("Description");
