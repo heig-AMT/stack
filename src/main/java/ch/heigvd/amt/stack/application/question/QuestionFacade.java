@@ -9,6 +9,7 @@ import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,7 @@ public class QuestionFacade {
                 .author(session.getUser())
                 .title(command.getTitle())
                 .description(command.getDescription())
+                .creation(Instant.now())
                 .build()
         );
     }
@@ -47,6 +49,7 @@ public class QuestionFacade {
                         .author(credentialRepository.findById(question.getAuthor()).map(Credential::getUsername).get())
                         .title(question.getTitle())
                         .description(question.getDescription())
+                        .creation(question.getCreation())
                         .build())
                 .collect(Collectors.toUnmodifiableList());
         return QuestionListDTO.builder()

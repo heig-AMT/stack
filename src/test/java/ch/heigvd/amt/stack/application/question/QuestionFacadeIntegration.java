@@ -72,6 +72,7 @@ public class QuestionFacadeIntegration {
         assertEquals("Some description", result.get(0).getDescription());
         assertEquals("What is love", result.get(0).getTitle());
         assertEquals("alice", result.get(0).getAuthor());
+        assertNotNull(result.get(0).getCreation());
     }
 
     @Test
