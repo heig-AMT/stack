@@ -33,11 +33,15 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build image
+        run: sh build-image.sh
+
       - name: Run image
         run: sh run-image.sh
 
-      - name: Checkout code
-        uses: actions/checkout@v2
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
