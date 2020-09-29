@@ -10,7 +10,7 @@ public class CredentialTest {
     public void testBuiltCredentialHasNonNullId() {
         var credential = Credential.builder()
                 .username("hello")
-                .clearTextPassword("world")
+                .hashedPassword("hashed")
                 .build();
 
         assertNotNull(credential.getId());

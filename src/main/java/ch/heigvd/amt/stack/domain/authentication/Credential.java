@@ -10,5 +10,5 @@ public class Credential implements Entity<CredentialId> {
     @Builder.Default
     CredentialId id = CredentialId.create();
     String username;
-    String clearTextPassword;
+    String hashedPassword;
 }

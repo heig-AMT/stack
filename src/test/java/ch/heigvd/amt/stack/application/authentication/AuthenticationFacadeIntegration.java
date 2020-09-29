@@ -116,4 +116,23 @@ public class AuthenticationFacadeIntegration {
             facade.register(register);
         });
     }
+
+    @Test
+    public void testRegisteredUserNeedsPasswordToLogin() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("bob")
+                .tag("tag")
+                .build();
+        var login = LoginCommand.builder()
+                .username("alice")
+                .password("charlie")
+                .tag("tag")
+                .build();
+
+        facade.register(register);
+        assertThrows(AuthenticationFailedException.class, () -> {
+            facade.login(login);
+        });
+    }
 }
