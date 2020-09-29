@@ -5,7 +5,7 @@ on:
     branches: [ dev ]
 
 jobs:
-  test:
+  unit-testing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,3 +26,39 @@ jobs:
       - name: Run unit tests
         run: |
           mvn clean test
+
+  e2e-testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build image
+        run: sh build-image.sh
+
+      - name: Run image in bg
+        run: sh run-image.sh &
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Wait to be online
+        run: python3 e2e/waitToBeOnline.py
+
+      - name: Run e2e tests
+        run: |
+          cd e2e
+          npm install
+          npx codeceptjs run --override '{"helpers": {"Puppeteer": {"show": false}}}' --steps
+        env:
+          CI: true
