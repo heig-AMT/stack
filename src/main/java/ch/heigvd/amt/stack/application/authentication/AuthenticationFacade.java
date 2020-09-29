@@ -7,6 +7,7 @@ import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
 import ch.heigvd.amt.stack.application.authentication.query.CredentialQuery;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.domain.authentication.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class AuthenticationFacade {
 
@@ -36,20 +37,24 @@ public class AuthenticationFacade {
                 .build())
                 .orElseThrow(AuthenticationFailedException::new);
 
+        if (!BCrypt.checkpw(command.getPassword(), credential.getHashedPassword())){
+            throw new AuthenticationFailedException();
+        }
+
         sessions.save(Session.builder()
                 .tag(command.getTag())
                 .user(credential.getId())
                 .build());
     }
 
-    public void logout(LogoutCommand command) throws AuthenticationFailedException {
+    public void logout(LogoutCommand command) {
         sessions.findBy(SessionQuery.builder()
                 .tag(command.getTag())
                 .build())
                 .ifPresent(s -> sessions.remove(s.getId()));
     }
 
-    public void register(RegisterCommand command) {
+    public void register(RegisterCommand command) throws AuthenticationFailedException {
         logout(LogoutCommand.builder().tag(command.getTag()).build());
 
         credentials.findBy(CredentialQuery.builder()
@@ -64,7 +69,7 @@ public class AuthenticationFacade {
         credentials.save(Credential.builder()
                 .id(id)
                 .username(command.getUsername())
-                .clearTextPassword(command.getPassword())
+                .hashedPassword(BCrypt.hashpw(command.getPassword(), BCrypt.gensalt()))
                 .build());
 
         sessions.save(Session.builder()
