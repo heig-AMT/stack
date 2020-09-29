@@ -33,6 +33,9 @@ jobs:
       matrix:
         node-version: [12.x]
     steps:
+      - name: Run image
+        run: sh run-image.sh
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -40,6 +43,9 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Wait to be online
+        run: python3 e2e/waitToBeOnline.py
 
       - name: Run e2e tests
         run: |
