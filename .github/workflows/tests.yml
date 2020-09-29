@@ -5,7 +5,7 @@ on:
     branches: [ dev ]
 
 jobs:
-  test:
+  unit-testing:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,3 +26,25 @@ jobs:
       - name: Run unit tests
         run: |
           mvn clean test
+
+  e2e-testing:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Run e2e tests
+        run: |
+          cd e2e
+          npm install
+          npx codeceptjs run --override '{"helpers": {"Puppeteer": {"show": false}}}' --steps
+        env:
+          CI: true
