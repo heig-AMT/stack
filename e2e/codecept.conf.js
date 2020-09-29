@@ -1,7 +1,5 @@
 const { setHeadlessWhen } = require('@codeceptjs/configure');
 
-// turn on headless mode when running with HEADLESS=true environment variable
-// export HEADLESS=true && npx codeceptjs run
 setHeadlessWhen(process.env.HEADLESS);
 
 exports.config = {
@@ -15,7 +13,8 @@ exports.config = {
     }
   },
   include: {
-    I: './steps_file.js'
+    I: './steps_file.js',
+    loginPage: './pages/Login.js',
   },
   bootstrap: null,
   mocha: {},
