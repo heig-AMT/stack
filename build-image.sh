@@ -2,7 +2,7 @@
 
 # Maven
 echo "Building StackUnderflow"
-mvn clean package
+mvn -B clean package
 
 # Payara
 echo "Building stack-payara Docker image"
