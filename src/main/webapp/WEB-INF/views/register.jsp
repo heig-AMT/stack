@@ -26,7 +26,7 @@
             <div class="w-full px-3 mb-6">
                 <label for="username" class="mb-2 block uppercase text-xs font-bold text-gray-700">Username</label>
                 <input id="username" class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
-                       type="email" name="username" placeholder="xX-MyKickAssName-Xx">
+                       type="text" name="username" placeholder="xX-MyKickAssName-Xx">
             </div>
 
             <div class="w-full md:w-full px-3 mb-6">
