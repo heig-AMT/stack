@@ -1,11 +1,11 @@
-import { v4 as uuidv4 } from 'uuid';
+const uid = require("uuid");
 
 const { I } = inject();
 
 module.exports = {
   addQuestion() {
-    const randomTitle = uuidv4();
-    const randomDesc = uuidv4();
+    const randomTitle = uid.v4();
+    const randomDesc = uid.v4();
 
     I.amOnPage("http://localhost:8080/ask");
 
