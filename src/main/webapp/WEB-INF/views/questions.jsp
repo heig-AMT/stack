@@ -9,6 +9,13 @@
 </jsp:include>
 <body>
 <jsp:include page="fragments/navigation.jsp"/>
+<form
+        action="${pageContext.request.contextPath}/questions"
+        method="GET">
+    <label for="search">Search</label>
+    <input type="text" id="search" name="search" placeholder="..." required>
+    <input type="submit" value="Filter">
+</form>
 <div class="bg-white w-full">
         <table class="w-full">
             <thead>
