@@ -1,11 +1,10 @@
 package ch.heigvd.amt.stack.ui.web.views.question;
 
-import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
-import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
+import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 
-import javax.servlet.ServletConfig;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,13 +15,8 @@ import java.io.IOException;
 @WebServlet(name = "QuestionListView", urlPatterns = "/questions")
 public class QuestionListView extends HttpServlet {
 
+    @Inject
     private QuestionFacade facade;
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        this.facade = ServiceRegistry.getInstance().getQuestionFacade();
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

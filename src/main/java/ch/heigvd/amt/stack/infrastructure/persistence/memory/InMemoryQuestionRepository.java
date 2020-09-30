@@ -5,9 +5,13 @@ import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
+@Default
 public class InMemoryQuestionRepository extends InMemoryRepository<Question, QuestionId> implements QuestionRepository {
 
     @Override

@@ -1,11 +1,10 @@
 package ch.heigvd.amt.stack.ui.web.endpoints.question;
 
-import ch.heigvd.amt.stack.application.ServiceRegistry;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 
-import javax.servlet.ServletConfig;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,13 +15,8 @@ import java.io.IOException;
 @WebServlet(name = "AskCommandEndpoint", urlPatterns = "/ask.do")
 public class AskCommandEndpoint extends HttpServlet {
 
-    QuestionFacade questionFacade;
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        questionFacade = ServiceRegistry.getInstance().getQuestionFacade();
-    }
+    @Inject
+    private QuestionFacade questionFacade;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
