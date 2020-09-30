@@ -13,5 +13,8 @@
   "devDependencies": {
     "codeceptjs": "^2.6.11",
     "puppeteer": "^5.3.1"
+  },
+  "dependencies": {
+    "uuid": "^8.3.0"
   }
 }
