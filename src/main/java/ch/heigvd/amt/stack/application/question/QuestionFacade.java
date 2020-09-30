@@ -9,6 +9,7 @@ import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
+import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ public class QuestionFacade {
     private final QuestionRepository repository;
     private final SessionRepository sessionRepository;
 
+    @Inject
     public QuestionFacade(
             CredentialRepository credentialRepository,
             QuestionRepository repository,

@@ -5,8 +5,12 @@ import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionId;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
 import java.util.Optional;
 
+@ApplicationScoped
+@Default
 public class InMemorySessionRepository extends InMemoryRepository<Session, SessionId> implements SessionRepository {
 
     @Override

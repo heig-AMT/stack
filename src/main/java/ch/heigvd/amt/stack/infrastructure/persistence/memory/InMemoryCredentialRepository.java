@@ -6,8 +6,12 @@ import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
 import java.util.Optional;
 
+@ApplicationScoped
+@Default
 public class InMemoryCredentialRepository extends InMemoryRepository<Credential, CredentialId> implements CredentialRepository {
 
     @Override
