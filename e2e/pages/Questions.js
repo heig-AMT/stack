@@ -1,9 +1,11 @@
+import { v4 as uuidv4 } from 'uuid';
+
 const { I } = inject();
 
 module.exports = {
   addQuestion() {
-    const randomTitle = Math.random().toString(36).substring(7);
-    const randomDesc = Math.random().toString(36).substring(7);
+    const randomTitle = uuidv4();
+    const randomDesc = uuidv4();
 
     I.amOnPage("http://localhost:8080/ask");
 
