@@ -25,4 +25,9 @@
         <span class="ml-4"><c:out value="${question.title}"/></span>
     </div>
     <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
+    <div class="flex flex-row mt-4 items-center">
+        <span class="text-sm text-gray-500">0 comments</span>
+        <div class="flex-grow"></div>
+        <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
+    </div>
 </div>
