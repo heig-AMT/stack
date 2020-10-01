@@ -4,6 +4,7 @@ import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
+import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
@@ -52,6 +53,7 @@ public class QuestionFacade {
                         .title(question.getTitle())
                         .description(question.getDescription())
                         .creation(question.getCreation())
+                        .status(QuestionStatusDTO.from(question, Instant.now()))
                         .build())
                 .collect(Collectors.toUnmodifiableList());
         return QuestionListDTO.builder()

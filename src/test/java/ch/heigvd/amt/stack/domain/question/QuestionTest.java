@@ -34,4 +34,12 @@ public class QuestionTest {
 
         assertEquals(first, second);
     }
+
+    @Test
+    public void testBuiltQuestionIsNotAnswered() {
+        var id = QuestionId.create();
+        var question = Question.builder().id(id).build();
+
+        assertFalse(question.isResolved());
+    }
 }
