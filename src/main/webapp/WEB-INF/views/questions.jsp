@@ -7,8 +7,9 @@
 <jsp:include page="fragments/head.jsp">
     <jsp:param name="pageTitle" value="Questions"/>
 </jsp:include>
-<body>
+<body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
+<div class="pt-16"/>
 <form
         action="${pageContext.request.contextPath}/questions"
         method="GET">
@@ -16,8 +17,8 @@
     <input type="text" id="search" name="search" placeholder="..." required>
     <input type="submit" value="Filter">
 </form>
-<div class="bg-white w-full">
-        <table class="w-full">
+<div class="w-full">
+        <table class="pt-16 w-full">
             <thead>
                 <tr class="text-left text-gray-700 font-medium">
                     <th class="px-4 py-2 bg-gray-200">Title</th>
@@ -26,7 +27,7 @@
             </thead>
             <tbody class="text-gray-700">
                 <c:forEach items="${questions.questions}" var="question">
-                    <tr class="hover:bg-gray-100 border-b border-gray-200">
+                    <tr class="bg-white hover:bg-gray-100 border-b border-gray-200">
                         <td class="px-4 py-4"><c:out value="${question.title}"/></td>
                         <td class="px-4 py-4"><c:out value="${question.description}"/></td>
                     </tr>

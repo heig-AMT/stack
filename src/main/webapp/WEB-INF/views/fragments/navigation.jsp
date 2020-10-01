@@ -3,7 +3,7 @@
 
 <jsp:useBean scope="request" id="connected" type="ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO"/>
 
-<nav class="flex px-4 py-2 items-center w-full bg-white border-b border-grey-700">
+<nav class="flex px-4 py-2 items-center w-full bg-white border-b border-grey-700 fixed top-0">
     <a href="${pageContext.request.contextPath}/">
         <img class="h-12 object-contain px-4 pb-2 pt-4"
              src="${pageContext.request.contextPath}/assets/logo.png"
