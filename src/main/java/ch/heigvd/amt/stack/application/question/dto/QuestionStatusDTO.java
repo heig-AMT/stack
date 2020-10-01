@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
  * asked, the status will be (in order of preference) :
  * <p>
  * - resolved if it has been answered; or
- * - new if it has been opened in the last day; or
+ * - new if it has been opened in the last two days; or
  * - open otherwise.
  */
 public enum QuestionStatusDTO {
