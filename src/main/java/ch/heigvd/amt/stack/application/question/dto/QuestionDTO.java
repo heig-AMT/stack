@@ -12,4 +12,5 @@ public class QuestionDTO {
     String title;
     String description;
     Instant creation;
+    QuestionStatusDTO status;
 }

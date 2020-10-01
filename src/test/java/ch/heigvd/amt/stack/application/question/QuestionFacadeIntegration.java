@@ -3,6 +3,7 @@ package ch.heigvd.amt.stack.application.question;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
@@ -72,6 +73,7 @@ public class QuestionFacadeIntegration {
         assertEquals("Some description", result.get(0).getDescription());
         assertEquals("What is love", result.get(0).getTitle());
         assertEquals("alice", result.get(0).getAuthor());
+        assertEquals(QuestionStatusDTO.New, result.get(0).getStatus());
         assertNotNull(result.get(0).getCreation());
     }
 
