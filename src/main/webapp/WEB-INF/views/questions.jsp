@@ -27,10 +27,8 @@
             </thead>
             <tbody class="text-gray-700">
                 <c:forEach items="${questions.questions}" var="question">
-                    <tr class="bg-white hover:bg-gray-100 border-b border-gray-200">
-                        <td class="px-4 py-4"><c:out value="${question.title}"/></td>
-                        <td class="px-4 py-4"><c:out value="${question.description}"/></td>
-                    </tr>
+                    <c:set var="question" value="${question}" scope="request"/>
+                    <c:import url="fragments/question.jsp"/>
                 </c:forEach>
             </tbody>
         </table>
