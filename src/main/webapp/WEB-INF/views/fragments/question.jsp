@@ -3,7 +3,7 @@
 
 <jsp:useBean scope="request" id="question" type="ch.heigvd.amt.stack.application.question.dto.QuestionDTO"/>
 
-<div class="m-2 p-4 rounded-lg
+<div class="m-2 p-6 rounded-lg
             bg-white hover:bg-gray-100
             border-b border-gray-200
             shadow hover:shadow-lg
