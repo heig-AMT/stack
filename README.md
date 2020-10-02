@@ -37,4 +37,4 @@ Our prototypes are visible on [Figma](https://www.figma.com/file/gR04fKmQQZCZzwV
 
 ## Deployments
 
-A live version of our site is available on [Heroku](https://http://heig-amt-stackunderflow.herokuapp.com). We're using a free plan, so it may need a few seconds to start up if the instance was previously paused :smile:
+A live version of our site is available on [Heroku](https://heig-amt-stackunderflow.herokuapp.com). We're using a free plan, so it may need a few seconds to start up if the instance was previously paused :smile:
