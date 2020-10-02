@@ -30,3 +30,8 @@ Assuming you have Docker installed locally, you can run the following scripts to
 sh ./build-image.sh
 sh ./run-image.sh
 ```
+
+## Mockups
+
+Our prototypes are visible on [Figma](https://www.figma.com/file/gR04fKmQQZCZzwVC8SAbx3/Web?node-id=1%3A117).
+
