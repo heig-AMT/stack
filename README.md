@@ -35,6 +35,6 @@ sh ./run-image.sh
 
 Our prototypes are visible on [Figma](https://www.figma.com/file/gR04fKmQQZCZzwVC8SAbx3/Web?node-id=1%3A117).
 
-## Deployments
+## Deployments
 
 A live version of our site is available on [Heroku](https://http://heig-amt-stackunderflow.herokuapp.com). We're using a free plan, so it may need a few seconds to start up if the instance was previously paused :smile:
