@@ -12,12 +12,17 @@
     <a class="hover:text-blue-500 text-lg px-4 py-2" href="${pageContext.request.contextPath}/">Home</a>
     <a class="hover:text-blue-500 text-lg px-4 py-2" href="${pageContext.request.contextPath}/questions">Questions</a>
 
-    <div class="flex-grow">
-    </div>
+    <form
+            action="${pageContext.request.contextPath}/questions"
+            method="GET"
+            class="flex flex-grow justify-between px-4 py-1 my-0 mr-4 rounded-full border border-gray-400">
+        <input type="text" name="search" class="flex-grow" placeholder="Search by content in the title, description or tags !" required>
+        <input type="image" src="${pageContext.request.contextPath}/assets/magnify.svg" alt="submit">
+    </form>
 
     <c:choose>
         <c:when test="${connected.connected}">
-            <a class="mx-2 px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500"
+            <a class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500"
                href="${pageContext.request.contextPath}/ask">Ask something</a>
             <form action="logout.do"
                   class="m-0"

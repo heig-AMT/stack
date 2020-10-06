@@ -10,13 +10,6 @@
 <body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
 <div class="pt-16"/>
-<form
-        action="${pageContext.request.contextPath}/questions"
-        method="GET">
-    <label for="search">Search</label>
-    <input type="text" id="search" name="search" placeholder="..." required>
-    <input type="submit" value="Filter">
-</form>
 <div class="max-w-4xl m-auto flex flex-col">
     <c:forEach items="${questions.questions}" var="question">
         <c:set var="question" value="${question}" scope="request"/>
