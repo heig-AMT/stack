@@ -62,6 +62,7 @@ public class AuthorizationFilter implements Filter {
             , "/login"
             , "/register"
             , "/questions"
+            , "" // Home
             );
 
         return allowedResources.stream().anyMatch(uri::startsWith);
