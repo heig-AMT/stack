@@ -7,7 +7,7 @@ exports.config = {
   output: './output',
   helpers: {
     Puppeteer: {
-      url: 'http://localhost',
+      url: 'http://localhost:8080',
       show: false,
       windowSize: '1600x900'
     }
