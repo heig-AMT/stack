@@ -12,7 +12,7 @@ module.exports = {
 
     I.fillField("username", email);
     I.fillField("Password", password);
-    I.click("input[type=submit]");
+    I.click("form input[value=Register]");
 
     return { email, password }
   }
