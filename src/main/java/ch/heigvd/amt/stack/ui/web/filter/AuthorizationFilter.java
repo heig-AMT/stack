@@ -59,6 +59,7 @@ public class AuthorizationFilter implements Filter {
      private boolean isPublicResource(String uri) {
         List<String> allowedResources = List.of
             ( "/assets"
+            , "/favicon.ico"
             , "/login"
             , "/register"
             , "/questions"
