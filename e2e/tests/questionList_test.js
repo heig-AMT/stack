@@ -1,9 +1,14 @@
 Feature('questionList');
 
-Scenario('Visiting the question page', (I) => {
-  I.amOnPage("/questions");
+const { I, registerPage, loginPage, questionsPage, logoutPage } = inject();
 
-  // TODO : Figure out what's actually displayed on an empty questions page.
-  // I.see("Title");
-  // I.see("Description");
+Scenario('See questions when not logged in', (I, registerPage, logoutPage, questionsPage) => {
+  registerPage.register();
+
+  const question1 = questionsPage.addQuestion();
+  logoutPage.logout();
+
+  I.amOnPage('/questions');
+  I.see(question1.title);
+  I.see(question1.description);
 });
