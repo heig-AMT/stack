@@ -1,11 +1,9 @@
 Feature('addQuestions');
 
-const { I, registerPage, loginPage, questionsPage } = inject();
+const { I, registerPage, loginPage, questionsPage, logoutPage } = inject();
 
-Scenario('Add a question', (I, registerPage, loginPage, questionsPage) => {
-  const register = registerPage.register();
-
-  loginPage.login(register.email, register.password);
+Scenario('Add a question', (I, registerPage, questionsPage) => {
+  registerPage.register();
 
   const question = questionsPage.addQuestion();
 
