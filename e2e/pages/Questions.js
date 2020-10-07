@@ -7,14 +7,16 @@ module.exports = {
     const randomTitle = uid.v4();
     const randomDesc = uid.v4();
 
-    I.amOnPage("http://localhost:8080/ask");
+    I.wait(0.5)
+    I.amOnPage("/ask");
+    I.seeInCurrentUrl('/ask')
 
     I.see("Ask a question");
 
-    I.fillField("Title", randomTitle);
-    I.fillField("Description", randomDesc);
+    I.fillField("#title", randomTitle);
+    I.fillField("#description", randomDesc);
 
-    I.click("Publish");
+    I.click("Publish question");
 
     return { title: randomTitle, description: randomDesc }
   }

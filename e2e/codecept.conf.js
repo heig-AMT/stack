@@ -7,7 +7,7 @@ exports.config = {
   output: './output',
   helpers: {
     Puppeteer: {
-      url: 'http://localhost',
+      url: 'http://localhost:8080',
       show: false,
       windowSize: '1600x900'
     }
@@ -17,6 +17,7 @@ exports.config = {
     loginPage: './pages/Login.js',
     registerPage: './pages/Register.js',
     questionsPage: './pages/Questions.js',
+    logoutPage: './pages/Logout.js',
   },
   bootstrap: null,
   mocha: {},

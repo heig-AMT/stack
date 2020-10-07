@@ -1,16 +1,24 @@
 Feature('addQuestions');
 
-const { I, registerPage, loginPage, questionsPage } = inject();
+const { I, registerPage, loginPage, questionsPage, logoutPage } = inject();
 
-Scenario('Add a question', (I, registerPage, loginPage, questionsPage) => {
-  const register = registerPage.register();
-
-  loginPage.login(register.email, register.password);
+Scenario('Add a question', (I, registerPage, questionsPage) => {
+  registerPage.register();
 
   const question = questionsPage.addQuestion();
 
   I.see(question.title);
   I.see(question.description);
+});
+
+Scenario('/ask redirects to /login when logged out', (I, registerPage, logoutPage) => {
+  registerPage.register();
+
+  logoutPage.logout();
+
+  I.amOnPage('/ask');
+
+  I.seeInCurrentUrl('/login');
 });
 
 Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
