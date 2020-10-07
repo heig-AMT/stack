@@ -11,6 +11,16 @@ Scenario('Add a question', (I, registerPage, questionsPage) => {
   I.see(question.description);
 });
 
+Scenario('/ask redirects to /login when logged out', (I, registerPage, logoutPage) => {
+  registerPage.register();
+
+  logoutPage.logout();
+
+  I.amOnPage('/ask');
+
+  I.seeInCurrentUrl('/login');
+});
+
 Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
   const register = registerPage.register();
 
