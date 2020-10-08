@@ -9,7 +9,18 @@ services:
 
   openliberty:
     build: ../../images/openliberty
+    depends_on:
+      - "database"
     environment:
       - PORT=1234
+      - JDBC_DATABASE_URL=database:5432
+      - JDBC_DATABASE_USERNAME=root
+      - JDBC_DATABASE_PASSWORD=123456
     ports:
       - "8080:1234"
+
+  database:
+    image: postgres:13.0
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456

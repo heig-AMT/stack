@@ -47,7 +47,7 @@ jobs:
         run: sh build-image.sh
 
       - name: Run image in bg
-        run: sh run-image.sh &
+        run: sh run-compose.sh &
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
