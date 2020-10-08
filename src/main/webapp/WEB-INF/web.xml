@@ -4,4 +4,8 @@
 		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
   <display-name>StackUnderflow</display-name>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error404</location>
+  </error-page>
 </web-app>
