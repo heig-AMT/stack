@@ -7,13 +7,11 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
-import javax.xml.transform.Result;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -28,67 +26,61 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public void save(Credential credential) {
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
-                    "INSERT INTO Credential VALUES ("+credential.getId().toString()+","
-                    +credential.getUsername()+","+credential.getHashedPassword()+");");
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
+                    "INSERT INTO Credential VALUES (" + credential.getId().toString() + ","
+                            + credential.getUsername() + "," + credential.getHashedPassword() + ");");
             ps.execute();
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
     }
 
     @Override
     public void remove(CredentialId credentialId) {
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
-                    "DELETE FROM Credential WHERE idCredential=\'"+credentialId.toString()+"\'))");
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
+                    "DELETE FROM Credential WHERE idCredential=\'" + credentialId.toString() + "\'))");
             ps.execute();
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
     }
 
     @Override
     public Optional<Credential> findById(CredentialId credentialId) {
-        Optional<Credential> result=Optional.empty();
+        Optional<Credential> result = Optional.empty();
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
-                    "SELECT * FROM Credential WHERE idCredential=\'"+credentialId.toString()+"\'))");
-            ResultSet rs=ps.executeQuery();
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
+                    "SELECT * FROM Credential WHERE idCredential=\'" + credentialId.toString() + "\'))");
+            ResultSet rs = ps.executeQuery();
 
-            while (rs.next())
-            {
-                Credential credential=Credential.builder()
+            while (rs.next()) {
+                Credential credential = Credential.builder()
                         .id(CredentialId.from(rs.getString("idCredential")))
                         .username(rs.getString("username"))
                         .hashedPassword(rs.getString("hash")).build();
-                result=Optional.of(credential);
+                result = Optional.of(credential);
             }
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
         return result;
     }
 
     @Override
     public Collection<Credential> findAll() {
-        ArrayList<Credential> result=new ArrayList<>();
+        ArrayList<Credential> result = new ArrayList<>();
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
                     "SELECT * FROM Credential;");
-            ResultSet rs=ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-            while (rs.next())
-            {
-                Credential credential=Credential.builder()
+            while (rs.next()) {
+                Credential credential = Credential.builder()
                         .id(CredentialId.from(rs.getString("idCredential")))
                         .username(rs.getString("username"))
                         .hashedPassword(rs.getString("hash")).build();
                 result.add(credential);
             }
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
         return result;
     }
 }
