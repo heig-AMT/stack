@@ -25,67 +25,61 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     @Override
     public void save(Session session) {
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
-                    "INSERT INTO Session (idSession, idxCredential, tag) VALUES ("+session.getId().toString()+", " +
-                            session.getUser().toString()+","+session.getTag()+");");
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
+                    "INSERT INTO Session (idSession, idxCredential, tag) VALUES (" + session.getId().toString() + ", " +
+                            session.getUser().toString() + "," + session.getTag() + ");");
             ps.execute();
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
     }
 
     @Override
     public void remove(SessionId sessionId) {
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
-                    "DELETE FROM Session WHERE idSession=\'"+sessionId.toString()+"\'))");
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
+                    "DELETE FROM Session WHERE idSession=\'" + sessionId.toString() + "\'))");
             ps.execute();
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
     }
 
     @Override
     public Optional<Session> findById(SessionId sessionId) {
-        Optional<Session> result=Optional.empty();
+        Optional<Session> result = Optional.empty();
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
-                    "SELECT * FROM Session WHERE idSession=\'"+sessionId.toString()+"\'))");
-            ResultSet rs=ps.executeQuery();
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
+                    "SELECT * FROM Session WHERE idSession=\'" + sessionId.toString() + "\'))");
+            ResultSet rs = ps.executeQuery();
 
-            while (rs.next())
-            {
-                Session session=Session.builder()
+            while (rs.next()) {
+                Session session = Session.builder()
                         .id(SessionId.from(rs.getString("idSession")))
                         .user(CredentialId.from(rs.getString("idxCredential")))
                         .tag(rs.getString("tag")).build();
-                result=Optional.of(session);
+                result = Optional.of(session);
             }
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
         return result;
     }
 
     @Override
     public Collection<Session> findAll() {
-        ArrayList<Session> result=new ArrayList<>();
+        ArrayList<Session> result = new ArrayList<>();
         try {
-            PreparedStatement ps=getDataSource().getConnection().prepareStatement(
+            PreparedStatement ps = getDataSource().getConnection().prepareStatement(
                     "SELECT * FROM Session;");
-            ResultSet rs=ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-            while (rs.next())
-            {
-                Session session=Session.builder()
+            while (rs.next()) {
+                Session session = Session.builder()
                         .id(SessionId.from(rs.getString("idSession")))
                         .user(CredentialId.from(rs.getString("idxCredential")))
                         .tag(rs.getString("tag")).build();
                 result.add(session);
             }
+        } catch (SQLException ex) {
         }
-        catch (SQLException ex)
-        {}
         return result;
     }
 }
