@@ -6,8 +6,10 @@ import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Default;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -19,11 +21,19 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-@Alternative
+@Default
 public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId> implements QuestionRepository {
+
+    @Resource(name = "database")
+    private DataSource dataSource;
+
+    private DataSource getDataSource() {
+        return dataSource;
+    }
 
     @Override
     public Collection<Question> findBy(QuestionQuery query) {
+        setup(dataSource);
         if (query.getShouldContain() != null) {
             return findAll().stream()
                     .filter(question -> (
@@ -43,6 +53,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
 
     @Override
     public void save(Question question) {
+        setup(dataSource);
         var insert = "INSERT INTO Question(idQuestion, idxCredential, resolved, title, description, instant)" +
                 " VALUES (?, ?, ?, ?,?, ?);";
         try {
@@ -61,6 +72,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
 
     @Override
     public void remove(QuestionId questionId) {
+        setup(dataSource);
         var delete = "DELETE FROM Question WHERE idQuestion = ?;";
         try {
             var statement = getDataSource().getConnection().prepareStatement(delete);
@@ -73,6 +85,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
 
     @Override
     public Optional<Question> findById(QuestionId questionId) {
+        setup(dataSource);
         var select = "SELECT * FROM Question WHERE idQuestion = ?;";
         try {
             var statement = getDataSource().getConnection().prepareStatement(select);
@@ -100,6 +113,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
 
     @Override
     public Collection<Question> findAll() {
+        setup(dataSource);
         var select = "SELECT * FROM Question;";
         Collection<Question> result = new ArrayList<>();
         try {

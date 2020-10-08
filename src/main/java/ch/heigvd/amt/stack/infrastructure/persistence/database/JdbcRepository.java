@@ -2,7 +2,6 @@ package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
 import ch.heigvd.amt.stack.domain.Repository;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -27,24 +26,21 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
     private static final String CREATE_SESSIONS =
             "CREATE TABLE IF NOT EXISTS Session" +
                     "( idSession VARCHAR PRIMARY KEY" +
-                    ", idxCredential INTEGER" +
+                    ", idxCredential VARCHAR" +
                     ", tag VARCHAR(50)" +
                     ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential));";
 
     private static final String CREATE_QUESTIONS =
             "CREATE TABLE IF NOT EXISTS Question" +
                     "( idQuestion VARCHAR PRIMARY KEY" +
-                    ", idxCredential INTEGER" +
+                    ", idxCredential VARCHAR" +
                     ", resolved BOOLEAN" +
                     ", title VARCHAR(50)" +
                     ", description VARCHAR(200)" +
                     ", instant TIMESTAMP" +
                     ",CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential));";
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
-    public JdbcRepository() {
+    protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {
             var credentials = connection.prepareStatement(CREATE_CREDENTIALS);
             var sessions = connection.prepareStatement(CREATE_SESSIONS);
@@ -54,14 +50,8 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             sessions.execute();
             questions.execute();
         } catch (SQLException exception) {
+            exception.printStackTrace();
             Logger.getLogger("JDBC").log(Level.SEVERE, "SQLException while setting up repository.");
         }
-    }
-
-    /**
-     * Returns the {@link DataSource} instance that should be used to perform some operations.
-     */
-    protected DataSource getDataSource() {
-        return this.dataSource;
     }
 }

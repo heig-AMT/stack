@@ -6,8 +6,10 @@ import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Default;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,11 +19,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-@Alternative
+@Default
 public class JdbcCredentialRepository extends JdbcRepository<Credential, CredentialId> implements CredentialRepository {
+
+    @Resource(name = "database")
+    private DataSource dataSource;
+
+    private DataSource getDataSource() {
+        return dataSource;
+    }
 
     @Override
     public Optional<Credential> findBy(CredentialQuery query) {
+        setup(dataSource);
         // TODO : Offer an optimized implementation, with SQL-specific optimizations.
         return findAll().stream()
                 .filter(cred -> cred.getUsername().equals(query.getUsername()))
@@ -30,6 +40,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
 
     @Override
     public void save(Credential credential) {
+        setup(dataSource);
         var insert = "INSERT INTO Credential(idCredential, username, hash) VALUES (?, ?, ?);";
         try {
             var statement = getDataSource().getConnection().prepareStatement(insert);
@@ -45,6 +56,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
 
     @Override
     public void remove(CredentialId credentialId) {
+        setup(dataSource);
         var delete = "DELETE FROM Credential WHERE idCredential = ?;";
         try {
             var statement = getDataSource().getConnection().prepareStatement(delete);
@@ -57,6 +69,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
 
     @Override
     public Optional<Credential> findById(CredentialId credentialId) {
+        setup(dataSource);
         var select = "SELECT * FROM Credential WHERE idCredential = ?;";
         try {
             var statement = getDataSource().getConnection().prepareStatement(select);
@@ -80,6 +93,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
 
     @Override
     public Collection<Credential> findAll() {
+        setup(dataSource);
         var select = "SELECT * FROM Credential;";
         Collection<Credential> result = new ArrayList<>();
         try {
@@ -94,6 +108,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
             }
         } catch (SQLException ex) {
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
+            ex.printStackTrace();
             return Collections.emptyList();
         }
         return result;

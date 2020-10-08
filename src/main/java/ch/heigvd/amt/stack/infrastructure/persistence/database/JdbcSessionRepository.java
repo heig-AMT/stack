@@ -3,8 +3,10 @@ package ch.heigvd.amt.stack.infrastructure.persistence.database;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.domain.authentication.*;
 
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Alternative;
+import javax.enterprise.inject.Default;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,11 +16,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-@Alternative
+@Default
 public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> implements SessionRepository {
+
+    @Resource(name = "database")
+    private DataSource dataSource;
+
+    private DataSource getDataSource() {
+        return dataSource;
+    }
 
     @Override
     public Optional<Session> findBy(SessionQuery query) {
+        setup(dataSource);
         return findAll().stream()
                 .filter(session -> session.getTag().equals(query.getTag()))
                 .findAny();
@@ -26,6 +36,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
 
     @Override
     public void save(Session session) {
+        setup(dataSource);
         var insert = "INSERT INTO Session (idSession, idxCredential, tag) VALUES (?, ?, ?);";
         try {
             var statement = getDataSource().getConnection().prepareStatement(insert);
@@ -40,6 +51,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
 
     @Override
     public void remove(SessionId sessionId) {
+        setup(dataSource);
         var delete = "DELETE FROM Session WHERE idSession = ?;";
         try {
             var statement = getDataSource().getConnection().prepareStatement(delete);
@@ -52,6 +64,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
 
     @Override
     public Optional<Session> findById(SessionId sessionId) {
+        setup(dataSource);
         var select = "SELECT * FROM Session WHERE idSession = ?;";
         try {
             var statement = getDataSource().getConnection().prepareStatement(select);
@@ -75,6 +88,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
 
     @Override
     public Collection<Session> findAll() {
+        setup(dataSource);
         var select = "SELECT * FROM Session;";
         Collection<Session> result = new ArrayList<>();
         try {
