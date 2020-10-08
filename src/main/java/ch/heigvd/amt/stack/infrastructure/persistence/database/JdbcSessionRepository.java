@@ -5,19 +5,15 @@ import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionId;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
-import javax.sql.DataSource;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 
 @ApplicationScoped
 @Alternative
-public class JdbcSessionRepository implements SessionRepository {
-
-    @Resource(name = "database")
-    private DataSource database;
+public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> implements SessionRepository {
 
     @Override
     public Optional<Session> findBy(SessionQuery query) {
@@ -41,6 +37,6 @@ public class JdbcSessionRepository implements SessionRepository {
 
     @Override
     public Collection<Session> findAll() {
-        return null;
+        return Collections.emptyList();
     }
 }
