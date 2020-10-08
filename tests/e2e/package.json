@@ -1,0 +1,20 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx codeceptjs run --steps"
+  },
+  "keywords": [],
+  "author": "heig-AMT group",
+  "license": "Copyright",
+  "private": true,
+  "devDependencies": {
+    "codeceptjs": "^2.6.11",
+    "puppeteer": "^5.3.1"
+  },
+  "dependencies": {
+    "uuid": "^8.3.0"
+  }
+}
