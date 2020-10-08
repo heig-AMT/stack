@@ -25,6 +25,7 @@ public class ProvideDebugFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        System.out.println(this.getClass().getSimpleName() + " " + System.getenv("DATABASE_URL"));
         System.out.println(this.getClass().getSimpleName() + " " + System.getenv("JDBC_DATABASE_URL"));
         System.out.println(this.getClass().getSimpleName() + " " + System.getenv("JDBC_DATABASE_USERNAME"));
         System.out.println(this.getClass().getSimpleName() + " " + System.getenv("JDBC_DATABASE_PASSWORD"));
