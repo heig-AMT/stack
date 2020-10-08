@@ -9,7 +9,19 @@
     </featureManager>
 
     <httpEndpoint
-        id="defaultHttpEndpoint"
-        httpPort="${env.PORT}"/>
+            id="defaultHttpEndpoint"
+            httpPort="${env.PORT}"/>
+
+    <library id="driver-library">
+        <fileset dir="${server.config.dir}/drivers/" includes="*.jar"/>
+    </library>
+
+    <dataSource id="DefaultDataSource" jndiName="jdbc/db">
+        <jdbcDriver libraryRef="driver-library"/>
+        <properties.postgresql serverName="${env.JDBC_DATABASE_URL}"
+                               user="${env.JDBC_DATABASE_USERNAME}"
+                               password="${env.JDBC_DATABASE_PASSWORD}"
+                               databaseName="${env.JDBC_DATABASE_NAME}"/>
+    </dataSource>
 
 </server>
