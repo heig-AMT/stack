@@ -55,11 +55,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Wait to be online
-        run: python3 e2e/waitToBeOnline.py
+        run: python3 tests/e2e/waitToBeOnline.py
 
       - name: Run e2e tests
         run: |
-          cd e2e
+          cd tests/e2e
           npm install
           npx codeceptjs run --override '{"helpers": {"Puppeteer": {"show": false}}}' --steps
         env:
