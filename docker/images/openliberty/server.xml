@@ -5,14 +5,27 @@
         <feature>jsonp-1.1</feature>
         <feature>jsp-2.3</feature>
         <feature>cdi-2.0</feature>
+        <feature>jdbc-4.2</feature>
+        <feature>jndi-1.0</feature>
     </featureManager>
 
     <webApplication
-        location="/opt/apps/mvc-simple.war"
-        contextRoot="/"/>
+            location="/opt/apps/mvc-simple.war"
+            contextRoot="/"/>
 
     <httpEndpoint
-        id="defaultHttpEndpoint"
-        httpPort="${env.PORT}"/>
+            id="defaultHttpEndpoint"
+            httpPort="${env.PORT}"/>
+
+    <library id="driver-library">
+        <fileset dir="/opt/lib/" includes="*.jar"/>
+    </library>
+
+    <dataSource id="DefaultDataSource" jndiName="jdbc/db">
+        <jdbcDriver libraryRef="driver-library"/>
+        <properties.postgresql serverName="${env.JDBC_DATABASE_URL}"
+                               user="${env.JDBC_DATABASE_USERNAME}"
+                               password="${env.JDBC_DATABASE_PASSWORD}"/>
+    </dataSource>
 
 </server>
