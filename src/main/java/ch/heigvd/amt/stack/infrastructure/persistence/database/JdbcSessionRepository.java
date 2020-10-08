@@ -34,7 +34,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             statement.setString(3, session.getTag());
             statement.execute();
         } catch (SQLException ex) {
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not add session " + session);
+            Logger.getLogger("JDBC").log(Level.WARNING, "Could not add session " + session.getId());
         }
     }
 

@@ -1,8 +1,6 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
-import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
-import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
@@ -12,7 +10,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Alternative;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -58,8 +55,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
             statement.setTimestamp(6, Timestamp.from(question.getCreation()));
             statement.execute();
         } catch (SQLException ex) {
-            // TODO : Make sure that duplicates are properly handed.
-            throw new AuthenticationFailedException();
+            Logger.getLogger("JDBC").log(Level.WARNING, "Could not add question " + question.getId());
         }
     }
 
