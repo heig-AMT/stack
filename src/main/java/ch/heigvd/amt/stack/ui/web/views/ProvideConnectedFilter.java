@@ -5,11 +5,9 @@ import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 
 import javax.inject.Inject;
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter("/*")
 public class ProvideConnectedFilter implements Filter {
 
     @Inject
