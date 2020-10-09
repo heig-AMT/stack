@@ -29,9 +29,25 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     @Override
     public Optional<Session> findBy(SessionQuery query) {
         setup(dataSource);
-        return findAll().stream()
-                .filter(session -> session.getTag().equals(query.getTag()))
-                .findAny();
+        var select = "SELECT * FROM Session WHERE tag = ?;";
+        try {
+            var statement = getDataSource().getConnection().prepareStatement(select);
+            statement.setString(1, query.getTag());
+            var rs = statement.executeQuery();
+
+            if (rs.next()) {
+                return Optional.of(Session.builder()
+                        .id(SessionId.from(rs.getString("idSession")))
+                        .user(CredentialId.from(rs.getString("idxCredential")))
+                        .tag(rs.getString("tag")).build());
+            } else {
+                return Optional.empty();
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find session with tag " + query.getTag());
+        }
+        return Optional.empty();
     }
 
     @Override
