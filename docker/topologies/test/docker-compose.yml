@@ -1,11 +1,11 @@
 version: '3'
 services:
-  payara:
-    build: ../../images/payara
-    environment:
-     - PORT=8080
-    ports:
-     - "8081:8080"
+  # payara:
+  #   build: ../../images/payara
+  #   environment:
+  #    - PORT=8080
+  #   ports:
+  #    - "8081:8080"
 
   openliberty:
     build: ../../images/openliberty
@@ -13,9 +13,7 @@ services:
       - "database"
     environment:
       - PORT=1234
-      - JDBC_DATABASE_URL=database:5432
-      - JDBC_DATABASE_USERNAME=root
-      - JDBC_DATABASE_PASSWORD=123456
+      - DATABASE_URL=postgres://root:123456@database:5432/root
     ports:
       - "8080:1234"
 

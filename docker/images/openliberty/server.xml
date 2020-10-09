@@ -25,7 +25,8 @@
         <jdbcDriver libraryRef="driver-library"/>
         <properties.postgresql serverName="${env.JDBC_DATABASE_URL}"
                                user="${env.JDBC_DATABASE_USERNAME}"
-                               password="${env.JDBC_DATABASE_PASSWORD}"/>
+                               password="${env.JDBC_DATABASE_PASSWORD}"
+                               databaseName="${env.JDBC_DATABASE_NAME}"/>
     </dataSource>
 
 </server>
