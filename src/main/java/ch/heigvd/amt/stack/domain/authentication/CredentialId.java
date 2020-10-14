@@ -9,6 +9,9 @@ public class CredentialId extends Id {
     public static CredentialId create() {
         return new CredentialId(UUID.randomUUID());
     }
+    public static CredentialId from(String id) {
+        return new CredentialId(UUID.fromString(id));
+    }
 
     private CredentialId(UUID backing) {
         super(backing);
