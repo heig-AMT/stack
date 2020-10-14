@@ -1,24 +1,17 @@
 package ch.heigvd.amt.stack.ui.web.filter;
 
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
-import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
+import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
 import java.io.IOException;
 import java.util.List;
-import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebFilter(filterName = "AuthorizationFilter", urlPatterns = "/*")
 public class AuthorizationFilter implements Filter {
-
-    @Inject
-    private AuthenticationFacade authenticationFacade;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -32,12 +25,9 @@ public class AuthorizationFilter implements Filter {
             return;
         }
 
-        var isAuthenticatedQuery = SessionQuery.builder()
-            .tag(httpRequest.getSession().getId())
-            .build();
-        var connectedDTO = authenticationFacade.connected(isAuthenticatedQuery);
+        var connected = (ConnectedDTO) httpRequest.getAttribute("connected");
 
-        if (!connectedDTO.isConnected()) {
+        if (!connected.isConnected()) {
           redirectToLogin(httpRequest, httpResponse);
           return;
         }
