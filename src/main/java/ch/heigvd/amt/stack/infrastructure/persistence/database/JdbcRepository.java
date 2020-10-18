@@ -27,7 +27,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             "CREATE TABLE IF NOT EXISTS Session" +
                     "( idSession VARCHAR PRIMARY KEY" +
                     ", idxCredential VARCHAR" +
-                    ", tag VARCHAR(50) PRIMARY KEY " +
+                    ", tag VARCHAR(50) " +
                     ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential));";
 
     private static final String CREATE_QUESTIONS =
