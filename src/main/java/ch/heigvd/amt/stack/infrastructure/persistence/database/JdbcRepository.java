@@ -40,15 +40,23 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", instant TIMESTAMP" +
                     ",CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential));";
 
+    private static final String CREATE_ANSWERS =
+            "CREATE TABLE IF NOT EXISTS Answer" +
+                    "( idAnswer VARCHAR PRIMARY KEY " +
+                    ", idxQuestion VARCHAR" +
+                    ", idxCredential VARCHAR" +
+                    ", description VARCHAR(1000)" +
+                    ", instant TIMESTAMP" +
+                    ",CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential)"+
+                    ",CONSTRAINT fkQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion));";
+
     protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {
-            var credentials = connection.prepareStatement(CREATE_CREDENTIALS);
-            var sessions = connection.prepareStatement(CREATE_SESSIONS);
-            var questions = connection.prepareStatement(CREATE_QUESTIONS);
+            connection.prepareStatement(CREATE_CREDENTIALS).execute();
+            connection.prepareStatement(CREATE_SESSIONS).execute();
+            connection.prepareStatement(CREATE_QUESTIONS).execute();
+            connection.prepareStatement(CREATE_ANSWERS).execute();
 
-            credentials.execute();
-            sessions.execute();
-            questions.execute();
         } catch (SQLException exception) {
             exception.printStackTrace();
             Logger.getLogger("JDBC").log(Level.SEVERE, "SQLException while setting up repository.");
