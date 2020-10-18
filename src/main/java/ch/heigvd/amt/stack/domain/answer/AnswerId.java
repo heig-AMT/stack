@@ -4,8 +4,7 @@ import ch.heigvd.amt.stack.domain.answer.AnswerId;
 
 import java.util.UUID;
 
-public class AnswerId extends Id
-{
+public class AnswerId extends Id {
     public static AnswerId create() {
         return new AnswerId(UUID.randomUUID());
     }

@@ -8,5 +8,4 @@ import ch.heigvd.amt.stack.domain.question.QuestionId;
 import java.util.Collection;
 
 public interface AnswerRepository extends Repository<Answer, AnswerId>
-{
-}
+{ }

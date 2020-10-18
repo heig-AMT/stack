@@ -10,10 +10,9 @@ import java.time.Instant;
 
 @Value
 @Builder
-public class Answer implements Entity<AnswerId>
-{
+public class Answer implements Entity<AnswerId> {
     @Builder.Default
-    AnswerId idAnswer=AnswerId.create();
+    AnswerId idAnswer = AnswerId.create();
     QuestionId idxQuestion;
     CredentialId idxCredential;
 
