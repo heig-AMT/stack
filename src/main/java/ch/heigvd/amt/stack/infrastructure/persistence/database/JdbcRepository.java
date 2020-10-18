@@ -28,7 +28,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     "( idSession VARCHAR PRIMARY KEY" +
                     ", idxCredential VARCHAR" +
                     ", tag VARCHAR(50) " +
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential)) ON UPDATE CASCADE ON DELETE CASCADE;";
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     private static final String CREATE_QUESTIONS =
             "CREATE TABLE IF NOT EXISTS Question" +
@@ -38,7 +38,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", title VARCHAR(50)" +
                     ", description VARCHAR(200)" +
                     ", instant TIMESTAMP" +
-                    ",CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential)) ON UPDATE CASCADE ON DELETE CASCADE;";
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     private static final String CREATE_ANSWERS =
             "CREATE TABLE IF NOT EXISTS Answer" +
@@ -47,8 +47,8 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", idxCredential VARCHAR" +
                     ", description VARCHAR(1000)" +
                     ", instant TIMESTAMP" +
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential)" +
-                    ", CONSTRAINT fkQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion)) ON UPDATE CASCADE ON DELETE CASCADE;";
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
+                    ", CONSTRAINT fkQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {
