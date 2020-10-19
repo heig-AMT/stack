@@ -98,4 +98,24 @@ public class QuestionFacadeIntegration {
 
         assertTrue(result.isEmpty());
     }
+
+    @Test
+    public void testAskedQuestionsGetDifferentIds() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var ask = AskQuestionCommand.builder()
+                .title("What is love")
+                .description("Description")
+                .tag("tag")
+                .build();
+
+        authenticationFacade.register(register);
+        var id1 = questionFacade.askQuestion(ask);
+        var id2 = questionFacade.askQuestion(ask);
+
+        assertNotEquals(id1, id2);
+    }
 }
