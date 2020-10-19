@@ -1,8 +1,10 @@
 package ch.heigvd.amt.stack.application.answer;
 
+import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerDTO;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerListDTO;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
+import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -12,6 +14,12 @@ public class AnswerFacade {
 
     @Inject
     public AnswerFacade() {
+    }
+
+    public void answer(AnswerQuestionCommand command) throws AuthenticationFailedException {
+        if (command.getBody().contains("fail")) {
+            throw new AuthenticationFailedException();
+        }
     }
 
     public AnswerListDTO getAnswers(AnswerQuery query) {
