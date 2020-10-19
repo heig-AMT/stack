@@ -14,10 +14,7 @@ import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,10 +36,10 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
         setup(dataSource);
         if (query.getForQuestion() != null) {
             return findAll().stream()
-                    .filter(answer -> (answer.getBody() != null) && (answer.getQuestion().equals(query.getForQuestion())))
+                    .filter(answer -> (answer.getQuestion().equals(query.getForQuestion())))
                     .collect(Collectors.toList());
         } else {
-            return findAll();
+            return List.of();
         }
     }
 
