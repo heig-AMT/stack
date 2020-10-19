@@ -16,6 +16,7 @@ import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AnswerFacade {
 
@@ -42,9 +43,8 @@ public class AnswerFacade {
      * answer to actually exists.
      *
      * @param command the {@link AnswerQuestionCommand} that should be fulfilled.
-     *
      * @throws AuthenticationFailedException if the user is not properly authenticated.
-     * @throws QuestionNotFoundException if the question does not actually exist.
+     * @throws QuestionNotFoundException     if the question does not actually exist.
      */
     public void answer(AnswerQuestionCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
         var session = sessionRepository.findBy(SessionQuery.builder()
@@ -63,24 +63,21 @@ public class AnswerFacade {
         );
     }
 
+    /**
+     * Returns a list of all the answers for a certain question.
+     *
+     * @param query the {@link AnswerQuery} that should be fulfilled.
+     * @return an {@link AnswerListDTO} with all answers for the query.
+     */
     public AnswerListDTO getAnswers(AnswerQuery query) {
-        List<AnswerDTO> answers = List.of(
-                AnswerDTO.builder()
-                        .author("Alice")
-                        .creation(Instant.now().minusSeconds(24 * 3600))
-                        .body("This is an answer that's been given by Alice.")
-                        .build(),
-                AnswerDTO.builder()
-                        .author("Bob")
-                        .creation(Instant.now().minusSeconds(3600))
-                        .body("This is an answer that's been given by Bob.")
-                        .build(),
-                AnswerDTO.builder()
-                        .author("Charlie")
-                        .creation(Instant.now())
-                        .body("This is an answer that's been given by Charlie.")
+        var answers = answerRepository.findBy(query).stream()
+                .map(answer -> AnswerDTO.builder()
+                        .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
+                        .body(answer.getBody())
+                        .creation(answer.getCreation())
                         .build()
-        );
+                )
+                .collect(Collectors.toUnmodifiableList());
         return AnswerListDTO.builder()
                 .answers(answers)
                 .build();
