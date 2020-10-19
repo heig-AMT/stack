@@ -9,6 +9,7 @@ import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
+import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryAnswerRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryQuestionRepository;
@@ -82,6 +83,27 @@ public class AnswerFacadeIntegration {
             var resultAnswer = result.getAnswers().get(0);
             assertEquals("alice", resultAnswer.getAuthor());
             assertEquals("This is my answer.", resultAnswer.getBody());
+        });
+    }
+
+    @Test
+    public void testAuthenticatedUserCanNotAnswerMissingQuestion() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+
+        var answer = AnswerQuestionCommand.builder()
+                .question(QuestionId.create())
+                .body("This is a stupid question.")
+                .tag("tag")
+                .build();
+
+        authenticationFacade.register(register);
+
+        assertThrows(QuestionNotFoundException.class, () -> {
+            answerFacade.answer(answer);
         });
     }
 }
