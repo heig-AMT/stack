@@ -3,11 +3,13 @@ package ch.heigvd.amt.stack.application.question;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
+import ch.heigvd.amt.stack.application.question.dto.QuestionIdDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
+import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
 import javax.inject.Inject;
@@ -32,18 +34,21 @@ public class QuestionFacade {
         this.sessionRepository = sessionRepository;
     }
 
-    public void askQuestion(AskQuestionCommand command) throws AuthenticationFailedException {
+    public QuestionIdDTO askQuestion(AskQuestionCommand command) throws AuthenticationFailedException {
         Session session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
                 .build())
                 .orElseThrow(AuthenticationFailedException::new);
+        var id = QuestionId.create();
         repository.save(Question.builder()
+                .id(id)
                 .author(session.getUser())
                 .title(command.getTitle())
                 .description(command.getDescription())
                 .creation(Instant.now())
                 .build()
         );
+        return QuestionIdDTO.builder().id(id).build();
     }
 
     public QuestionListDTO getQuestions(QuestionQuery query) {
