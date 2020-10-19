@@ -5,6 +5,6 @@ import ch.heigvd.amt.stack.domain.Repository;
 
 import java.util.Collection;
 
-public interface AnswerRepository extends Repository<AnswerId, Answer> {
+public interface AnswerRepository extends Repository<Answer, AnswerId> {
     Collection<Answer> findBy(AnswerQuery query);
 }
