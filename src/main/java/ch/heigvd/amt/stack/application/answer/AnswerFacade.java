@@ -15,7 +15,6 @@ import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class AnswerFacade {
