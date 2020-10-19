@@ -5,7 +5,6 @@ import ch.heigvd.amt.stack.domain.Id;
 import java.util.UUID;
 
 public class QuestionId extends Id {
-
     public static QuestionId create() {
         return new QuestionId(UUID.randomUUID());
     }
