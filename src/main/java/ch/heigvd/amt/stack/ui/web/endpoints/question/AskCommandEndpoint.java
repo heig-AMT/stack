@@ -2,6 +2,7 @@ package ch.heigvd.amt.stack.ui.web.endpoints.question;
 
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.dto.QuestionIdDTO;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 
 import javax.inject.Inject;
@@ -22,12 +23,12 @@ public class AskCommandEndpoint extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            questionFacade.askQuestion(AskQuestionCommand.builder()
+             QuestionIdDTO questionIdDTO = questionFacade.askQuestion(AskQuestionCommand.builder()
                     .title(req.getParameter("title"))
                     .description(req.getParameter("description"))
                     .tag(req.getSession().getId())
                     .build());
-            String path = getServletContext().getContextPath() + "/questions";
+            String path = getServletContext().getContextPath() + "/question?id=" + questionIdDTO.getId().toString();
             resp.sendRedirect(path);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.

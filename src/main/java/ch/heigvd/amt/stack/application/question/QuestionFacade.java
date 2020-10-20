@@ -59,6 +59,7 @@ public class QuestionFacade {
                         .description(question.getDescription())
                         .creation(question.getCreation())
                         .status(QuestionStatusDTO.from(question, Instant.now()))
+                        .id(QuestionIdDTO.builder().id(question.getId()).build())
                         .build())
                 .collect(Collectors.toUnmodifiableList());
         return QuestionListDTO.builder()

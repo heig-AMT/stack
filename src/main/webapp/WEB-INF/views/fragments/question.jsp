@@ -22,7 +22,7 @@
                 <div class="border-2 rounded-full px-4 border-gray-500 text-gray-500">Open</div>
             </c:otherwise>
         </c:choose>
-        <span class="ml-4"><c:out value="${question.title}"/></span>
+        <a class="ml-4" href="${pageContext.request.contextPath}/question?id=<c:out value="${question.id.id.toString()}"/>"><c:out value="${question.title}"/></a>
     </div>
     <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
     <div class="flex flex-row mt-4 items-center">

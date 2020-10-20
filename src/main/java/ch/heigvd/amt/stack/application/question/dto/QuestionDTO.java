@@ -13,4 +13,5 @@ public class QuestionDTO {
     String description;
     Instant creation;
     QuestionStatusDTO status;
+    QuestionIdDTO id;
 }

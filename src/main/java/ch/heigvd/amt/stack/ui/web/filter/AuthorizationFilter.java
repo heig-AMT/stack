@@ -53,6 +53,7 @@ public class AuthorizationFilter implements Filter {
             , "/login"
             , "/register"
             , "/questions"
+            , "/question"
             , "/error404"
             );
 
