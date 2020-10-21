@@ -9,13 +9,17 @@
 </jsp:include>
 <body>
 <jsp:include page="fragments/navigation.jsp"/>
-<div class="flex pt-16 h-screen
-            items-center justify-center
+<div class="flex flex-col pt-16 h-screen
+            items-center
             bg-gradient-to-r from-teal-400 to-blue-500">
-    <div class="p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
-        <h1 class="text-center text-4xl">
-            Ask a question
-        </h1>
+    <div class="max-w-4xl w-full flex flex-col">
+        <c:forEach items="${answers.answers}" var="answer">
+            <c:set var="answer" value="${answer}" scope="request"/>
+            <c:import url="fragments/answer.jsp"/>
+        </c:forEach>
+    </div>
+
+    <div class="flex-end p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <form action="answer.do"
               method="POST"
               class="w-full">
