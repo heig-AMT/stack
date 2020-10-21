@@ -28,7 +28,7 @@ public class AskCommandEndpoint extends HttpServlet {
                     .description(req.getParameter("description"))
                     .tag(req.getSession().getId())
                     .build());
-            String path = getServletContext().getContextPath() + "/question?id=" + questionIdDTO.getId().toString();
+            String path = getServletContext().getContextPath() + "/question?" + questionIdDTO.getId().toString();
             resp.sendRedirect(path);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.
