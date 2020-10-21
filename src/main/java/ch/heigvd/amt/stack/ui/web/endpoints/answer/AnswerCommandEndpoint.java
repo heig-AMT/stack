@@ -29,6 +29,9 @@ public class AnswerCommandEndpoint extends HttpServlet {
                     .body(req.getParameter("body"))
                     .tag(req.getSession().getId())
                     .build());
+            // TODO: Make this more elegant if possible
+            String path = getServletContext().getContextPath() + "/question?id=" + req.getParameter("question");
+            resp.sendRedirect(path);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.
             resp.sendError(HttpServletResponse.SC_FORBIDDEN);
