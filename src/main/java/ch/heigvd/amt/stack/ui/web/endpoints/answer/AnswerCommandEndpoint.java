@@ -1,9 +1,12 @@
-package ch.heigvd.amt.stack.ui.web.endpoints.question;
+package ch.heigvd.amt.stack.ui.web.endpoints.answer;
 
-import ch.heigvd.amt.stack.application.question.QuestionFacade;
+import ch.heigvd.amt.stack.application.answer.AnswerFacade;
+import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionIdDTO;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
+import ch.heigvd.amt.stack.domain.question.QuestionId;
+import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -13,26 +16,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "AskCommandEndpoint", urlPatterns = "/ask.do")
-public class AskCommandEndpoint extends HttpServlet {
+@WebServlet(name = "AskCommandEndpoint", urlPatterns = "/answer.do")
+public class AnswerCommandEndpoint extends HttpServlet {
 
     @Inject
-    private QuestionFacade questionFacade;
+    private AnswerFacade answerFacade;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-             QuestionIdDTO questionIdDTO = questionFacade.askQuestion(AskQuestionCommand.builder()
-                    .title(req.getParameter("title"))
-                    .description(req.getParameter("description"))
+                     answerFacade.answer(AnswerQuestionCommand.builder()
+                    .question(QuestionId.from(req.getParameter("question")))
+                    .body(req.getParameter("body"))
                     .tag(req.getSession().getId())
                     .build());
-            String path = getServletContext().getContextPath() + "/question?id=" + questionIdDTO.getId().toString();
-            resp.sendRedirect(path);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.
             resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+        } catch (QuestionNotFoundException exception) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 }

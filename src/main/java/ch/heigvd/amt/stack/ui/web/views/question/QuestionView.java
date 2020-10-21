@@ -3,6 +3,7 @@ package ch.heigvd.amt.stack.ui.web.views.question;
 import ch.heigvd.amt.stack.application.answer.AnswerFacade;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerListDTO;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
+import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 
 import javax.inject.Inject;
@@ -21,12 +22,12 @@ public class QuestionView extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var builder = AnswerQuery.builder();
-        var query = QuestionId.from(req.getQueryString());
-        if (query != null) {
-            builder.forQuestion(query);
+        var answerQueryBuilder = AnswerQuery.builder();
+        var questionId = QuestionId.from(req.getParameter("id"));
+        if (questionId != null) {
+            answerQueryBuilder.forQuestion(questionId);
         }
-        AnswerListDTO answers =answerFacade.getAnswers(builder.build());
+        AnswerListDTO answers =answerFacade.getAnswers(answerQueryBuilder.build());
         req.setAttribute("answers", answers);
         req.getRequestDispatcher("WEB-INF/views/question.jsp").forward(req, resp);
     }
