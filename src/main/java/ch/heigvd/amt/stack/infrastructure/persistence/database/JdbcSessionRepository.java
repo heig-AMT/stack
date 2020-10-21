@@ -1,7 +1,10 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
-import ch.heigvd.amt.stack.domain.authentication.*;
+import ch.heigvd.amt.stack.domain.authentication.CredentialId;
+import ch.heigvd.amt.stack.domain.authentication.Session;
+import ch.heigvd.amt.stack.domain.authentication.SessionId;
+import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;

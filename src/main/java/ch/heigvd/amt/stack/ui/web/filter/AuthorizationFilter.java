@@ -1,15 +1,12 @@
 package ch.heigvd.amt.stack.ui.web.filter;
 
 import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
-import java.io.IOException;
-import java.util.List;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 public class AuthorizationFilter implements Filter {
 
@@ -28,15 +25,15 @@ public class AuthorizationFilter implements Filter {
         var connected = (ConnectedDTO) httpRequest.getAttribute("connected");
 
         if (!connected.isConnected()) {
-          redirectToLogin(httpRequest, httpResponse);
-          return;
+            redirectToLogin(httpRequest, httpResponse);
+            return;
         }
 
         chain.doFilter(request, response);
     }
 
     private void redirectToLogin(HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
+            throws IOException {
         String initialUrl = request.getRequestURI();
         String query = request.getQueryString();
 
@@ -46,16 +43,16 @@ public class AuthorizationFilter implements Filter {
         response.sendRedirect(request.getContextPath() + "/login");
     }
 
-     private boolean isPublicResource(String uri) {
+    private boolean isPublicResource(String uri) {
         List<String> allowedResources = List.of
-            ( "/assets"
-            , "/favicon.ico"
-            , "/login"
-            , "/register"
-            , "/questions"
-            , "/question"
-            , "/error404"
-            );
+                ("/assets"
+                        , "/favicon.ico"
+                        , "/login"
+                        , "/register"
+                        , "/questions"
+                        , "/question"
+                        , "/error404"
+                );
 
         boolean onHomePage = uri.equals("/") || uri.equals("");
 

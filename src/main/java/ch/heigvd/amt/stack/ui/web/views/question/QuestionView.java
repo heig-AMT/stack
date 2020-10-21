@@ -3,7 +3,6 @@ package ch.heigvd.amt.stack.ui.web.views.question;
 import ch.heigvd.amt.stack.application.answer.AnswerFacade;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerListDTO;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
-import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 
 import javax.inject.Inject;
@@ -27,7 +26,7 @@ public class QuestionView extends HttpServlet {
         if (questionId != null) {
             answerQueryBuilder.forQuestion(questionId);
         }
-        AnswerListDTO answers =answerFacade.getAnswers(answerQueryBuilder.build());
+        AnswerListDTO answers = answerFacade.getAnswers(answerQueryBuilder.build());
         req.setAttribute("answers", answers);
         req.getRequestDispatcher("WEB-INF/views/question.jsp").forward(req, resp);
     }

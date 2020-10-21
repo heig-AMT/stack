@@ -23,7 +23,7 @@ public class AskCommandEndpoint extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-             QuestionIdDTO questionIdDTO = questionFacade.askQuestion(AskQuestionCommand.builder()
+            QuestionIdDTO questionIdDTO = questionFacade.askQuestion(AskQuestionCommand.builder()
                     .title(req.getParameter("title"))
                     .description(req.getParameter("description"))
                     .tag(req.getSession().getId())

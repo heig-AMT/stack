@@ -22,7 +22,8 @@
             <div class="flex flex-col -mx-3 mb-6">
                 <div class="md:w-full px-3">
                     <label for="body" class="mb-2 block uppercase text-xs font-bold text-gray-700">Answer</label>
-                    <textarea rows="6" id="body" class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                    <textarea rows="6" id="body"
+                              class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                               type="text" name="body" placeholder="Enter an answer" required></textarea>
                 </div>
                 <input type="hidden" name="question" value="${pageContext.request.getParameter("id")}"/>

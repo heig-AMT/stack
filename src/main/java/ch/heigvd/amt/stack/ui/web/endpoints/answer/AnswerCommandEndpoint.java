@@ -2,8 +2,6 @@ package ch.heigvd.amt.stack.ui.web.endpoints.answer;
 
 import ch.heigvd.amt.stack.application.answer.AnswerFacade;
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
-import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
-import ch.heigvd.amt.stack.application.question.dto.QuestionIdDTO;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
@@ -26,7 +24,7 @@ public class AnswerCommandEndpoint extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-                     answerFacade.answer(AnswerQuestionCommand.builder()
+            answerFacade.answer(AnswerQuestionCommand.builder()
                     .question(QuestionId.from(req.getParameter("question")))
                     .body(req.getParameter("body"))
                     .tag(req.getSession().getId())

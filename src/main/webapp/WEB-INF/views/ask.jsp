@@ -18,13 +18,16 @@
             <div class="flex flex-col -mx-3 mb-6">
                 <div class="px-3 mb-6">
                     <label for="title" class="mb-2 block uppercase text-xs font-bold text-gray-700">Title</label>
-                    <input id="title" class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                    <input id="title"
+                           class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                            type="text" name="title" placeholder="Enter a title" required>
                 </div>
 
                 <div class="md:w-full px-3">
-                    <label for="description" class="mb-2 block uppercase text-xs font-bold text-gray-700">Description</label>
-                    <textarea rows="6" id="description" class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                    <label for="description"
+                           class="mb-2 block uppercase text-xs font-bold text-gray-700">Description</label>
+                    <textarea rows="6" id="description"
+                              class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                               type="text" name="description" placeholder="Enter a description" required></textarea>
                 </div>
 
