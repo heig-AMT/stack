@@ -41,9 +41,9 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             var rs = statement.executeQuery();
             first = rs.getInt(1);
 
+            search= "SELECT COUNT (*) FROM Vote WHERE isUpvote = FALSE AND idxAnswer = ?;";
             statement=getDataSource().getConnection().prepareStatement(search);
             statement.setString(1, query.getForAnswer().toString());
-
             rs=statement.executeQuery();
             second=rs.getInt(1);
 
