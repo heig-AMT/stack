@@ -47,7 +47,7 @@ public class VoteCommandEndpoint extends HttpServlet {
                     break;
                 default:
                     resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-                    break;
+                    return;
             }
 
             var questionDTO = questionFacade.getQuestion(SingleAnswerQuery.builder()
