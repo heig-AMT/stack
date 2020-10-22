@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
-import ch.heigvd.amt.stack.application.vote.query.VoteCountQuery;
+import ch.heigvd.amt.stack.application.answer.query.VoteCountQuery;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.vote.Vote;
@@ -31,26 +31,21 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     }
 
     @Override
-    public Pair<Integer, Integer> countUpAndDownVotes(VoteCountQuery query) {
+    public int count(VoteCountQuery query) {
         setup(dataSource);
-        Integer first=0, second=0;
-        var search= "SELECT COUNT (*) FROM Vote WHERE isUpvote = TRUE AND idxAnswer = ?;";
+        boolean table= query.isUpvote();
+        var search= "SELECT COUNT (*) FROM Vote WHERE isUpvote = ? AND idxAnswer = ?;";
         try{
             var statement = getDataSource().getConnection().prepareStatement(search);
-            statement.setString(1, query.getForAnswer().toString());
+            statement.setBoolean(1, table);
+            statement.setString(2, query.getForAnswer().toString());
             var rs = statement.executeQuery();
-            first = rs.getInt(1);
-
-            search= "SELECT COUNT (*) FROM Vote WHERE isUpvote = FALSE AND idxAnswer = ?;";
-            statement=getDataSource().getConnection().prepareStatement(search);
-            statement.setString(1, query.getForAnswer().toString());
-            rs=statement.executeQuery();
-            second=rs.getInt(1);
+            return rs.getInt(1);
 
         } catch (SQLException ex) {
             Logger.getLogger("JDBC").log(Level.WARNING, "Query didn't work");
         }
-        return Pair.of(first,second);
+        return 0;
     }
 
     @Override

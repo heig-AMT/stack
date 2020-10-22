@@ -5,17 +5,8 @@ import lombok.EqualsAndHashCode;
 import java.util.Objects;
 import java.util.UUID;
 
-@EqualsAndHashCode
-public abstract class Id {
 
-    private final UUID uuid;
+public interface Id {
 
-    protected Id(UUID backing) {
-        this.uuid = Objects.requireNonNull(backing);
-    }
 
-    @Override
-    public String toString() {
-        return uuid.toString();
-    }
 }
