@@ -5,7 +5,6 @@ import ch.heigvd.amt.stack.domain.answer.Answer;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
-import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 
 import javax.annotation.Resource;
