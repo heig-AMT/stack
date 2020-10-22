@@ -1,7 +1,6 @@
 package ch.heigvd.amt.stack.application.answer;
 
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
-import ch.heigvd.amt.stack.application.answer.dto.AnswerDTO;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
@@ -10,10 +9,7 @@ import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryAnswerRepository;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryQuestionRepository;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemorySessionRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,8 +27,9 @@ public class AnswerFacadeIntegration {
         var answers = new InMemoryAnswerRepository();
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
+        var votes = new InMemoryVoteRepository();
 
-        this.answerFacade = new AnswerFacade(credentials, answers, questions, sessions);
+        this.answerFacade = new AnswerFacade(credentials, answers, questions, sessions, votes);
         this.authenticationFacade = new AuthenticationFacade(credentials, sessions);
         this.questionFacade = new QuestionFacade(credentials, questions, sessions);
     }
@@ -83,6 +80,8 @@ public class AnswerFacadeIntegration {
             var resultAnswer = result.getAnswers().get(0);
             assertEquals("alice", resultAnswer.getAuthor());
             assertEquals("This is my answer.", resultAnswer.getBody());
+            assertEquals(0, resultAnswer.getPositiveVotesCount());
+            assertEquals(0, resultAnswer.getNegativeVotesCount());
         });
     }
 
