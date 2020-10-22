@@ -22,6 +22,7 @@ import ch.heigvd.amt.stack.domain.vote.VoteRepository;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -165,6 +166,7 @@ public class AnswerFacade {
                         )
                         .build()
                 )
+                .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
                 .collect(Collectors.toUnmodifiableList());
         return AnswerListDTO.builder()
                 .answers(answers)
