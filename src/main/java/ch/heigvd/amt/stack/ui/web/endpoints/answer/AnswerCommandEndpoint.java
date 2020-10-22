@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "AskCommandEndpoint", urlPatterns = "/answer.do")
+@WebServlet(name = "AnswerCommandEndpoint", urlPatterns = "/answer.do")
 public class AnswerCommandEndpoint extends HttpServlet {
 
     @Inject
@@ -22,7 +22,7 @@ public class AnswerCommandEndpoint extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        System.out.println("Why are we here? Only to suffer.");
         try {
             answerFacade.answer(AnswerQuestionCommand.builder()
                     .question(QuestionId.from(req.getParameter("question")))

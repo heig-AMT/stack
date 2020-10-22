@@ -21,7 +21,7 @@ public class AskCommandEndpoint extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        System.out.println("IT'S A ME MARIO");
         try {
             QuestionIdDTO questionIdDTO = questionFacade.askQuestion(AskQuestionCommand.builder()
                     .title(req.getParameter("title"))

@@ -7,19 +7,23 @@
 <jsp:include page="fragments/head.jsp">
     <jsp:param name="pageTitle" value="Question"/>
 </jsp:include>
-<body>
+<body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
 <div class="flex flex-col pt-16 h-screen
-            items-center
-            bg-gradient-to-r from-teal-400 to-blue-500">
-    <div class="max-w-4xl w-full flex flex-col">
-        <c:forEach items="${answers.answers}" var="answer">
-            <c:set var="answer" value="${answer}" scope="request"/>
-            <c:import url="fragments/answer.jsp"/>
-        </c:forEach>
+            items-center">
+
+    <div class="px-16 pt-4 w-full flex flex-col">
+        <div class="border-b-2 color-white">
+            <span class="px-2 text-white font-semibold">${answers.answers.size()} comments</span>
+        </div>
+
+            <c:forEach items="${answers.answers}" var="answer">
+                <c:set var="answer" value="${answer}" scope="request"/>
+                <c:import url="fragments/answer.jsp"/>
+            </c:forEach>
     </div>
 
-    <div class="flex-end p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
+    <div class="flex-end mt-4 p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <form action="answer.do"
               method="POST"
               class="w-full">
