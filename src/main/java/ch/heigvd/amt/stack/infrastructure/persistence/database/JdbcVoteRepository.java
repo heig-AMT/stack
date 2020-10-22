@@ -6,7 +6,6 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.vote.Vote;
 import ch.heigvd.amt.stack.domain.vote.VoteId;
 import ch.heigvd.amt.stack.domain.vote.VoteRepository;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
