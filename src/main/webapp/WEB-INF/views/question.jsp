@@ -82,7 +82,7 @@
             </div>
             <div class="w-full px-3">
                 <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-white focus:border-gray-500"
-                       type="submit" value="Answer question" disabled/>
+                       type="submit" value="Answer question"/>
             </div>
         </form>
     </div>
