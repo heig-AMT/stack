@@ -18,7 +18,7 @@
             items-center">
 
     <div class="w-full p-8">
-        <div class="m-2 p-6 rounded-lg
+        <div class="p-6 rounded-lg
             bg-white hover:bg-gray-100
             border-b border-gray-200
             shadow hover:shadow-lg
@@ -40,16 +40,16 @@
                 <span class="ml-4 text-2xl"><c:out value="${question.title}"/></span>
             </div>
             <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
-            <div class="flex flex-row mt-4 items-center">
+            <div class="flex flex-row mt-2 items-center">
                 <div class="flex-grow"></div>
                 <div class="flex flex-col items-end">
-            <span class="text-sm text-gray-500">
-                <%=
-                DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
-                        .withLocale(Locale.FRANCE)
-                        .withZone(ZoneId.systemDefault()).format(question.getCreation())
-                %>
-            </span>
+                    <span class="text-sm text-gray-500">
+                        <%=
+                        DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
+                                .withLocale(Locale.FRANCE)
+                                .withZone(ZoneId.systemDefault()).format(question.getCreation())
+                        %>
+                    </span>
                     <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
                 </div>
             </div>
