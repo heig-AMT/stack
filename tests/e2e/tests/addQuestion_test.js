@@ -17,8 +17,7 @@ Scenario('/ask redirects to /login when logged out', (I, registerPage, logoutPag
   logoutPage.logout();
 
   I.amOnPage('/ask');
-  I.wait(2);
-  I.seeInCurrentUrl('/login');
+  I.waitInUrl('/login', 2);
 });
 
 Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
