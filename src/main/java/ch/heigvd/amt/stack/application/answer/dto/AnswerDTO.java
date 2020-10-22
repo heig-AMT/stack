@@ -15,4 +15,6 @@ public class AnswerDTO {
     AnswerId id;
     int positiveVotesCount;
     int negativeVotesCount;
+    boolean hasPositiveVote;
+    boolean hasNegativeVote;
 }

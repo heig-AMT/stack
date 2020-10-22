@@ -8,4 +8,5 @@ import lombok.Value;
 @Builder
 public class AnswerQuery {
     QuestionId forQuestion;
+    String tag;
 }
