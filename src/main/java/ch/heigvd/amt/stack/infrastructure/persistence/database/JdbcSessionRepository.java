@@ -33,8 +33,8 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     public Optional<Session> findBy(SessionQuery query) {
         setup(dataSource);
         var select = "SELECT * FROM Session WHERE tag = ?;";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(select);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(select);
             statement.setString(1, query.getTag());
             var rs = statement.executeQuery();
 
@@ -57,8 +57,8 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     public void save(Session session) {
         setup(dataSource);
         var insert = "INSERT INTO Session (idSession, idxCredential, tag) VALUES (?, ?, ?);";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(insert);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(insert);
             statement.setString(1, session.getId().toString());
             statement.setString(2, session.getUser().toString());
             statement.setString(3, session.getTag());
@@ -72,8 +72,8 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     public void remove(SessionId sessionId) {
         setup(dataSource);
         var delete = "DELETE FROM Session WHERE idSession = ?;";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(delete);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(delete);
             statement.setString(1, sessionId.toString());
             statement.execute();
         } catch (SQLException ex) {
@@ -85,8 +85,8 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     public Optional<Session> findById(SessionId sessionId) {
         setup(dataSource);
         var select = "SELECT * FROM Session WHERE idSession = ?;";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(select);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(select);
             statement.setString(1, sessionId.toString());
             var rs = statement.executeQuery();
 
@@ -110,8 +110,8 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
         setup(dataSource);
         var select = "SELECT * FROM Session;";
         Collection<Session> result = new ArrayList<>();
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(select);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
                 var session = Session.builder()
