@@ -18,7 +18,7 @@
             items-center">
 
     <div class="w-full p-8">
-        <div class="m-2 p-6 rounded-lg
+        <div class="p-6 rounded-lg
             bg-white hover:bg-gray-100
             border-b border-gray-200
             shadow hover:shadow-lg
@@ -39,16 +39,16 @@
                 <span class="ml-4 text-2xl"><c:out value="${question.title}"/></span>
             </div>
             <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
-            <div class="flex flex-row mt-4 items-center">
+            <div class="flex flex-row mt-2 items-center">
                 <div class="flex-grow"></div>
                 <div class="flex flex-col items-end">
-            <span class="text-sm text-gray-500">
-                <%=
-                DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
-                        .withLocale(Locale.FRANCE)
-                        .withZone(ZoneId.systemDefault()).format(question.getCreation())
-                %>
-            </span>
+                    <span class="text-sm text-gray-500">
+                        <%=
+                        DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
+                                .withLocale(Locale.FRANCE)
+                                .withZone(ZoneId.systemDefault()).format(question.getCreation())
+                        %>
+                    </span>
                     <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
                 </div>
             </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="w-full px-3">
                 <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-white focus:border-gray-500"
-                       type="submit" value="Answer question"/>
+                       type="submit" value="Answer question" disabled/>
             </div>
         </form>
     </div>

@@ -8,6 +8,7 @@ import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
+import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryAnswerRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryQuestionRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemorySessionRepository;
@@ -26,12 +27,13 @@ public class QuestionFacadeIntegration {
 
     @BeforeEach
     public void prepare() {
+        var answers = new InMemoryAnswerRepository();
         var credentials = new InMemoryCredentialRepository();
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
 
         authenticationFacade = new AuthenticationFacade(credentials, sessions);
-        questionFacade = new QuestionFacade(credentials, questions, sessions);
+        questionFacade = new QuestionFacade(answers, credentials, questions, sessions);
     }
 
     @Test

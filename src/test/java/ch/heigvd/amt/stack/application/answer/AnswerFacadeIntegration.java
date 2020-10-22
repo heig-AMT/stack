@@ -31,7 +31,7 @@ public class AnswerFacadeIntegration {
 
         this.answerFacade = new AnswerFacade(credentials, answers, questions, sessions, votes);
         this.authenticationFacade = new AuthenticationFacade(credentials, sessions);
-        this.questionFacade = new QuestionFacade(credentials, questions, sessions);
+        this.questionFacade = new QuestionFacade(answers, credentials, questions, sessions);
     }
 
     @Test
