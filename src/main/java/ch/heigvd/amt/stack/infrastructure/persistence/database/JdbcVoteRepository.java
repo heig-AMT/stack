@@ -32,9 +32,9 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     @Override
     public int count(VoteCountQuery query) {
         setup(dataSource);
-        boolean table= query.isUpvote();
-        var search= "SELECT COUNT (*) FROM Vote WHERE isUpvote = ? AND idxAnswer = ?;";
-        try{
+        boolean table = query.isUpvote();
+        var search = "SELECT COUNT (*) FROM Vote WHERE isUpvote = ? AND idxAnswer = ?;";
+        try {
             var statement = getDataSource().getConnection().prepareStatement(search);
             statement.setBoolean(1, table);
             statement.setString(2, query.getForAnswer().toString());
