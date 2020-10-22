@@ -110,6 +110,20 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Apache CXF. -->
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-client</artifactId>
+      <version>3.3.6</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-rs-extension-providers</artifactId>
+      <version>3.3.6</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
