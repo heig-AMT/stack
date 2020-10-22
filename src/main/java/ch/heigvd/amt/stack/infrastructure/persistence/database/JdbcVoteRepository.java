@@ -53,7 +53,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
 
     @Override
     public void remove(VoteId voteId) {
-        if(!findById(voteId).isEmpty()){
+        if(findById(voteId).isPresent()){
             remove(findById(voteId).get());
         }
     }
