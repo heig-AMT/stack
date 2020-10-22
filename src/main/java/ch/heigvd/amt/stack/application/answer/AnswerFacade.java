@@ -12,6 +12,7 @@ import ch.heigvd.amt.stack.domain.answer.Answer;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
+import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
@@ -21,6 +22,7 @@ import ch.heigvd.amt.stack.domain.vote.VoteRepository;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnswerFacade {
@@ -120,6 +122,12 @@ public class AnswerFacade {
      * @return an {@link AnswerListDTO} with all answers for the query.
      */
     public AnswerListDTO getAnswers(AnswerQuery query) {
+        var user = Optional.ofNullable(query.getTag()).stream()
+                .flatMap(tag -> sessionRepository.findBy(SessionQuery.builder()
+                        .tag(tag)
+                        .build()).stream())
+                .map(Session::getUser)
+                .findAny();
         var answers = answerRepository.findBy(query).stream()
                 .map(answer -> AnswerDTO.builder()
                         .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
@@ -134,6 +142,27 @@ public class AnswerFacade {
                                 .forAnswer(answer.getId())
                                 .isUpvote(false)
                                 .build()))
+                        .hasPositiveVote(
+                                user.isPresent() && voteRepository.findById(VoteId.builder()
+                                        .answer(answer.getId())
+                                        .voter(user.get())
+                                        .build())
+                                        // True if user has upvote.
+                                        .map(Vote::isUpvote)
+                                        // Otherwise nothing
+                                        .orElse(false)
+                        )
+                        .hasNegativeVote(
+                                user.isPresent() && voteRepository.findById(VoteId.builder()
+                                        .answer(answer.getId())
+                                        .voter(user.get())
+                                        .build())
+                                        // True if user has downvote.
+                                        .map(Vote::isUpvote)
+                                        .map(up -> !up)
+                                        // Otherwise nothing.
+                                        .orElse(false)
+                        )
                         .build()
                 )
                 .collect(Collectors.toUnmodifiableList());
