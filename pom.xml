@@ -18,6 +18,8 @@
   </properties>
 
   <dependencies>
+
+    <!-- Jakarta platform -->
     <dependency>
       <groupId>jakarta.platform</groupId>
       <artifactId>jakarta.jakartaee-api</artifactId>
@@ -30,24 +32,43 @@
       <version>1.2</version>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Compile-time annotation processing. -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.12</version>
       <scope>provided</scope>
     </dependency>
+
+    <!-- Application-specific dependencies. -->
     <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
       <version>0.4</version>
       <scope>compile</scope>
     </dependency>
+
+    <!-- Unit and integration testing. -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.7.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>5.7.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-runner</artifactId>
+      <version>1.7.0</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
