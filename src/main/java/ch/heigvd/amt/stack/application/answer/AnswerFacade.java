@@ -125,6 +125,7 @@ public class AnswerFacade {
                         .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
                         .body(answer.getBody())
                         .creation(answer.getCreation())
+                        .id(answer.getId())
                         .positiveVotesCount(voteRepository.count(VoteCountQuery.builder()
                                 .forAnswer(answer.getId())
                                 .isUpvote(true)
