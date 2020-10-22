@@ -12,7 +12,14 @@
         <form class="mt-2 mb-0 self-center" action="vote.do" method="POST">
             <input type="hidden" name="type" value="upvote"/>
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
-            <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
+            <c:choose>
+                <c:when test="${connected.connected}">
+                    <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/assets/vote.svg">
+                </c:otherwise>
+            </c:choose>
         </form>
         <span class="text-white text-center"><c:out value="${answer.positiveVotesCount}"/></span>
         <div class="border-b-2 color-white"></div>
@@ -20,7 +27,14 @@
         <form class="mb-2 self-center transform rotate-180" action="vote.do" method="POST">
             <input type="hidden" name="type" value="downvote"/>
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
-            <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
+            <c:choose>
+                <c:when test="${connected.connected}">
+                    <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
+                </c:when>
+                <c:otherwise>
+                    <img src="${pageContext.request.contextPath}/assets/vote.svg">
+                </c:otherwise>
+            </c:choose>
         </form>
     </div>
     <div class="px-6 py-2 w-full rounded-lg
