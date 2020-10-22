@@ -53,12 +53,11 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
 
     @Override
     public void remove(VoteId voteId) {
-        if(findById(voteId).isPresent()){
+        if (findById(voteId).isPresent()) {
             remove(findById(voteId).get());
         }
     }
-
-
+    
     public void remove(Vote vote) {
         setup(dataSource);
         String table = (vote.isUpOrDown() ? "UpVote" : "DownVote");
@@ -114,12 +113,12 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     @Override
     public Collection<Vote> findAll() {
         setup(dataSource);
-        return Stream.concat(findAllFromOneTable("UpVote").stream(),findAllFromOneTable("DownVote").stream()).collect(Collectors.toList());
+        return Stream.concat(findAllFromOneTable("UpVote").stream(), findAllFromOneTable("DownVote").stream()).collect(Collectors.toList());
     }
 
     private Collection<Vote> findAllFromOneTable(String table) {
-        Collection<Vote>result =new ArrayList();
-        var select = "SELECT * From "+table;
+        Collection<Vote> result = new ArrayList();
+        var select = "SELECT * From " + table;
 
         try {
             var statement = getDataSource().getConnection().prepareStatement(select);
@@ -133,7 +132,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
                 result.add(newA);
             }
         } catch (SQLException ex) {
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll from table "+table);
+            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll from table " + table);
             return Collections.emptyList();
         }
         return result;
