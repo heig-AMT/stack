@@ -57,7 +57,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             remove(findById(voteId).get());
         }
     }
-    
+
     public void remove(Vote vote) {
         setup(dataSource);
         String table = (vote.isUpOrDown() ? "UpVote" : "DownVote");
