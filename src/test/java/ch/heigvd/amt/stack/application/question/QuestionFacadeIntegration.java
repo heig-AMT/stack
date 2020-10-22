@@ -5,7 +5,9 @@ import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
+import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
+import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryQuestionRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemorySessionRepository;
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -117,5 +120,14 @@ public class QuestionFacadeIntegration {
         var id2 = questionFacade.askQuestion(ask);
 
         assertNotEquals(id1, id2);
+    }
+
+    @Test
+    public void testEmptyQuestionFacadeReturnsEmptyQuestionDTO() {
+        var query = SingleQuestionQuery.builder()
+                .id(QuestionId.create())
+                .build();
+        var answer = questionFacade.getQuestion(query);
+        assertEquals(Optional.empty(), answer);
     }
 }

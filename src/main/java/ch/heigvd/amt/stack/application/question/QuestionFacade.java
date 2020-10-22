@@ -7,6 +7,7 @@ import ch.heigvd.amt.stack.application.question.dto.QuestionIdDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
+import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
@@ -15,6 +16,8 @@ import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class QuestionFacade {
@@ -22,6 +25,18 @@ public class QuestionFacade {
     private final CredentialRepository credentialRepository;
     private final QuestionRepository repository;
     private final SessionRepository sessionRepository;
+    private final Function<Question, QuestionDTO> questionToDto = new Function<>() {
+        @Override
+        public QuestionDTO apply(Question question) {
+            return QuestionDTO.builder()
+                    .author(credentialRepository.findById(question.getAuthor()).map(Credential::getUsername).get())
+                    .title(question.getTitle())
+                    .description(question.getDescription())
+                    .creation(question.getCreation())
+                    .status(QuestionStatusDTO.from(question, Instant.now()))
+                    .build();
+        }
+    };
 
     @Inject
     public QuestionFacade(
@@ -51,16 +66,14 @@ public class QuestionFacade {
         return QuestionIdDTO.builder().id(id).build();
     }
 
+    public Optional<QuestionDTO> getQuestion(SingleQuestionQuery query) {
+        return repository.findById(query.getId())
+                .map(questionToDto);
+    }
+
     public QuestionListDTO getQuestions(QuestionQuery query) {
         List<QuestionDTO> questions = repository.findBy(query).stream()
-                .map(question -> QuestionDTO.builder()
-                        .author(credentialRepository.findById(question.getAuthor()).map(Credential::getUsername).get())
-                        .title(question.getTitle())
-                        .description(question.getDescription())
-                        .creation(question.getCreation())
-                        .status(QuestionStatusDTO.from(question, Instant.now()))
-                        .id(QuestionIdDTO.builder().id(question.getId()).build())
-                        .build())
+                .map(questionToDto)
                 .collect(Collectors.toUnmodifiableList());
         return QuestionListDTO.builder()
                 .questions(questions)
