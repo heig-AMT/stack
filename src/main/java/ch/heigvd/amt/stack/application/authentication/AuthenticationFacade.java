@@ -40,7 +40,7 @@ public class AuthenticationFacade {
                 .build())
                 .orElseThrow(AuthenticationFailedException::new);
 
-        if (!BCrypt.checkpw(command.getPassword(), credential.getHashedPassword())){
+        if (!BCrypt.checkpw(command.getPassword(), credential.getHashedPassword())) {
             throw new AuthenticationFailedException();
         }
 

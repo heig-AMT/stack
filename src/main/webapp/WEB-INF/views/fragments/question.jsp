@@ -1,3 +1,7 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.format.FormatStyle" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.time.ZoneId" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -18,16 +22,26 @@
                 <div class="border-2 rounded-full px-4 border-green-500 text-green-500">Resolved</div>
             </c:when>
             <c:otherwise>
-                <c:out value="${question.status}"/>
                 <div class="border-2 rounded-full px-4 border-gray-500 text-gray-500">Open</div>
             </c:otherwise>
         </c:choose>
-        <span class="ml-4"><c:out value="${question.title}"/></span>
+        <a class="ml-4"
+           href="${pageContext.request.contextPath}/question?id=<c:out value="${question.id.toString()}"/>"><c:out
+                value="${question.title}"/></a>
     </div>
     <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
     <div class="flex flex-row mt-4 items-center">
         <span class="text-sm text-gray-500">0 comments</span>
         <div class="flex-grow"></div>
-        <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
+        <div class="flex flex-col items-end">
+            <span class="text-sm text-gray-500">
+                <%=
+                DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
+                        .withLocale(Locale.FRANCE)
+                        .withZone(ZoneId.systemDefault()).format(question.getCreation())
+                %>
+            </span>
+            <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
+        </div>
     </div>
 </div>

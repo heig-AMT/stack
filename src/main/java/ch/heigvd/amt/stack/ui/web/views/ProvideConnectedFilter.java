@@ -10,6 +10,11 @@ import java.io.IOException;
 
 public class ProvideConnectedFilter implements Filter {
 
+    @Override
+    public void init(FilterConfig filterConfig) {
+        /* Our dependencies requires us to override this method. */
+    }
+
     @Inject
     private AuthenticationFacade authenticationFacade;
 
