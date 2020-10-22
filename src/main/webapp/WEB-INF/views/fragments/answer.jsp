@@ -41,7 +41,7 @@
                             .withZone(ZoneId.systemDefault()).format(answer.getCreation())
                     %>
                 </span>
-                <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
+                <span class="text-sm text-gray-500">by <c:out value="${answer.author}"/></span>
             </div>
         </div>
     </div>
