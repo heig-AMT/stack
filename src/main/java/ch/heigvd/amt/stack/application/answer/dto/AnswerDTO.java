@@ -11,4 +11,6 @@ public class AnswerDTO {
     String author;
     String body;
     Instant creation;
+    int positiveVotesCount;
+    int negativeVotesCount;
 }
