@@ -13,7 +13,7 @@
             shadow hover:shadow-lg
             transition-all duration-200
             flex flex-col">
-    <span class="text-gray-500 mt-2"><c:out value="${answer.body}"/><% Object question; %></span>
+    <span class="text-gray-500 mt-2"><c:out value="${answer.body}"/></span>
     <div class="flex flex-row mt-4 items-center">
         <div class="flex-grow"></div>
         <div class="flex flex-col items-end">
