@@ -3,7 +3,6 @@ package ch.heigvd.amt.stack.application.question;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
-import ch.heigvd.amt.stack.application.question.dto.QuestionIdDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
@@ -34,6 +33,7 @@ public class QuestionFacade {
                     .description(question.getDescription())
                     .creation(question.getCreation())
                     .status(QuestionStatusDTO.from(question, Instant.now()))
+                    .id(question.getId())
                     .build();
         }
     };
@@ -49,7 +49,7 @@ public class QuestionFacade {
         this.sessionRepository = sessionRepository;
     }
 
-    public QuestionIdDTO askQuestion(AskQuestionCommand command) throws AuthenticationFailedException {
+    public QuestionId askQuestion(AskQuestionCommand command) throws AuthenticationFailedException {
         Session session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
                 .build())
@@ -63,7 +63,7 @@ public class QuestionFacade {
                 .creation(Instant.now())
                 .build()
         );
-        return QuestionIdDTO.builder().id(id).build();
+        return id;
     }
 
     public Optional<QuestionDTO> getQuestion(SingleQuestionQuery query) {

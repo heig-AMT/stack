@@ -54,12 +54,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             "CREATE TABLE IF NOT EXISTS Vote" +
                     "( idxAnswer VARCHAR "+
                     ", idxCredential VARCHAR" +
-                    ", PRIMARY KEY (idxAnswer, idxCredential)"+
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
-                    ", CONSTRAINT fkAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);" +
-            "CREATE TABLE IF NOT EXISTS DownVote" +
-                    "( idxAnswer VARCHAR " +
-                    ", idxCredential VARCHAR" +
+                    ", isUpvote BOOLEAN" +
                     ", PRIMARY KEY (idxAnswer, idxCredential)"+
                     ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
                     ", CONSTRAINT fkAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);";
