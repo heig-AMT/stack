@@ -8,7 +8,7 @@ module.exports = {
     const randomDesc = uid.v4();
 
     I.amOnPage("/ask");
-    I.seeInCurrentUrl('/ask')
+    I.waitInUrl('/ask')
 
     I.see("Ask a question");
 
