@@ -50,17 +50,17 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     @Override
     public void save(Vote vote) {
         setup(dataSource);
-        var insert = "INSERT INTO Vote (idxAnswer, idxCredential, isUpvote) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET isUpvote = ?;";
+        var insert = "INSERT INTO Vote (idxAnswer, idxCredential, isUpvote) VALUES (?, ?, ?) ON CONFLICT (idxAnswer, idxCredential) DO UPDATE SET isUpvote = ?;";
         try {
             var statement = getDataSource().getConnection().prepareStatement(insert);
-            var isUpvote = vote.isUpvote() ? "TRUE" : "FALSE";
             statement.setString(1, vote.getId().getAnswer().toString());
             statement.setString(2, vote.getId().getVoter().toString());
-            statement.setString(3, isUpvote);
-            statement.setString(4, isUpvote);
+            statement.setBoolean(3, vote.isUpvote());
+            statement.setBoolean(4, vote.isUpvote());
+
             statement.execute();
         } catch (SQLException ex) {
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not add vote " + vote.getId());
+            Logger.getLogger("JDBC").log(Level.WARNING, "Could not add vote " + vote.getId() + ": " + ex.toString());
         }
     }
 

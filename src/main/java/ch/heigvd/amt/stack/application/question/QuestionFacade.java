@@ -6,7 +6,10 @@ import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
+import ch.heigvd.amt.stack.application.question.query.SingleAnswerQuery;
 import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
+import ch.heigvd.amt.stack.domain.answer.Answer;
+import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 
 public class QuestionFacade {
 
+    private final AnswerRepository answerRepository;
     private final CredentialRepository credentialRepository;
     private final QuestionRepository repository;
     private final SessionRepository sessionRepository;
@@ -40,10 +44,12 @@ public class QuestionFacade {
 
     @Inject
     public QuestionFacade(
+            AnswerRepository answerRepository,
             CredentialRepository credentialRepository,
             QuestionRepository repository,
             SessionRepository sessionRepository
     ) {
+        this.answerRepository = answerRepository;
         this.credentialRepository = credentialRepository;
         this.repository = repository;
         this.sessionRepository = sessionRepository;
@@ -69,6 +75,14 @@ public class QuestionFacade {
     public Optional<QuestionDTO> getQuestion(SingleQuestionQuery query) {
         return repository.findById(query.getId())
                 .map(questionToDto);
+    }
+
+    public Optional<QuestionDTO> getQuestion(SingleAnswerQuery query) {
+        return answerRepository.findById(query.getId()).stream()
+                .map(Answer::getQuestion)
+                .flatMap(id -> repository.findById(id).stream())
+                .map(questionToDto)
+                .findFirst();
     }
 
     public QuestionListDTO getQuestions(QuestionQuery query) {
