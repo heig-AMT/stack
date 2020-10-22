@@ -3,15 +3,16 @@ package ch.heigvd.amt.stack.ui.web.filter;
 import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
 import java.io.IOException;
 import java.util.List;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AuthorizationFilter implements Filter {
+
+    @Override
+    public void init(FilterConfig filterConfig) {
+        /* Our dependencies requires us to override this method. */
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
