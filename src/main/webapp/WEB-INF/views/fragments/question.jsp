@@ -22,7 +22,6 @@
                 <div class="border-2 rounded-full px-4 border-green-500 text-green-500">Resolved</div>
             </c:when>
             <c:otherwise>
-                <c:out value="${question.status}"/>
                 <div class="border-2 rounded-full px-4 border-gray-500 text-gray-500">Open</div>
             </c:otherwise>
         </c:choose>
