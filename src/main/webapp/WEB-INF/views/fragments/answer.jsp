@@ -11,7 +11,7 @@
     <div class="mx-2 flex flex-col">
         <form class="mt-2 mb-0 self-center" action="vote.do" method="POST">
             <input type="hidden" name="type" value="upvote"/>
-            <input type="hidden" name="answer" value="<c:out value="Awaiting PR"/>"/>
+            <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
             <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
         </form>
         <span class="text-white text-center"><c:out value="${answer.positiveVotesCount}"/></span>
@@ -19,7 +19,7 @@
         <span class="text-white text-center"><c:out value="${answer.negativeVotesCount}"/></span>
         <form class="mb-2 self-center transform rotate-180" action="vote.do" method="POST">
             <input type="hidden" name="type" value="downvote"/>
-            <input type="hidden" name="answer" value="<c:out value="Awaiting PR"/>"/>
+            <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
             <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
         </form>
     </div>
