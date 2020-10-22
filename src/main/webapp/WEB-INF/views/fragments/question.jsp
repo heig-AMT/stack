@@ -1,3 +1,7 @@
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="java.time.format.FormatStyle" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.time.ZoneId" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -30,6 +34,15 @@
     <div class="flex flex-row mt-4 items-center">
         <span class="text-sm text-gray-500">0 comments</span>
         <div class="flex-grow"></div>
-        <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
+        <div class="flex flex-col items-end">
+            <span class="text-sm text-gray-500">
+                <%=
+                DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
+                        .withLocale(Locale.FRANCE)
+                        .withZone(ZoneId.systemDefault()).format(question.getCreation())
+                %>
+            </span>
+            <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
+        </div>
     </div>
 </div>
