@@ -17,6 +17,19 @@
     <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
+  <dependencyManagement>
+    <!-- JBoss' Arquillian support. -->
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>1.6.0.Final</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
 
     <!-- Jakarta platform -->
@@ -80,6 +93,20 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>3.5.13</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Arquillian. -->
+    <dependency>
+      <groupId>io.openliberty.arquillian</groupId>
+      <artifactId>arquillian-liberty-managed-junit</artifactId>
+      <version>1.1.6</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-api</artifactId>
       <scope>test</scope>
     </dependency>
 
