@@ -1,5 +1,6 @@
 package ch.heigvd.amt.stack.application.question.dto;
 
+import ch.heigvd.amt.stack.domain.question.QuestionId;
 import lombok.Builder;
 import lombok.Value;
 
@@ -13,5 +14,5 @@ public class QuestionDTO {
     String description;
     Instant creation;
     QuestionStatusDTO status;
-    QuestionIdDTO id;
+    QuestionId id;
 }

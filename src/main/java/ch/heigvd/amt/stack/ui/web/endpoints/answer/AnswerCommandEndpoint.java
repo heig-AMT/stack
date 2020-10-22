@@ -22,7 +22,6 @@ public class AnswerCommandEndpoint extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("Why are we here? Only to suffer.");
         try {
             answerFacade.answer(AnswerQuestionCommand.builder()
                     .question(QuestionId.from(req.getParameter("question")))

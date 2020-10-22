@@ -23,7 +23,7 @@
             </c:otherwise>
         </c:choose>
         <a class="ml-4"
-           href="${pageContext.request.contextPath}/question?id=<c:out value="${question.id.id.toString()}"/>"><c:out
+           href="${pageContext.request.contextPath}/question?id=<c:out value="${question.id.toString()}"/>"><c:out
                 value="${question.title}"/></a>
     </div>
     <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
