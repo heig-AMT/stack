@@ -7,7 +7,6 @@ module.exports = {
     const randomTitle = uid.v4();
     const randomDesc = uid.v4();
 
-    I.wait(0.5)
     I.amOnPage("/ask");
     I.seeInCurrentUrl('/ask')
 
