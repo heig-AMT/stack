@@ -9,13 +9,17 @@
 
 <div class="flex flex-row justify-center mt-4">
     <div class="mx-2 flex flex-col">
-        <form class="mt-2 mb-0 self-center" action="upvote.do" method="POST">
+        <form class="mt-2 mb-0 self-center" action="vote.do" method="POST">
+            <input type="hidden" name="type" value="upvote"/>
+            <input type="hidden" name="answer" value="<c:out value="Awaiting PR"/>"/>
             <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
         </form>
-        <span class="text-white" text-center>1478</span>
+        <span class="text-white text-center"><c:out value="${answer.positiveVotesCount}"/></span>
         <div class="border-b-2 color-white"></div>
-        <span class="text-white text-center">357</span>
-        <form class="mb-2 self-center transform rotate-180" action="downvote.do" method="POST">
+        <span class="text-white text-center"><c:out value="${answer.negativeVotesCount}"/></span>
+        <form class="mb-2 self-center transform rotate-180" action="vote.do" method="POST">
+            <input type="hidden" name="type" value="downvote"/>
+            <input type="hidden" name="answer" value="<c:out value="Awaiting PR"/>"/>
             <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
         </form>
     </div>
