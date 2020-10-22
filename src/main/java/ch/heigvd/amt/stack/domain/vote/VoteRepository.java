@@ -4,7 +4,6 @@ import ch.heigvd.amt.stack.application.answer.query.VoteCountQuery;
 import ch.heigvd.amt.stack.domain.Repository;
 
 public interface VoteRepository extends Repository<Vote, VoteId> {
-
     /**
      * Returns the count of votes that match a certain predicate.
      *

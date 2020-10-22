@@ -1,5 +1,6 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
+import ch.heigvd.amt.stack.application.answer.query.VoteCountQuery;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.vote.Vote;
@@ -26,6 +27,24 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
 
     private DataSource getDataSource() {
         return dataSource;
+    }
+
+    @Override
+    public int count(VoteCountQuery query) {
+        setup(dataSource);
+        boolean table = query.isUpvote();
+        var search = "SELECT COUNT (*) FROM Vote WHERE isUpvote = ? AND idxAnswer = ?;";
+        try {
+            var statement = getDataSource().getConnection().prepareStatement(search);
+            statement.setBoolean(1, table);
+            statement.setString(2, query.getForAnswer().toString());
+            var rs = statement.executeQuery();
+            return rs.getInt(1);
+
+        } catch (SQLException ex) {
+            Logger.getLogger("JDBC").log(Level.WARNING, "Query didn't work");
+        }
+        return 0;
     }
 
     @Override
