@@ -13,6 +13,9 @@
             <input type="hidden" name="type" value="upvote"/>
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
             <c:choose>
+                <c:when test="${answer.hasPositiveVote}">
+                    <img src="${pageContext.request.contextPath}/assets/upvote_green.svg">
+                </c:when>
                 <c:when test="${connected.connected}">
                     <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
                 </c:when>
@@ -21,18 +24,35 @@
                 </c:otherwise>
             </c:choose>
         </form>
-        <span class="text-white text-center"><c:out value="${answer.positiveVotesCount}"/></span>
+        <c:choose>
+            <c:when test="${answer.hasPositiveVote}">
+                <span class="text-green-700 text-center"><c:out value="${answer.positiveVotesCount}"/></span>
+            </c:when>
+            <c:otherwise>
+                <span class="text-white text-center"><c:out value="${answer.positiveVotesCount}"/></span>
+            </c:otherwise>
+        </c:choose>
         <div class="border-b-2 color-white"></div>
-        <span class="text-white text-center"><c:out value="${answer.negativeVotesCount}"/></span>
-        <form class="mb-2 self-center transform rotate-180" action="vote.do" method="POST">
+        <c:choose>
+            <c:when test="${answer.hasNegativeVote}">
+                <span class="text-red-500 text-center"><c:out value="${answer.negativeVotesCount}"/></span>
+            </c:when>
+            <c:otherwise>
+                <span class="text-white text-center"><c:out value="${answer.negativeVotesCount}"/></span>
+            </c:otherwise>
+        </c:choose>
+        <form class="mb-2 self-center" action="vote.do" method="POST">
             <input type="hidden" name="type" value="downvote"/>
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
             <c:choose>
+                <c:when test="${answer.hasNegativeVote}">
+                    <img src="${pageContext.request.contextPath}/assets/downvote_red.svg">
+                </c:when>
                 <c:when test="${connected.connected}">
-                    <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
+                    <input class="transform rotate-180" type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
                 </c:when>
                 <c:otherwise>
-                    <img src="${pageContext.request.contextPath}/assets/vote.svg">
+                    <img class="transform rotate-180" src="${pageContext.request.contextPath}/assets/vote.svg">
                 </c:otherwise>
             </c:choose>
         </form>
