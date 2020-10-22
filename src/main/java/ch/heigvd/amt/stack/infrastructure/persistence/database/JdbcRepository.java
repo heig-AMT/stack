@@ -27,8 +27,8 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             "CREATE TABLE IF NOT EXISTS Session" +
                     "( idSession VARCHAR PRIMARY KEY" +
                     ", idxCredential VARCHAR" +
-                    ", tag VARCHAR(50)" +
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential));";
+                    ", tag VARCHAR(50) " +
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     private static final String CREATE_QUESTIONS =
             "CREATE TABLE IF NOT EXISTS Question" +
@@ -38,17 +38,35 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", title VARCHAR(50)" +
                     ", description VARCHAR(200)" +
                     ", instant TIMESTAMP" +
-                    ",CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential));";
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
+
+    private static final String CREATE_ANSWERS =
+            "CREATE TABLE IF NOT EXISTS Answer" +
+                    "( idAnswer VARCHAR PRIMARY KEY " +
+                    ", idxQuestion VARCHAR" +
+                    ", idxCredential VARCHAR" +
+                    ", description VARCHAR(1000)" +
+                    ", instant TIMESTAMP" +
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
+                    ", CONSTRAINT fkQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion) ON UPDATE CASCADE ON DELETE CASCADE);";
+
+    private static final String CREATE_VOTES =
+            "CREATE TABLE IF NOT EXISTS Vote" +
+                    "( idxAnswer VARCHAR "+
+                    ", idxCredential VARCHAR" +
+                    ", isUpvote BOOLEAN" +
+                    ", PRIMARY KEY (idxAnswer, idxCredential)"+
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
+                    ", CONSTRAINT fkAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {
-            var credentials = connection.prepareStatement(CREATE_CREDENTIALS);
-            var sessions = connection.prepareStatement(CREATE_SESSIONS);
-            var questions = connection.prepareStatement(CREATE_QUESTIONS);
+            connection.prepareStatement(CREATE_CREDENTIALS).execute();
+            connection.prepareStatement(CREATE_SESSIONS).execute();
+            connection.prepareStatement(CREATE_QUESTIONS).execute();
+            connection.prepareStatement(CREATE_ANSWERS).execute();
+            connection.prepareStatement(CREATE_VOTES).execute();
 
-            credentials.execute();
-            sessions.execute();
-            questions.execute();
         } catch (SQLException exception) {
             exception.printStackTrace();
             Logger.getLogger("JDBC").log(Level.SEVERE, "SQLException while setting up repository.");
