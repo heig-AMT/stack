@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.memory;
 
-import ch.heigvd.amt.stack.application.vote.query.VoteCountQuery;
+import ch.heigvd.amt.stack.application.answer.query.VoteCountQuery;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.vote.Vote;
