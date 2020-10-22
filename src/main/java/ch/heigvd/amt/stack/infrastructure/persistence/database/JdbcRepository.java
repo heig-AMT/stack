@@ -51,7 +51,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", CONSTRAINT fkQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     private static final String CREATE_VOTES =
-            "CREATE TABLE IF NOT EXISTS UpVote" +
+            "CREATE TABLE IF NOT EXISTS Vote" +
                     "( idxAnswer VARCHAR "+
                     ", idxCredential VARCHAR" +
                     ", PRIMARY KEY (idxAnswer, idxCredential)"+
