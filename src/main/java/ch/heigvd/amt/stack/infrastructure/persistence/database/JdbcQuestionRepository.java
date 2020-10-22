@@ -56,8 +56,8 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
         setup(dataSource);
         var insert = "INSERT INTO Question(idQuestion, idxCredential, resolved, title, description, instant)" +
                 " VALUES (?, ?, ?, ?,?, ?);";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(insert);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(insert);
             statement.setString(1, question.getId().toString());
             statement.setString(2, question.getAuthor().toString());
             statement.setBoolean(3, question.isResolved());
@@ -74,8 +74,8 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public void remove(QuestionId questionId) {
         setup(dataSource);
         var delete = "DELETE FROM Question WHERE idQuestion = ?;";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(delete);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(delete);
             statement.setString(1, questionId.toString());
             statement.execute();
         } catch (SQLException ex) {
@@ -87,8 +87,8 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public Optional<Question> findById(QuestionId questionId) {
         setup(dataSource);
         var select = "SELECT * FROM Question WHERE idQuestion = ?;";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(select);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(select);
             statement.setString(1, questionId.toString());
             var rs = statement.executeQuery();
 
@@ -116,8 +116,8 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
         setup(dataSource);
         var select = "SELECT * FROM Question;";
         Collection<Question> result = new ArrayList<>();
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(select);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
                 Question question = Question.builder()

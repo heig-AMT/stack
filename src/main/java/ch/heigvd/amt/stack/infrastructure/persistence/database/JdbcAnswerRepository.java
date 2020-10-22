@@ -47,8 +47,8 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
         setup(dataSource);
         var insert = "INSERT INTO Answer(idAnswer, idxCredential, idxQuestion, description, instant)" +
                 " VALUES (?, ?, ?, ?,?);";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(insert);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(insert);
             statement.setString(1, answer.getId().toString());
             statement.setString(2, answer.getCreator().toString());
             statement.setString(3, answer.getQuestion().toString());
@@ -64,8 +64,8 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     public void remove(AnswerId answerId) {
         setup(dataSource);
         var delete = "DELETE FROM Answer WHERE idAnswer = ?;";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(delete);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(delete);
             statement.setString(1, answerId.toString());
             statement.execute();
         } catch (SQLException ex) {
@@ -77,8 +77,8 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     public Optional<Answer> findById(AnswerId answerId) {
         setup(dataSource);
         var select = "SELECT * FROM Answer WHERE idAnswer = ?;";
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(select);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(select);
             statement.setString(1, answerId.toString());
             var rs = statement.executeQuery();
 
@@ -105,8 +105,8 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
         setup(dataSource);
         var select = "SELECT * FROM Answer;";
         Collection<Answer> result = new ArrayList<>();
-        try {
-            var statement = getDataSource().getConnection().prepareStatement(select);
+        try (var connection = getDataSource().getConnection()) {
+            var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
 
             while (rs.next()) {
