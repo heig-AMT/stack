@@ -67,13 +67,13 @@ public class AnswerFacadeIntegration {
         var questionId = questionFacade.askQuestion(ask);
 
         var answer = AnswerQuestionCommand.builder()
-                .question(questionId.getId())
+                .question(questionId)
                 .body("This is my answer.")
                 .tag("tag")
                 .build();
 
         var query = AnswerQuery.builder()
-                .forQuestion(questionId.getId())
+                .forQuestion(questionId)
                 .build();
 
         assertDoesNotThrow(() -> {
