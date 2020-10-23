@@ -14,7 +14,7 @@
 </jsp:include>
 <body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
-<div class="flex flex-col pt-16 h-screen
+<div class="flex flex-col pt-16 mb-32 h-screen
             items-center">
 
     <div class="w-full p-8">
@@ -66,7 +66,7 @@
             </c:forEach>
     </div>
 
-    <div class="flex-end mt-4 p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
+    <div class="flex-end mt-16 p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <form action="answer.do"
               method="POST"
               class="w-full">
