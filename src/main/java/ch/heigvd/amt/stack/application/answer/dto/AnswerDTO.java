@@ -17,4 +17,5 @@ public class AnswerDTO {
     int negativeVotesCount;
     boolean hasPositiveVote;
     boolean hasNegativeVote;
+    boolean deletionEnabled;
 }

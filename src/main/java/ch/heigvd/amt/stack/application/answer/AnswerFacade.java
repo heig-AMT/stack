@@ -1,6 +1,7 @@
 package ch.heigvd.amt.stack.application.answer;
 
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
+import ch.heigvd.amt.stack.application.answer.command.DeleteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.DownvoteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.UpvoteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerDTO;
@@ -9,6 +10,7 @@ import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.answer.query.VoteCountQuery;
 import ch.heigvd.amt.stack.domain.answer.Answer;
+import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
@@ -72,6 +74,28 @@ public class AnswerFacade {
                         .creator(session.getUser())
                         .build()
         );
+    }
+
+    /**
+     * Deletes a certain answer, provided that the user is properly authenticated and actually has the necessary
+     * permissions to delete the answer. To do that, users should be the owner of the said answer.
+     *
+     * @param command the {@link DeleteAnswerCommand} that should be fulfilled.
+     * @throws AuthenticationFailedException if the user is not the question owner or is not authenticated.
+     * @throws AnswerNotFoundException       if the answer does not exist.
+     */
+    // TODO : Integration test this.
+    public void delete(DeleteAnswerCommand command) throws AuthenticationFailedException, AnswerNotFoundException {
+        var session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+        var answer = answerRepository.findById(command.getAnswer())
+                .orElseThrow(AnswerNotFoundException::new);
+        if (!session.getUser().equals(answer.getCreator())) {
+            throw new AuthenticationFailedException();
+        }
+        answerRepository.remove(answer.getId());
     }
 
     /**
@@ -164,6 +188,7 @@ public class AnswerFacade {
                                         // Otherwise nothing.
                                         .orElse(false)
                         )
+                        .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
                         .build()
                 )
                 .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
