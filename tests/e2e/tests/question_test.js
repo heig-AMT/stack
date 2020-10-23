@@ -23,7 +23,7 @@ Scenario('/ask redirects to /login when logged out', (I, registerPage, logoutPag
 Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
   const register = registerPage.register();
 
-  loginPage.login(register.email, register.password);
+  loginPage.login(register.user, register.password);
 
   const question1 = questionsPage.addQuestion();
   const question2 = questionsPage.addQuestion();
