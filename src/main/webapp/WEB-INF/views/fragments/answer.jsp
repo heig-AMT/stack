@@ -69,9 +69,10 @@
             <c:if test="${answer.deletionEnabled}">
                 <form class="flex items-end mb-0" action="deleteAnswer.do" method="POST">
                     <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
-                    <!-- <input class="bg-transparent font-semibold text-red-400 hover:text-red-600" type="submit" value="Delete"/> -->
-                    <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
-
+                    <div class="flex flex-row">
+                        <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
+                        <input class=" ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600" type="submit" value="Delete"/>
+                    </div>
                 </form>
             </c:if>
             <div class="flex-grow"></div>
