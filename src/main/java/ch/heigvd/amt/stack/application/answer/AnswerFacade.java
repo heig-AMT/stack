@@ -104,7 +104,6 @@ public class AnswerFacade {
      * @param command the {@link UpvoteAnswerCommand} that should be fulfilled.
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      */
-    // TODO : Integration test this.
     public void upvote(UpvoteAnswerCommand command) throws AuthenticationFailedException {
         var session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
@@ -125,7 +124,6 @@ public class AnswerFacade {
      * @param command the {@link DownvoteAnswerCommand} that should be fulfilled.
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      */
-    // TODO : Integration test this.
     public void downvote(DownvoteAnswerCommand command) throws AuthenticationFailedException {
         var session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
