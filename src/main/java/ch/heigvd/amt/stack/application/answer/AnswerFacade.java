@@ -84,7 +84,6 @@ public class AnswerFacade {
      * @throws AuthenticationFailedException if the user is not the question owner or is not authenticated.
      * @throws AnswerNotFoundException       if the answer does not exist.
      */
-    // TODO : Integration test this.
     public void delete(DeleteAnswerCommand command) throws AuthenticationFailedException, AnswerNotFoundException {
         var session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())

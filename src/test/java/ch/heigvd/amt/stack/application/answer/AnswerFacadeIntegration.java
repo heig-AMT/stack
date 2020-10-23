@@ -1,6 +1,7 @@
 package ch.heigvd.amt.stack.application.answer;
 
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
+import ch.heigvd.amt.stack.application.answer.command.DeleteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.DownvoteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.UpvoteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
@@ -228,5 +229,104 @@ public class AnswerFacadeIntegration {
                 .forQuestion(questionId)
                 .build())
                 .getAnswers().get(0).getNegativeVotesCount());
+    }
+
+    @Test
+    public void testAuthenticatedUserCanDeleteTheirOwnAnswer() {
+
+        // Register.
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var question = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag("tag")
+                .build();
+        authenticationFacade.register(register);
+
+        // Ask a question and answer.
+        var questionId = questionFacade.askQuestion(question);
+        var answer = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag("tag")
+                .build();
+        assertDoesNotThrow(() -> answerFacade.answer(answer));
+
+        // Make sure the question was added.
+        var answers = answerFacade.getAnswers(AnswerQuery.builder()
+                .tag("tag")
+                .forQuestion(questionId)
+                .build())
+                .getAnswers();
+
+        assertEquals(1, answers.size());
+        assertTrue(answers.get(0).isDeletionEnabled());
+
+        // Delete the answer.
+        assertDoesNotThrow(() -> answerFacade.delete(DeleteAnswerCommand.builder()
+                .tag("tag")
+                .answer(answers.get(0).getId())
+                .build()));
+
+        // Check the question count.
+        assertEquals(0, answerFacade.getAnswers(AnswerQuery.builder()
+                .tag("tag")
+                .forQuestion(questionId)
+                .build())
+                .getAnswers()
+                .size());
+    }
+
+    @Test
+    public void testUnauthenticatedUserCanNotDeleteAnAnswer() {
+
+        // Register.
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var question = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag("tag")
+                .build();
+        authenticationFacade.register(register);
+
+        // Ask a question and answer.
+        var questionId = questionFacade.askQuestion(question);
+        var answer = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag("tag")
+                .build();
+        assertDoesNotThrow(() -> answerFacade.answer(answer));
+
+        // Make sure the question was added.
+        var answers = answerFacade.getAnswers(AnswerQuery.builder()
+                .tag("anotherTag")
+                .forQuestion(questionId)
+                .build())
+                .getAnswers();
+
+        assertEquals(1, answers.size());
+        assertFalse(answers.get(0).isDeletionEnabled());
+
+        // Try to delete the answer.
+        assertThrows(AuthenticationFailedException.class, () -> answerFacade.delete(DeleteAnswerCommand.builder()
+                .answer(answers.get(0).getId())
+                .build()));
+
+        // Check the question count.
+        assertEquals(1, answerFacade.getAnswers(AnswerQuery.builder()
+                .tag("tag")
+                .forQuestion(questionId)
+                .build())
+                .getAnswers()
+                .size());
     }
 }
