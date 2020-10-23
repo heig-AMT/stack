@@ -203,7 +203,7 @@ public class AnswerFacadeIntegration {
                 .getAnswers();
         assertEquals(1, answers.size());
 
-        // Upvote.
+        // Downvote.
         var downvote = DownvoteAnswerCommand.builder()
                 .answer(answers.get(0).getId())
                 .tag("tag")
@@ -216,7 +216,7 @@ public class AnswerFacadeIntegration {
                 .build())
                 .getAnswers().get(0).getNegativeVotesCount());
 
-        // Upvote with non-authenticated account.
+        // Downvote with non-authenticated account.
         assertThrows(AuthenticationFailedException.class, () -> {
             answerFacade.downvote(DownvoteAnswerCommand.builder()
                     .answer(answers.get(0).getId())
