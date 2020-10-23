@@ -35,17 +35,29 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public Collection<Question> findBy(QuestionQuery query) {
         setup(dataSource);
         if (query.getShouldContain() != null) {
-            return findAll().stream()
-                    .filter(question -> (
-                            question.getTitle() != null && question.getTitle()
-                                    .toLowerCase()
-                                    .contains(query.getShouldContain().toLowerCase())
-                    ) || (
-                            question.getDescription() != null && question.getDescription()
-                                    .toLowerCase()
-                                    .contains(query.getShouldContain().toLowerCase())
-                    ))
-                    .collect(Collectors.toList());
+            var select = "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;";
+            Collection<Question> result = new ArrayList<>();
+            try (var connection = getDataSource().getConnection()) {
+                var statement = connection.prepareStatement(select);
+                statement.setString(1, "%" + query.getShouldContain().trim().toLowerCase() + "%");
+                statement.setString(2, "%" + query.getShouldContain().trim().toLowerCase() + "%");
+                var rs = statement.executeQuery();
+                while (rs.next()) {
+                    Question question = Question.builder()
+                            .id(QuestionId.from(rs.getString("idQuestion")))
+                            .author(CredentialId.from(rs.getString("idxCredential")))
+                            .resolved(rs.getBoolean("resolved"))
+                            .title(rs.getString("title"))
+                            .description(rs.getString("description"))
+                            .creation((rs.getTimestamp("instant")).toInstant())
+                            .build();
+                    result.add(question);
+                }
+                return result;
+            } catch (SQLException ex) {
+                Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
+                return Collections.emptyList();
+            }
         } else {
             return findAll();
         }
