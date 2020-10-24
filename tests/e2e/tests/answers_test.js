@@ -37,7 +37,7 @@ Scenario('Cannot add an answer, when not logged in', (I, logoutPage, registerPag
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Can delete an answer', (I, registerPage, questionsPage, answersPage) => {
+Scenario('Can delete my answer', (I, registerPage, questionsPage, answersPage) => {
   registerPage.register();
   const question = questionsPage.addQuestion();
 
@@ -50,4 +50,21 @@ Scenario('Can delete an answer', (I, registerPage, questionsPage, answersPage) =
   I.click("Delete");
 
   I.dontSee(answer);
+});
+
+Scenario('Cannot delete someone\'s answer', (I, logoutPage, registerPage, questionsPage, answersPage) => {
+  registerPage.register();
+  const question = questionsPage.addQuestion();
+
+  I.click("Questions");
+  I.click(question.title);
+
+  answersPage.addAnswer();
+
+  logoutPage.logout();
+
+  I.click("Questions");
+  I.click(question.title);
+
+  I.dontSee("Delete");
 });
