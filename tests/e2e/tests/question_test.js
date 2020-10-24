@@ -2,16 +2,21 @@ Feature('addQuestions');
 
 const { I, registerPage, loginPage, questionsPage, logoutPage } = inject();
 
-Scenario('Add a question', (I, registerPage, questionsPage) => {
+Scenario('When adding a question, must be redirected to it\'s own page', (I, registerPage, questionsPage) => {
   registerPage.register();
 
   const question = questionsPage.addQuestion();
 
-  // Question should have a page of it's own
+  I.waitInUrl("/question?id", 2);
   I.see(question.title);
   I.see(question.description);
+});
 
-  // Question should be in list of questions
+Scenario('When adding a question, it must appear in question list', (I, registerPage, questionsPage) => {
+  registerPage.register();
+
+  const question = questionsPage.addQuestion();
+
   I.click("Questions")
   I.see(question.title);
   I.see(question.description);
