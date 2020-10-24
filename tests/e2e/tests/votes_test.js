@@ -80,3 +80,16 @@ Scenario('Cannot vote twice', async (I, registerPage, questionsPage, answersPage
   assert.equal(0, numUpvotes);
   assert.equal(1, numDownvotes);
 });
+
+Scenario('Cannot vote when logged out', async (I, registerPage, logoutPage, questionsPage, answersPage) => {
+  registerPage.register();
+  const question = questionsPage.addQuestion();
+  I.click("Questions")
+  I.click(question.title);
+
+  answersPage.addAnswer();
+  logoutPage.logout();
+
+  I.dontSeeElement({css: '.voteBox:nth-of-type(1) form:nth-of-type(1) input[type="image"]'});
+  I.dontSeeElement({css: '.voteBox:nth-of-type(1) form:nth-of-type(2) input[type="image"]'});
+});
