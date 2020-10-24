@@ -8,7 +8,7 @@
 <jsp:useBean scope="request" id="answer" type="ch.heigvd.amt.stack.application.answer.dto.AnswerDTO"/>
 
 <div class="flex flex-row justify-center mt-4">
-    <div class="mx-2 flex flex-col">
+    <div class="mx-2 flex flex-col voteBox">
         <form class="mt-2 mb-0 self-center" action="vote.do" method="POST">
             <input type="hidden" name="type" value="upvote"/>
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>

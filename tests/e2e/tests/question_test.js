@@ -2,11 +2,22 @@ Feature('addQuestions');
 
 const { I, registerPage, loginPage, questionsPage, logoutPage } = inject();
 
-Scenario('Add a question', (I, registerPage, questionsPage) => {
+Scenario('When adding a question, must be redirected to it\'s own page', (I, registerPage, questionsPage) => {
   registerPage.register();
 
   const question = questionsPage.addQuestion();
 
+  I.waitInUrl("/question?id", 2);
+  I.see(question.title);
+  I.see(question.description);
+});
+
+Scenario('When adding a question, it must appear in question list', (I, registerPage, questionsPage) => {
+  registerPage.register();
+
+  const question = questionsPage.addQuestion();
+
+  I.click("Questions")
   I.see(question.title);
   I.see(question.description);
 });
@@ -23,7 +34,7 @@ Scenario('/ask redirects to /login when logged out', (I, registerPage, logoutPag
 Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
   const register = registerPage.register();
 
-  loginPage.login(register.email, register.password);
+  loginPage.login(register.user, register.password);
 
   const question1 = questionsPage.addQuestion();
   const question2 = questionsPage.addQuestion();
