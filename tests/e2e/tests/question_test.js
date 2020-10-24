@@ -7,6 +7,12 @@ Scenario('Add a question', (I, registerPage, questionsPage) => {
 
   const question = questionsPage.addQuestion();
 
+  // Question should have a page of it's own
+  I.see(question.title);
+  I.see(question.description);
+
+  // Question should be in list of questions
+  I.click("Questions")
   I.see(question.title);
   I.see(question.description);
 });
