@@ -24,7 +24,7 @@ Scenario('Add an answer', (I, logoutPage, registerPage, questionsPage, answersPa
   I.see(answer);
 });
 
-Scenario('Cannot add an answer, when not logged in', (I, logoutPage, registerPage, questionsPage, answersPage) => {
+Scenario('Cannot add an answer, when not logged in', (I, logoutPage, registerPage, questionsPage) => {
   registerPage.register();
   const question = questionsPage.addQuestion();
   logoutPage.logout();
@@ -32,7 +32,7 @@ Scenario('Cannot add an answer, when not logged in', (I, logoutPage, registerPag
   I.click("Questions")
   I.click(question.title);
 
-  const answer = answersPage.addAnswer();
-  I.dontSee(answer);
+  I.click("To answer, please login");
+
   I.waitInUrl('/login', 2);
 });
