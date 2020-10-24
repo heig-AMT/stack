@@ -33,9 +33,7 @@ public class QuestionView extends HttpServlet {
         var questionId = QuestionId.from(req.getParameter("id"));
         var questionQueryBuilder = SingleQuestionQuery.builder();
 
-        if (questionId != null) {
-            questionQueryBuilder.id(questionId);
-        }
+        questionQueryBuilder.id(questionId);
 
         var built = questionQueryBuilder.build();
 
@@ -46,9 +44,8 @@ public class QuestionView extends HttpServlet {
 
             var answerQueryBuilder = AnswerQuery.builder();
 
-            if (questionId != null) {
-                answerQueryBuilder.forQuestion(questionId);
-            }
+            answerQueryBuilder.forQuestion(questionId);
+            answerQueryBuilder.tag(req.getSession().getId());
 
             AnswerListDTO answers = answerFacade.getAnswers(answerQueryBuilder.build());
             req.setAttribute("answers", answers);

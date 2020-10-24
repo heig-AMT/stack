@@ -1,6 +1,7 @@
 package ch.heigvd.amt.stack.application.answer;
 
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
+import ch.heigvd.amt.stack.application.answer.command.DeleteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.DownvoteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.UpvoteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerDTO;
@@ -9,9 +10,11 @@ import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.answer.query.VoteCountQuery;
 import ch.heigvd.amt.stack.domain.answer.Answer;
+import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
+import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
@@ -21,6 +24,8 @@ import ch.heigvd.amt.stack.domain.vote.VoteRepository;
 
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class AnswerFacade {
@@ -72,12 +77,32 @@ public class AnswerFacade {
     }
 
     /**
+     * Deletes a certain answer, provided that the user is properly authenticated and actually has the necessary
+     * permissions to delete the answer. To do that, users should be the owner of the said answer.
+     *
+     * @param command the {@link DeleteAnswerCommand} that should be fulfilled.
+     * @throws AuthenticationFailedException if the user is not the question owner or is not authenticated.
+     * @throws AnswerNotFoundException       if the answer does not exist.
+     */
+    public void delete(DeleteAnswerCommand command) throws AuthenticationFailedException, AnswerNotFoundException {
+        var session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+        var answer = answerRepository.findById(command.getAnswer())
+                .orElseThrow(AnswerNotFoundException::new);
+        if (!session.getUser().equals(answer.getCreator())) {
+            throw new AuthenticationFailedException();
+        }
+        answerRepository.remove(answer.getId());
+    }
+
+    /**
      * Upvote a certain answer, provided that the user is properly authenticated.
      *
      * @param command the {@link UpvoteAnswerCommand} that should be fulfilled.
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      */
-    // TODO : Integration test this.
     public void upvote(UpvoteAnswerCommand command) throws AuthenticationFailedException {
         var session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
@@ -98,7 +123,6 @@ public class AnswerFacade {
      * @param command the {@link DownvoteAnswerCommand} that should be fulfilled.
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      */
-    // TODO : Integration test this.
     public void downvote(DownvoteAnswerCommand command) throws AuthenticationFailedException {
         var session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
@@ -120,6 +144,12 @@ public class AnswerFacade {
      * @return an {@link AnswerListDTO} with all answers for the query.
      */
     public AnswerListDTO getAnswers(AnswerQuery query) {
+        var user = Optional.ofNullable(query.getTag()).stream()
+                .flatMap(tag -> sessionRepository.findBy(SessionQuery.builder()
+                        .tag(tag)
+                        .build()).stream())
+                .map(Session::getUser)
+                .findAny();
         var answers = answerRepository.findBy(query).stream()
                 .map(answer -> AnswerDTO.builder()
                         .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
@@ -134,8 +164,31 @@ public class AnswerFacade {
                                 .forAnswer(answer.getId())
                                 .isUpvote(false)
                                 .build()))
+                        .hasPositiveVote(
+                                user.isPresent() && voteRepository.findById(VoteId.builder()
+                                        .answer(answer.getId())
+                                        .voter(user.get())
+                                        .build())
+                                        // True if user has upvote.
+                                        .map(Vote::isUpvote)
+                                        // Otherwise nothing
+                                        .orElse(false)
+                        )
+                        .hasNegativeVote(
+                                user.isPresent() && voteRepository.findById(VoteId.builder()
+                                        .answer(answer.getId())
+                                        .voter(user.get())
+                                        .build())
+                                        // True if user has downvote.
+                                        .map(Vote::isUpvote)
+                                        .map(up -> !up)
+                                        // Otherwise nothing.
+                                        .orElse(false)
+                        )
+                        .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
                         .build()
                 )
+                .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
                 .collect(Collectors.toUnmodifiableList());
         return AnswerListDTO.builder()
                 .answers(answers)

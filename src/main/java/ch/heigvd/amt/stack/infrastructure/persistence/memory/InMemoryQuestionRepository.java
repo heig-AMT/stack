@@ -21,11 +21,11 @@ public class InMemoryQuestionRepository extends InMemoryRepository<Question, Que
                     .filter(question -> (
                             question.getTitle() != null && question.getTitle()
                                     .toLowerCase()
-                                    .contains(query.getShouldContain().toLowerCase())
+                                    .contains(query.getShouldContain().trim().toLowerCase())
                     ) || (
                             question.getDescription() != null && question.getDescription()
                                     .toLowerCase()
-                                    .contains(query.getShouldContain().toLowerCase())
+                                    .contains(query.getShouldContain().trim().toLowerCase())
                     ))
                     .collect(Collectors.toList());
         } else {

@@ -14,7 +14,7 @@
 </jsp:include>
 <body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
-<div class="flex flex-col pt-16 h-screen
+<div class="flex flex-col pt-16 mb-32 h-screen
             items-center">
 
     <div class="w-full p-8">
@@ -66,7 +66,7 @@
             </c:forEach>
     </div>
 
-    <div class="flex-end mt-4 p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
+    <div class="flex-end mt-16 p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <form action="answer.do"
               method="POST"
               class="w-full">
@@ -81,8 +81,18 @@
 
             </div>
             <div class="w-full px-3">
-                <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-white focus:border-gray-500"
-                       type="submit" value="Answer question"/>
+                <c:choose>
+                    <c:when test="${connected.connected}">
+                        <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-white focus:border-gray-500"
+                               type="submit" value="Answer question">
+                    </c:when>
+                    <c:otherwise>
+                        <a class="text-center p-3 block w-full bg-gray-500 text-white font-bold border border-gray-200 rounded-lg hover:bg-gray-700 focus:bg-white focus:border-gray-500"
+                           href="${pageContext.request.contextPath}/ask">
+                            To answer, please login
+                        </a>
+                    </c:otherwise>
+               </c:choose>
             </div>
         </form>
     </div>

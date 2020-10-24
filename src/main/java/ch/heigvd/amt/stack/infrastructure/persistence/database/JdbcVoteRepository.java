@@ -39,6 +39,9 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             statement.setBoolean(1, table);
             statement.setString(2, query.getForAnswer().toString());
             var rs = statement.executeQuery();
+            if (!rs.next()) {
+                throw new SQLException("ResultSet should not be empty.");
+            }
             return rs.getInt(1);
 
         } catch (SQLException ex) {
