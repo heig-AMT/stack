@@ -12,8 +12,7 @@ const {
 
 
 Scenario('Votes are updated', async (I, registerPage, questionsPage, answersPage) => {
-  let numUpvotes = 0;
-  let numDownvotes = 0;
+  let votes = null;
 
   registerPage.register();
   const question = questionsPage.addQuestion();
@@ -22,34 +21,28 @@ Scenario('Votes are updated', async (I, registerPage, questionsPage, answersPage
 
   answersPage.addAnswer();
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
+  // initial value
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(0, votes.up);
+  assert.equal(0, votes.down);
 
-  assert.equal(0, numUpvotes);
-  assert.equal(0, numDownvotes);
-
-  //I.click({css: '.voteBox:nth-of-type(1) form:nth-of-type(1) input[type="image"]'});
+  // upvote
   answersPage.upvoteForAns(1);
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(1, votes.up);
+  assert.equal(0, votes.down);
 
-  assert.equal(1, numUpvotes);
-  assert.equal(0, numDownvotes);
-
-  //I.click({css: '.voteBox:nth-of-type(1) form:nth-of-type(2) input[type="image"]'});
+  // downvote
   answersPage.downvoteForAns(1);
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
-
-  assert.equal(0, numUpvotes);
-  assert.equal(1, numDownvotes);
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(0, votes.up);
+  assert.equal(1, votes.down);
 });
 
 Scenario('Cannot vote twice', async (I, registerPage, questionsPage, answersPage) => {
-  let numUpvotes = 0;
-  let numDownvotes = 0;
+  let votes = null;
 
   registerPage.register();
   const question = questionsPage.addQuestion();
@@ -58,31 +51,26 @@ Scenario('Cannot vote twice', async (I, registerPage, questionsPage, answersPage
 
   answersPage.addAnswer();
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
+  // initial votes value
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(0, votes.up);
+  assert.equal(0, votes.down);
 
-  assert.equal(0, numUpvotes);
-  assert.equal(0, numDownvotes);
-
-  //I.click({css: '.voteBox:nth-of-type(1) form:nth-of-type(1) input[type="image"]'});
+  // upvote
   answersPage.upvoteForAns(1);
   I.dontSeeElement({css: '.voteBox:nth-of-type(1) form:nth-of-type(1) input[type="image"]'});
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(1, votes.up);
+  assert.equal(0, votes.down);
 
-  assert.equal(1, numUpvotes);
-  assert.equal(0, numDownvotes);
-
-  //I.click({css: '.voteBox:nth-of-type(1) form:nth-of-type(2) input[type="image"]'});
+  // downvote
   answersPage.downvoteForAns(1);
   I.dontSeeElement({css: '.voteBox:nth-of-type(1) form:nth-of-type(2) input[type="image"]'});
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
-
-  assert.equal(0, numUpvotes);
-  assert.equal(1, numDownvotes);
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(0, votes.up);
+  assert.equal(1, votes.down);
 });
 
 Scenario('Cannot vote when logged out', async (I, registerPage, logoutPage, questionsPage, answersPage) => {
@@ -99,8 +87,7 @@ Scenario('Cannot vote when logged out', async (I, registerPage, logoutPage, ques
 });
 
 Scenario('Multiple people can vote', async (I, logoutPage, registerPage, questionsPage, answersPage) => {
-  let numUpvotes = 0;
-  let numDownvotes = 0;
+  let votes = null;
 
   registerPage.register();
   const question = questionsPage.addQuestion();
@@ -109,19 +96,16 @@ Scenario('Multiple people can vote', async (I, logoutPage, registerPage, questio
 
   answersPage.addAnswer();
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
+  // initial votes value
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(0, votes.up);
+  assert.equal(0, votes.down);
 
-  assert.equal(0, numUpvotes);
-  assert.equal(0, numDownvotes);
-
+  // First user's upvote
   answersPage.upvoteForAns(1);
-
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)');
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)');
-
-  assert.equal(1, numUpvotes);
-  assert.equal(0, numDownvotes);
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(1, votes.up);
+  assert.equal(0, votes.down);
 
   logoutPage.logout();
 
@@ -132,11 +116,9 @@ Scenario('Multiple people can vote', async (I, logoutPage, registerPage, questio
   I.click(question.title);
   answersPage.upvoteForAns(1);
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
-
-  assert.equal(2, numUpvotes);
-  assert.equal(0, numDownvotes);
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(2, votes.up);
+  assert.equal(0, votes.down);
 
   logoutPage.logout();
 
@@ -147,9 +129,7 @@ Scenario('Multiple people can vote', async (I, logoutPage, registerPage, questio
   I.click(question.title);
   answersPage.upvoteForAns(1);
 
-  numUpvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(1)')
-  numDownvotes = await I.grabTextFrom('.voteBox:nth-of-type(1) span:nth-of-type(2)')
-
-  assert.equal(3, numUpvotes);
-  assert.equal(0, numDownvotes);
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(3, votes.up);
+  assert.equal(0, votes.down);
 });
