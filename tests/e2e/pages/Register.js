@@ -1,9 +1,18 @@
 const { I } = inject();
 
+function randomString(length) {
+   var string     = '';
+   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   for ( var i = 0; i < length; i++ ) {
+      string += characters.charAt(Math.floor(Math.random() * characters.length));
+   }
+   return string;
+}
+
 module.exports = {
   register() {
-    const user = Math.random().toString(36).substring(7);
-    const password = Math.random().toString(36).substring(7);
+    const user = randomString(10);
+    const password = randomString(10);
 
     I.amOnPage("/register");
 
