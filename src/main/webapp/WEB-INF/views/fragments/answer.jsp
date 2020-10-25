@@ -71,7 +71,7 @@
                     <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
                     <div class="flex flex-row">
                         <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
-                        <input class=" ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600" type="submit" value="Delete"/>
+                        <input class="ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600 cursor-pointer" type="submit" value="Delete"/>
                     </div>
                 </form>
             </c:if>
