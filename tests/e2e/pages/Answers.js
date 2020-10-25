@@ -12,5 +12,13 @@ module.exports = {
     I.click("Answer question");
 
     return randomAnswer
+  },
+
+  upvoteForAns(n) {
+    I.click({css: ".voteBox:nth-of-type(" + n + ") form:nth-of-type(1) input[type=\"image\"]"});
+  },
+
+  downvoteForAns(n) {
+    I.click({css: ".voteBox:nth-of-type(" + n + ") form:nth-of-type(2) input[type=\"image\"]"});
   }
 }
