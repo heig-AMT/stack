@@ -21,6 +21,8 @@
         <input type="image" src="${pageContext.request.contextPath}/assets/magnify.svg" alt="submit">
     </form>
 
+    <a class="hover:text-blue-500 text-lg px-4 py-2" href="${pageContext.request.contextPath}/profile">Profile</a>
+
     <c:choose>
         <c:when test="${connected.connected}">
             <a class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500"
