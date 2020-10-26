@@ -1,5 +1,6 @@
 package ch.heigvd.amt.stack.application.authentication;
 
+import ch.heigvd.amt.stack.application.authentication.command.ChangePasswordCommand;
 import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
 import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
@@ -135,6 +136,50 @@ public class AuthenticationFacadeIntegration {
         facade.register(register);
         assertThrows(AuthenticationFailedException.class, () -> {
             facade.login(login);
+        });
+    }
+
+    @Test
+    public void testRegisteredUserCanChangePasswordAndStayConnected() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+
+        facade.register(register);
+
+        var changePassword = ChangePasswordCommand.builder()
+                .username("alice")
+                .currentPassword("password")
+                .newPassword("iloveyou")
+                .build();
+
+        facade.changePassword(changePassword);
+        var connected = facade.connected(SessionQuery.builder().tag("tag").build());
+
+        assertTrue(connected.isConnected());
+        assertEquals("alice", connected.getUsername());
+    }
+
+    @Test
+    public void testRegisteredUserCanNotChangePasswordWithIncorrectPassword() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+
+        facade.register(register);
+
+        var changePassword = ChangePasswordCommand.builder()
+                .username("alice")
+                .currentPassword("wrong")
+                .newPassword("iloveyou")
+                .build();
+
+        assertThrows(AuthenticationFailedException.class, () -> {
+           facade.changePassword(changePassword);
         });
     }
 }
