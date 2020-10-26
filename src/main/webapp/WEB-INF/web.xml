@@ -25,6 +25,7 @@
         <filter-class>ch.heigvd.amt.stack.ui.web.filter.ProvideStatisticsFilter</filter-class>
     </filter>
 
+
     <!-- Filter mappings -->
     <filter-mapping>
         <filter-name>provide-connected-filter</filter-name>
@@ -38,5 +39,6 @@
         <filter-name>statistics-filter</filter-name>
         <url-pattern>/</url-pattern>
     </filter-mapping>
+
 
 </web-app>

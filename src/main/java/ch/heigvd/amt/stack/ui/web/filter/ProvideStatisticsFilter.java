@@ -27,7 +27,6 @@ public class ProvideStatisticsFilter implements Filter {
 
         UsageStatisticsDTO statistics = statisticsFacade.getUsageStatistics(new UsageStatisticsQuery());
         httpRequest.setAttribute("statistics", statistics);
-        httpRequest.getRequestDispatcher("/index.jsp").forward(httpRequest, response);
 
         chain.doFilter(request, response);
     }

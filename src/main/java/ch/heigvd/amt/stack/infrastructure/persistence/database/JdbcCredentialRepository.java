@@ -41,12 +41,13 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public void save(Credential credential) {
         setup(dataSource);
-        var insert = "INSERT INTO Credential(idCredential, username, hash) VALUES (?, ?, ?);";
+        var insert = "INSERT INTO Credential(idCredential, username, hash) VALUES (?, ?, ?) ON CONFLICT (idCredential) DO UPDATE SET hash = ?;";
         try (var connection = getDataSource().getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, credential.getId().toString());
             statement.setString(2, credential.getUsername());
             statement.setString(3, credential.getHashedPassword());
+            statement.setString(4, credential.getHashedPassword());
             statement.execute();
         } catch (SQLException ex) {
             // TODO : Make sure that duplicates are properly handed.
