@@ -1,5 +1,6 @@
 package ch.heigvd.amt.stack.application.authentication;
 
+import ch.heigvd.amt.stack.application.authentication.command.ChangePasswordCommand;
 import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
 import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
@@ -78,6 +79,29 @@ public class AuthenticationFacade {
         sessions.save(Session.builder()
                 .tag(command.getTag())
                 .user(id)
+                .build());
+    }
+
+    /**
+     * Changes the password of a certain user, but without logging them out of their existing sessions.
+     *
+     * @param command The {@link ChangePasswordCommand} to be executed.
+     * @throws AuthenticationFailedException if something went wrong in during the process.
+     */
+    public void changePassword(ChangePasswordCommand command) throws AuthenticationFailedException {
+        var existing = credentials.findBy(CredentialQuery.builder()
+                .username(command.getUsername())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        if (!BCrypt.checkpw(command.getCurrentPassword(), existing.getHashedPassword())) {
+            throw new AuthenticationFailedException();
+        }
+
+        credentials.save(Credential.builder()
+                .id(existing.getId())
+                .username(existing.getUsername())
+                .hashedPassword(BCrypt.hashpw(command.getNewPassword(), BCrypt.gensalt()))
                 .build());
     }
 
