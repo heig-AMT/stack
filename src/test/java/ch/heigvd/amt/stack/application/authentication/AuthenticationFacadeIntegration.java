@@ -92,6 +92,7 @@ public class AuthenticationFacadeIntegration {
         facade.register(register);
         var connected = facade.connected(query);
         assertTrue(connected.isConnected());
+        assertEquals("alice", connected.getUsername());
     }
 
     @Test
@@ -101,6 +102,7 @@ public class AuthenticationFacadeIntegration {
                 .build();
         var connected = facade.connected(query);
         assertFalse(connected.isConnected());
+        assertNull(connected.getUsername());
     }
 
     @Test
