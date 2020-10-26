@@ -1,9 +1,6 @@
 package ch.heigvd.amt.stack.application.authentication;
 
-import ch.heigvd.amt.stack.application.authentication.command.ChangePasswordCommand;
-import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
-import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
-import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
+import ch.heigvd.amt.stack.application.authentication.command.*;
 import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
 import ch.heigvd.amt.stack.application.authentication.query.CredentialQuery;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
@@ -80,6 +77,25 @@ public class AuthenticationFacade {
                 .tag(command.getTag())
                 .user(id)
                 .build());
+    }
+
+    /**
+     * Unregisters a user, namely deleting all of their data from the website.
+     *
+     * @param command The {@link UnregisterCommand} to be executed.
+     * @throws AuthenticationFailedException if something went wrong during the process.
+     */
+    public void unregister(UnregisterCommand command) throws AuthenticationFailedException {
+        var existing = credentials.findBy(CredentialQuery.builder()
+                .username(command.getUsername())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        if (!BCrypt.checkpw(command.getPassword(), existing.getHashedPassword())) {
+            throw new AuthenticationFailedException();
+        }
+
+        credentials.remove(existing.getId());
     }
 
     /**
