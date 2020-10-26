@@ -14,11 +14,15 @@
     <!-- Filters -->
     <filter>
         <filter-name>provide-connected-filter</filter-name>
-        <filter-class>ch.heigvd.amt.stack.ui.web.views.ProvideConnectedFilter</filter-class>
+        <filter-class>ch.heigvd.amt.stack.ui.web.filter.ProvideConnectedFilter</filter-class>
     </filter>
     <filter>
         <filter-name>authorize-filter</filter-name>
         <filter-class>ch.heigvd.amt.stack.ui.web.filter.AuthorizationFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>statistics-filter</filter-name>
+        <filter-class>ch.heigvd.amt.stack.ui.web.filter.ProvideStatisticsFilter</filter-class>
     </filter>
 
     <!-- Filter mappings -->
@@ -29,6 +33,10 @@
     <filter-mapping>
         <filter-name>authorize-filter</filter-name>
         <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>statistics-filter</filter-name>
+        <url-pattern>/</url-pattern>
     </filter-mapping>
 
 </web-app>
