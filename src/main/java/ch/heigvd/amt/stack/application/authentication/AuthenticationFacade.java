@@ -11,6 +11,8 @@ import ch.heigvd.amt.stack.domain.authentication.*;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.inject.Inject;
+import java.util.Objects;
+import java.util.Optional;
 
 public class AuthenticationFacade {
 
@@ -113,11 +115,20 @@ public class AuthenticationFacade {
      * @return A {@link ConnectedDTO} with true set if the user is connected.
      */
     public ConnectedDTO connected(SessionQuery query) {
-        boolean connected = sessions.findBy(query)
-                .map(session -> session.getUser() != null)
-                .orElse(false);
-        return ConnectedDTO.builder()
-                .connected(connected)
-                .build();
+        return sessions.findBy(query)
+                .map(Session::getUser)
+                .flatMap(credentials::findById)
+
+                // Get the connected user.
+                .map(credential -> ConnectedDTO.builder()
+                        .username(credential.getUsername())
+                        .connected(true)
+                        .build())
+
+                // Or indicate that we don't know about them.
+                .orElse(ConnectedDTO.builder()
+                        .username(null)
+                        .connected(false)
+                        .build());
     }
 }
