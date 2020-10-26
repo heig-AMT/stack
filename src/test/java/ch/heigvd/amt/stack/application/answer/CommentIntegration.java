@@ -37,7 +37,7 @@ public class CommentIntegration {
     }
 
     @Test
-    public void testRegisteredUserCanNotCommentOnMissingComment() {
+    public void testRegisteredUserCanNotCommentOnMissingAnswer() {
         var register = RegisterCommand.builder()
                 .username("alice")
                 .password("password")
