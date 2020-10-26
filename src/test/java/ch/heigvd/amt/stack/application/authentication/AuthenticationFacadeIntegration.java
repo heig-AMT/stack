@@ -182,4 +182,17 @@ public class AuthenticationFacadeIntegration {
            facade.changePassword(changePassword);
         });
     }
+
+    @Test
+    public void testCanNotChangePasswordForMissingUser() {
+        var changePassword = ChangePasswordCommand.builder()
+                .username("alice")
+                .currentPassword("missing")
+                .newPassword("iloveyou")
+                .build();
+
+        assertThrows(AuthenticationFailedException.class, () -> {
+            facade.changePassword(changePassword);
+        });
+    }
 }
