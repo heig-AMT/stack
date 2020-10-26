@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,6 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
 
     @Override
     public Collection<Comment> findAll() {
-        return null;
+        return List.of();
     }
 }
