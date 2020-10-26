@@ -44,6 +44,7 @@ public class AnswerFacade {
                     .author(credentialRepository.findById(comment.getCreator()).map(Credential::getUsername).get())
                     .creation(comment.getCreation())
                     .contents(comment.getContents())
+                    .id(comment.getId())
                     .deletionEnabled(deletionEnabled) // true if we are the creator.
                     .build();
         }
