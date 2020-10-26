@@ -11,8 +11,6 @@ import ch.heigvd.amt.stack.domain.authentication.*;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.inject.Inject;
-import java.util.Objects;
-import java.util.Optional;
 
 public class AuthenticationFacade {
 
