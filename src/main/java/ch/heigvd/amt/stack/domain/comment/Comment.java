@@ -6,6 +6,8 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import lombok.Builder;
 import lombok.Value;
 
+import java.time.Instant;
+
 @Builder
 @Value
 public class Comment implements Entity<CommentId> {
@@ -16,4 +18,5 @@ public class Comment implements Entity<CommentId> {
     CredentialId creator;
 
     String contents;
+    Instant creation;
 }

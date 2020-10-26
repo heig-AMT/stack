@@ -50,6 +50,16 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
                     ", CONSTRAINT fkQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion) ON UPDATE CASCADE ON DELETE CASCADE);";
 
+    private static final String CREATE_COMMENTS =
+            "CREATE TABLE IF NOT EXISTS Comment" +
+                    "( idComment VARCHAR PRIMARY KEY " +
+                    ", idxAnswer VARCHAR" +
+                    ", idxCredential VARCHAR" +
+                    ", contents VARCHAR(1000)" +
+                    ", instant TIMESTAMP" +
+                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
+                    ", CONSTRAINT fkAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);";
+
     private static final String CREATE_VOTES =
             "CREATE TABLE IF NOT EXISTS Vote" +
                     "( idxAnswer VARCHAR "+
@@ -65,6 +75,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             connection.prepareStatement(CREATE_SESSIONS).execute();
             connection.prepareStatement(CREATE_QUESTIONS).execute();
             connection.prepareStatement(CREATE_ANSWERS).execute();
+            connection.prepareStatement(CREATE_COMMENTS).execute();
             connection.prepareStatement(CREATE_VOTES).execute();
 
         } catch (SQLException exception) {

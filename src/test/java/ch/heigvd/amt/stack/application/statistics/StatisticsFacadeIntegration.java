@@ -24,12 +24,13 @@ public class StatisticsFacadeIntegration {
     @BeforeEach
     public void prepare() {
         var answers = new InMemoryAnswerRepository();
+        var comments = new InMemoryCommentRepository();
         var credentials = new InMemoryCredentialRepository();
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
         var votes = new InMemoryVoteRepository();
 
-        this.answerFacade = new AnswerFacade(credentials, answers, questions, sessions, votes);
+        this.answerFacade = new AnswerFacade(comments, credentials, answers, questions, sessions, votes);
         this.authenticationFacade = new AuthenticationFacade(credentials, sessions);
         this.questionFacade = new QuestionFacade(answers, credentials, questions, sessions);
         this.statisticsFacade = new StatisticsFacade(answers, credentials, questions);
