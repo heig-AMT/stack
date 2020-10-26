@@ -25,11 +25,11 @@ public class StatisticsFacade {
         this.questionRepository = questions;
     }
 
-    public UsageStatisticsDTO getUsageStatistics(UsageStatisticsQuery query) {
+    public UsageStatisticsDTO getUsageStatistics(UsageStatisticsQuery ignored) {
         return UsageStatisticsDTO.builder()
-                .answerCount(answerRepository.findAll().size())
-                .questionCount(questionRepository.findAll().size())
-                .userCount(credentialRepository.findAll().size())
+                .answerCount(answerRepository.size())
+                .questionCount(questionRepository.size())
+                .userCount(credentialRepository.size())
                 .build();
     }
 }

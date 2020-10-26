@@ -14,6 +14,11 @@ public abstract class InMemoryRepository<E extends Entity<I>, I extends Id> impl
     private final Map<I, E> store = new ConcurrentHashMap<>();
 
     @Override
+    public long size() {
+        return store.size();
+    }
+
+    @Override
     public void save(E entity) {
         store.put(entity.getId(), entity);
     }

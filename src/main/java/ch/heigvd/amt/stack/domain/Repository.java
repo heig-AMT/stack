@@ -5,6 +5,10 @@ import java.util.Optional;
 
 public interface Repository<Entity, Id> {
 
+    default long size() {
+        return findAll().size();
+    }
+
     void save(Entity entity);
 
     void remove(Id id);
