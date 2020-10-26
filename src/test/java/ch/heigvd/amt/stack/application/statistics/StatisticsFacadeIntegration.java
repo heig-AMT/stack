@@ -1,21 +1,22 @@
 package ch.heigvd.amt.stack.application.statistics;
 
+import ch.heigvd.amt.stack.application.answer.AnswerFacade;
+import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
 import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.statistics.query.UsageStatisticsQuery;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryAnswerRepository;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryQuestionRepository;
-import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemorySessionRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StatisticsFacadeIntegration {
 
+    private AnswerFacade answerFacade;
     private AuthenticationFacade authenticationFacade;
     private QuestionFacade questionFacade;
     private StatisticsFacade statisticsFacade;
@@ -26,7 +27,9 @@ public class StatisticsFacadeIntegration {
         var credentials = new InMemoryCredentialRepository();
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
+        var votes = new InMemoryVoteRepository();
 
+        this.answerFacade = new AnswerFacade(credentials, answers, questions, sessions, votes);
         this.authenticationFacade = new AuthenticationFacade(credentials, sessions);
         this.questionFacade = new QuestionFacade(answers, credentials, questions, sessions);
         this.statisticsFacade = new StatisticsFacade(answers, credentials, questions);
@@ -92,6 +95,44 @@ public class StatisticsFacadeIntegration {
 
         assertEquals(0, stats.getAnswerCount());
         assertEquals(3, stats.getQuestionCount());
+        assertEquals(1, stats.getUserCount());
+    }
+
+    @Test
+    public void testRegisteredUserCanAnswerQuestionsThatAreProperlyCounted() {
+        var aliceRegister = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        authenticationFacade.register(aliceRegister);
+
+        var askQuestion = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag("tag")
+                .build();
+
+        var questionId = questionFacade.askQuestion(askQuestion);
+
+        var answerQuestion = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag("tag")
+                .build();
+
+        assertDoesNotThrow(() -> {
+            answerFacade.answer(answerQuestion);
+            answerFacade.answer(answerQuestion);
+            answerFacade.answer(answerQuestion);
+            answerFacade.answer(answerQuestion);
+        });
+
+        var query = new UsageStatisticsQuery();
+        var stats = statisticsFacade.getUsageStatistics(query);
+
+        assertEquals(4, stats.getAnswerCount());
+        assertEquals(1, stats.getQuestionCount());
         assertEquals(1, stats.getUserCount());
     }
 }
