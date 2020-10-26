@@ -27,9 +27,9 @@ public class StatisticsFacade {
 
     public UsageStatisticsDTO getUsageStatistics(UsageStatisticsQuery query) {
         return UsageStatisticsDTO.builder()
-                .answerCount(0)
-                .questionCount(0)
-                .userCount(0)
+                .answerCount(answerRepository.findAll().size())
+                .questionCount(questionRepository.findAll().size())
+                .userCount(credentialRepository.findAll().size())
                 .build();
     }
 }
