@@ -16,7 +16,7 @@
             stack<span class="font-bold">underflow</span>
         </h1>
         <h3 class="text-gray-800 font-extrabold text-2xl">
-            Ask anything like our <c:out value="${statistics.questionCount}"/> code related questions, answer them like <c:out value="${statistics.questionCount}"/> others did, and get insulted by <c:out value="${statistics.userCount}"/> of your peers!
+            Ask anything like our <c:out value="${statistics.questionCount}"/> code related questions, answer them like <c:out value="${statistics.answerCount}"/> others did, and get insulted by <c:out value="${statistics.userCount}"/> of your peers!
         </h3>
     </div>
 </div>

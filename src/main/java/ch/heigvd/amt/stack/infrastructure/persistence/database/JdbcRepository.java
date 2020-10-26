@@ -28,7 +28,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     "( idSession VARCHAR PRIMARY KEY" +
                     ", idxCredential VARCHAR" +
                     ", tag VARCHAR(50) " +
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
+                    ", CONSTRAINT fkSessionCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     private static final String CREATE_QUESTIONS =
             "CREATE TABLE IF NOT EXISTS Question" +
@@ -38,7 +38,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", title VARCHAR(50)" +
                     ", description VARCHAR(200)" +
                     ", instant TIMESTAMP" +
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
+                    ", CONSTRAINT fkQuestionCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     private static final String CREATE_ANSWERS =
             "CREATE TABLE IF NOT EXISTS Answer" +
@@ -47,8 +47,18 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", idxCredential VARCHAR" +
                     ", description VARCHAR(1000)" +
                     ", instant TIMESTAMP" +
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
-                    ", CONSTRAINT fkQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion) ON UPDATE CASCADE ON DELETE CASCADE);";
+                    ", CONSTRAINT fkAnswerCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
+                    ", CONSTRAINT fkAnswerQuestion FOREIGN KEY (idxQuestion) REFERENCES Question (idQuestion) ON UPDATE CASCADE ON DELETE CASCADE);";
+
+    private static final String CREATE_COMMENTS =
+            "CREATE TABLE IF NOT EXISTS Comment" +
+                    "( idComment VARCHAR PRIMARY KEY " +
+                    ", idxAnswer VARCHAR" +
+                    ", idxCredential VARCHAR" +
+                    ", contents VARCHAR(1000)" +
+                    ", instant TIMESTAMP" +
+                    ", CONSTRAINT fkCommentCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
+                    ", CONSTRAINT fkCommentAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     private static final String CREATE_VOTES =
             "CREATE TABLE IF NOT EXISTS Vote" +
@@ -56,8 +66,8 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
                     ", idxCredential VARCHAR" +
                     ", isUpvote BOOLEAN" +
                     ", PRIMARY KEY (idxAnswer, idxCredential)"+
-                    ", CONSTRAINT fkCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
-                    ", CONSTRAINT fkAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);";
+                    ", CONSTRAINT fkVoteCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
+                    ", CONSTRAINT fkVoteAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);";
 
     protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {
@@ -65,6 +75,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             connection.prepareStatement(CREATE_SESSIONS).execute();
             connection.prepareStatement(CREATE_QUESTIONS).execute();
             connection.prepareStatement(CREATE_ANSWERS).execute();
+            connection.prepareStatement(CREATE_COMMENTS).execute();
             connection.prepareStatement(CREATE_VOTES).execute();
 
         } catch (SQLException exception) {
