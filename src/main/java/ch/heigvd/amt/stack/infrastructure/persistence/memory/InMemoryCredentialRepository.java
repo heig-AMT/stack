@@ -20,7 +20,7 @@ public class InMemoryCredentialRepository extends InMemoryRepository<Credential,
         Optional<Credential> previous = findBy(CredentialQuery.builder()
                 .username(entity.getUsername())
                 .build());
-        if (previous.isPresent()) {
+        if (previous.isPresent() && !entity.getId().equals(previous.get().getId())) {
             throw new AuthenticationFailedException();
         }
         super.save(entity);
