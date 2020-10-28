@@ -1,6 +1,6 @@
 Feature('addQuestions');
 
-const { I, registerPage, loginPage, questionsPage, logoutPage } = inject();
+const { I, registerPage, loginPage, questionsPage, profilePage } = inject();
 
 Scenario('When adding a question, must be redirected to it\'s own page', (I, registerPage, questionsPage) => {
   registerPage.register();
@@ -22,10 +22,10 @@ Scenario('When adding a question, it must appear in question list', (I, register
   I.see(question.description);
 });
 
-Scenario('/ask redirects to /login when logged out', (I, registerPage, logoutPage) => {
+Scenario('/ask redirects to /login when logged out', (I, registerPage, profilePage) => {
   registerPage.register();
 
-  logoutPage.logout();
+  profilePage.logout();
 
   I.amOnPage('/ask');
   I.waitInUrl('/login', 2);
