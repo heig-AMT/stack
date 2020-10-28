@@ -1,7 +1,7 @@
 package ch.heigvd.amt.stack.ui.web.endpoints.profile;
 
 import ch.heigvd.amt.stack.application.AuthenticationFacade;
-import ch.heigvd.amt.stack.application.authentication.command.ChangePasswordCommand;
+import ch.heigvd.amt.stack.application.authentication.command.UnregisterCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 
 import javax.inject.Inject;
@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "ChangePasswordCommandEndpoint", urlPatterns = "/changePassword.do")
-public class ChangePasswordCommandEndpoint extends HttpServlet {
+@WebServlet(name = "UnregisterCommandEndpoint", urlPatterns = "/deleteAccount.do")
+public class UnregisterCommandEndpoint extends HttpServlet {
 
     @Inject
     private AuthenticationFacade authenticationFacade;
@@ -20,13 +20,12 @@ public class ChangePasswordCommandEndpoint extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            authenticationFacade.changePassword(ChangePasswordCommand.builder()
+            authenticationFacade.unregister(UnregisterCommand.builder()
                     .username(req.getParameter("username"))
-                    .currentPassword(req.getParameter("currentPassword"))
-                    .newPassword(req.getParameter("newPassword"))
+                    .password(req.getParameter("password"))
                     .build());
 
-            String redirect = getServletContext().getContextPath() + "/profile";
+            String redirect = getServletContext().getContextPath() + "/questions";
             resp.sendRedirect(redirect);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.
