@@ -9,8 +9,7 @@
 </jsp:include>
 <body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="WEB-INF/views/fragments/navigation.jsp"/>
-<div class="pt-16"/>
-<div class="flex h-full items-center justify-center text-center">
+<div class="flex p-16 h-screen items-center justify-center text-center">
     <div>
         <h1 class="text-white text-6xl">
             stack<span class="font-bold">underflow</span>

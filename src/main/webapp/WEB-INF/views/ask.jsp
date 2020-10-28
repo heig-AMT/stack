@@ -6,8 +6,7 @@
 <body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
 <div class="pt-16"/>
-<div class="flex h-full
-            items-center justify-center">
+<div class="flex mt-8 items-center justify-center">
     <div class="p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <h1 class="text-center text-4xl">
             Ask a question
