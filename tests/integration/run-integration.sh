@@ -15,7 +15,7 @@ mvn clean package
 
 # Start a local open-liberty deployment server.
 mvn liberty:create liberty:install-feature liberty:deploy
-mvn liberty:start
+# mvn liberty:start
 mvn liberty:configure-arquillian
 
 # Verify that the tests were successful.

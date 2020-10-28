@@ -15,6 +15,7 @@ import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class QuestionFacade {
 
     private final AnswerRepository answerRepository;

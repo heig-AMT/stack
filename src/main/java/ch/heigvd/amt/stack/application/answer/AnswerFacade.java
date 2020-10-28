@@ -22,12 +22,14 @@ import ch.heigvd.amt.stack.domain.vote.Vote;
 import ch.heigvd.amt.stack.domain.vote.VoteId;
 import ch.heigvd.amt.stack.domain.vote.VoteRepository;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class AnswerFacade {
 
     private final CredentialRepository credentialRepository;

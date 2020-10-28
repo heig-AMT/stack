@@ -11,7 +11,7 @@
 
     <httpEndpoint
             id="defaultHttpEndpoint"
-            httpPort="${env.PORT}"/>
+            httpPort="9081"/>
 
     <library id="driver-library">
         <fileset dir="${server.config.dir}/drivers/" includes="*.jar"/>
@@ -19,10 +19,10 @@
 
     <dataSource id="DefaultDataSource" jndiName="jdbc/db">
         <jdbcDriver libraryRef="driver-library"/>
-        <properties.postgresql serverName="${env.JDBC_DATABASE_URL}"
-                               user="${env.JDBC_DATABASE_USERNAME}"
-                               password="${env.JDBC_DATABASE_PASSWORD}"
-                               databaseName="${env.JDBC_DATABASE_NAME}"/>
+        <properties.postgresql serverName="localhost:5432"
+                               user="postgres"
+                               password="123456"
+                               databaseName="postgres"/>
     </dataSource>
 
     <applicationMonitor updateTrigger="mbean"/>

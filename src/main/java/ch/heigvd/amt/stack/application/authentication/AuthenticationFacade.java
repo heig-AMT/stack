@@ -9,8 +9,10 @@ import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
+@RequestScoped
 public class AuthenticationFacade {
 
     private final CredentialRepository credentials;
