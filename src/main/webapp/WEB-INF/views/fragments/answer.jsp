@@ -53,7 +53,7 @@
             </c:choose>
         </form>
     </div>
-    <div class="px-6 py-2 w-full rounded-lg
+    <div class="px-4 py-2 w-full rounded-lg
             bg-white hover:bg-gray-100
             border-b border-gray-200
             shadow hover:shadow-lg
