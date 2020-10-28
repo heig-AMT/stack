@@ -30,6 +30,7 @@ public class RegisterCommandEndpoint extends HttpServlet {
             redirect = (redirect != null)
                     ? redirect
                     : getServletContext().getContextPath() + "/questions";
+            req.getSession().removeAttribute("redirectUrl");
             resp.sendRedirect(redirect);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.
