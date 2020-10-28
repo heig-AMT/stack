@@ -31,8 +31,9 @@
 
             <div class="mt-4">
                 <label for="username" class="block uppercase text-xs font-bold text-gray-700">Username</label>
-                <input class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
-                       id="username" type="text" name="username" placeholder="<c:out value="${connected.username}"/>" disabled>
+                <span id="username" class="mt-2 p-3 block w-full bg-white text-gray-400 font-medium border border-gray-400 rounded-lg">
+                    <c:out value="${connected.username}"/>
+                </span>
             </div>
         </div>
 
@@ -53,20 +54,20 @@
                     <div class="">
                         <label for="currentPassword" class="block uppercase text-xs font-bold text-gray-700">Current password</label>
                         <input id="currentPassword"
-                               class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                               class="mt-2 p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                                type="password" name="currentPassword" placeholder="Current password" required>
                     </div>
 
                     <div class="mt-4">
                         <label for="newPassword" class="block uppercase text-xs font-bold text-gray-700">New password</label>
                         <input id="newPassword"
-                               class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                               class="mt-2 p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                                type="password" name="newPassword" placeholder="New password" required>
                     </div>
 
                 </div>
-                <div class="mt-4">
-                    <input class="block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-800 focus:border-gray-500"
+                <div class="mt-4 px-3">
+                    <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-800 focus:border-gray-500"
                            type="submit" value="Change password"/>
                 </div>
             </form>
@@ -87,15 +88,18 @@
             <div class="flex flex-col">
                 <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
                 <div class="">
-                    <label for="password" class="block uppercase text-xs font-bold text-gray-700">Current password</label>
+                    <label for="password" class="block uppercase text-xs font-bold text-gray-700">Confirm password</label>
                     <input id="password"
-                           class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                           class="mt-2 p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                            type="password" name="password" placeholder="Password" required>
                 </div>
-
+                <span class="px-3 pt-1 text-sm text-red-500">
+                    Note: All your questions, answers, comments and votes will be deleted as well.
+                </span>
             </div>
-            <div class="mt-4">
-                <input class="block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-700 focus:border-gray-500"
+
+            <div class="mt-4 px-3">
+                <input class="p-3 block w-full bg-red-600 text-white font-bold border border-gray-200 rounded-lg hover:bg-red-700 focus:bg-red-800 focus:border-gray-500"
                        type="submit" value="Delete account"/>
             </div>
         </form>
