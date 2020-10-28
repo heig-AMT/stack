@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "DeleteAccountCommandEndpoint", urlPatterns = "/deleteAccount.do")
-public class DeleteAccountCommandEndpoint extends HttpServlet {
+@WebServlet(name = "UnregisterCommandEndpoint", urlPatterns = "/deleteAccount.do")
+public class UnregisterCommandEndpoint extends HttpServlet {
 
     @Inject
     private AuthenticationFacade authenticationFacade;
