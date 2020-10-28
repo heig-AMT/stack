@@ -11,7 +11,7 @@
             items-center justify-center
             bg-gradient-to-r from-teal-400 to-blue-500">
 
-    <div class="max-w-xl w-full bg-white rounded-lg shadow-md">
+    <div class="p-8 max-w-xl w-full bg-white rounded-lg shadow-md">
 
         <!-- Profile title -->
         <div class="text-center">
@@ -21,59 +21,58 @@
         </div>
 
         <!-- Username section -->
-        <div class="border-t-2 color-white">
+        <div class="mt-8 border-t-2 color-white">
             <h1 class="text-2xl">
                 Username
             </h1>
             <span class="text-sm">
                 Here you can see your username, but not change it.
             </span>
-        </div>
 
-        <div class="">
-            <label for="username" class="block uppercase text-xs font-bold text-gray-700">Username</label>
-            <input class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
-                   id="username" type="text" name="username" placeholder="<c:out value="${connected.username}"/>" disabled>
+            <div class="mt-4">
+                <label for="username" class="block uppercase text-xs font-bold text-gray-700">Username</label>
+                <input class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                       id="username" type="text" name="username" placeholder="<c:out value="${connected.username}"/>" disabled>
+            </div>
         </div>
 
         <!-- Password section -->
-        <div class="border-t-2 color-white">
+        <div class="mt-8 border-t-2 color-white">
             <h1 class="text-2xl">
                 Password
             </h1>
             <span class="text-sm">
                 Here you can change your password.
             </span>
+
+            <form action="changePassword.do"
+                  method="POST"
+                  class="mt-4"><!-- TODO: Change to PUT -->
+                <div class="flex flex-col">
+                    <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
+                    <div class="">
+                        <label for="currentPassword" class="block uppercase text-xs font-bold text-gray-700">Current password</label>
+                        <input id="currentPassword"
+                               class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                               type="password" name="currentPassword" placeholder="Current password" required>
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="newPassword" class="block uppercase text-xs font-bold text-gray-700">New password</label>
+                        <input id="newPassword"
+                               class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
+                               type="password" name="newPassword" placeholder="New password" required>
+                    </div>
+
+                </div>
+                <div class="mt-4">
+                    <input class="block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-800 focus:border-gray-500"
+                           type="submit" value="Change password"/>
+                </div>
+            </form>
         </div>
-
-        <form action="changePassword.do"
-              method="POST"
-              class="w-full"><!-- TODO: Change to PUT -->
-            <div class="flex flex-col">
-                <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
-                <div class="">
-                    <label for="currentPassword" class="block uppercase text-xs font-bold text-gray-700">Current password</label>
-                    <input id="currentPassword"
-                           class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
-                           type="password" name="currentPassword" placeholder="Current password" required>
-                </div>
-
-                <div class="">
-                    <label for="newPassword" class="mb-2 block uppercase text-xs font-bold text-gray-700">New password</label>
-                    <input id="newPassword"
-                           class="block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
-                           type="password" name="newPassword" placeholder="New password" required>
-                </div>
-
-            </div>
-            <div class="w-full">
-                <input class="block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-800 focus:border-gray-500"
-                       type="submit" value="Change password"/>
-            </div>
-        </form>
-
         <!-- Delete profile section -->
-        <div class="border-t-2 color-white">
+        <div class="mt-8 border-t-2 color-white">
             <h1 class="text-2xl">
                 Delete account
             </h1>
@@ -84,7 +83,7 @@
 
         <form action="deleteAccount.do"
               method="POST"
-              class="w-full"><!-- TODO: Change to DELETE -->
+              class="mt-4"><!-- TODO: Change to DELETE -->
             <div class="flex flex-col">
                 <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
                 <div class="">
@@ -95,7 +94,7 @@
                 </div>
 
             </div>
-            <div class="w-full">
+            <div class="mt-4">
                 <input class="block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-700 focus:border-gray-500"
                        type="submit" value="Delete account"/>
             </div>
