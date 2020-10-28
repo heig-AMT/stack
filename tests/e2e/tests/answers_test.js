@@ -2,18 +2,17 @@ Feature('answers');
 
 const {
   I,
-  registerPage,
   profilePage,
   questionsPage,
   answersPage
 } = inject();
 
-Scenario('Add an answer', (I, profilePage, registerPage, questionsPage, answersPage) => {
-  registerPage.register();
+Scenario('Add an answer', (I, profilePage, questionsPage, answersPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
   profilePage.logout();
 
-  const user2 = registerPage.register();
+  const user2 = profilePage.register();
   I.click("Questions")
   I.click(question.title);
 
@@ -23,8 +22,8 @@ Scenario('Add an answer', (I, profilePage, registerPage, questionsPage, answersP
   I.see(answer);
 });
 
-Scenario('Cannot add an answer, when not logged in', (I, profilePage, registerPage, questionsPage) => {
-  registerPage.register();
+Scenario('Cannot add an answer, when not logged in', (I, profilePage, questionsPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
   profilePage.logout();
 
@@ -36,8 +35,8 @@ Scenario('Cannot add an answer, when not logged in', (I, profilePage, registerPa
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Can delete my answer', (I, registerPage, questionsPage, answersPage) => {
-  registerPage.register();
+Scenario('Can delete my answer', (I, questionsPage, answersPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
 
   I.click("Questions");
@@ -51,8 +50,8 @@ Scenario('Can delete my answer', (I, registerPage, questionsPage, answersPage) =
   I.dontSee(answer);
 });
 
-Scenario('Cannot delete someone\'s answer', (I, profilePage, registerPage, questionsPage, answersPage) => {
-  registerPage.register();
+Scenario('Cannot delete someone\'s answer', (I, profilePage, questionsPage, answersPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
 
   I.click("Questions");

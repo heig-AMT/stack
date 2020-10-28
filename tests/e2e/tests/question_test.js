@@ -1,9 +1,13 @@
 Feature('addQuestions');
 
-const { I, registerPage, questionsPage, profilePage } = inject();
+const {
+  I,
+  questionsPage,
+  profilePage
+} = inject();
 
-Scenario('When adding a question, must be redirected to it\'s own page', (I, registerPage, questionsPage) => {
-  registerPage.register();
+Scenario('When adding a question, must be redirected to it\'s own page', (I, profilePage, questionsPage) => {
+  profilePage.register();
 
   const question = questionsPage.addQuestion();
 
@@ -12,8 +16,8 @@ Scenario('When adding a question, must be redirected to it\'s own page', (I, reg
   I.see(question.description);
 });
 
-Scenario('When adding a question, it must appear in question list', (I, registerPage, questionsPage) => {
-  registerPage.register();
+Scenario('When adding a question, it must appear in question list', (I, profilePage, questionsPage) => {
+  profilePage.register();
 
   const question = questionsPage.addQuestion();
 
@@ -22,8 +26,8 @@ Scenario('When adding a question, it must appear in question list', (I, register
   I.see(question.description);
 });
 
-Scenario('/ask redirects to /login when logged out', (I, registerPage, profilePage) => {
-  registerPage.register();
+Scenario('/ask redirects to /login when logged out', (I, profilePage) => {
+  profilePage.register();
 
   profilePage.logout();
 
@@ -31,8 +35,8 @@ Scenario('/ask redirects to /login when logged out', (I, registerPage, profilePa
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Filter questions', (I, registerPage, profilePage, questionsPage) => {
-  const register = registerPage.register();
+Scenario('Filter questions', (I, profilePage, questionsPage) => {
+  const register = profilePage.register();
 
   profilePage.login(register.user, register.password);
 

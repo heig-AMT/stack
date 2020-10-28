@@ -1,9 +1,12 @@
 Feature('register');
 
-const { I, registerPage } = inject();
+const {
+  I,
+  profilePage
+} = inject();
 
-Scenario('User is redirect to /questions after registering', (I, registerPage) => {
-  registerPage.register();
+Scenario('User is redirect to /questions after registering', (I, profilePage) => {
+  profilePage.register();
 
   I.seeInCurrentUrl('/questions');
 });

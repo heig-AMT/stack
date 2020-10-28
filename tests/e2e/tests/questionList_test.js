@@ -1,9 +1,13 @@
 Feature('questionList');
 
-const { I, registerPage, questionsPage, profilePage } = inject();
+const {
+  I,
+  questionsPage,
+  profilePage
+} = inject();
 
-Scenario('See questions when not logged in', (I, registerPage, profilePage, questionsPage) => {
-  registerPage.register();
+Scenario('See questions when not logged in', (I, profilePage, questionsPage) => {
+  profilePage.register();
 
   const question1 = questionsPage.addQuestion();
   profilePage.logout();
