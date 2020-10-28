@@ -4,7 +4,6 @@ const assert = require('assert');
 const {
   I,
   registerPage,
-  loginPage,
   questionsPage,
   profilePage,
   answersPage

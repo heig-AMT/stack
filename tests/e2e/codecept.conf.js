@@ -15,7 +15,6 @@ exports.config = {
   },
   include: {
     I: './steps_file.js',
-    loginPage: './pages/Login.js',
     registerPage: './pages/Register.js',
     questionsPage: './pages/Questions.js',
     answersPage: './pages/Answers.js',

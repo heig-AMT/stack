@@ -3,9 +3,8 @@ Feature('answers');
 const {
   I,
   registerPage,
-  loginPage,
-  questionsPage,
   profilePage,
+  questionsPage,
   answersPage
 } = inject();
 

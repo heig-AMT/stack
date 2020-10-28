@@ -1,6 +1,6 @@
 Feature('addQuestions');
 
-const { I, registerPage, loginPage, questionsPage, profilePage } = inject();
+const { I, registerPage, questionsPage, profilePage } = inject();
 
 Scenario('When adding a question, must be redirected to it\'s own page', (I, registerPage, questionsPage) => {
   registerPage.register();
@@ -31,10 +31,10 @@ Scenario('/ask redirects to /login when logged out', (I, registerPage, profilePa
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
+Scenario('Filter questions', (I, registerPage, profilePage, questionsPage) => {
   const register = registerPage.register();
 
-  loginPage.login(register.user, register.password);
+  profilePage.login(register.user, register.password);
 
   const question1 = questionsPage.addQuestion();
   const question2 = questionsPage.addQuestion();

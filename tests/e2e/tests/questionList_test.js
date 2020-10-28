@@ -1,6 +1,6 @@
 Feature('questionList');
 
-const { I, registerPage, loginPage, questionsPage, profilePage } = inject();
+const { I, registerPage, questionsPage, profilePage } = inject();
 
 Scenario('See questions when not logged in', (I, registerPage, profilePage, questionsPage) => {
   registerPage.register();
