@@ -8,7 +8,7 @@
 <jsp:useBean scope="request" id="answer" type="ch.heigvd.amt.stack.application.answer.dto.AnswerDTO"/>
 
 <div class="flex flex-row justify-center mt-4">
-    <div class="mx-2 flex flex-col">
+    <div class="mx-2 flex flex-col voteBox">
         <form class="mt-2 mb-0 self-center" action="vote.do" method="POST">
             <input type="hidden" name="type" value="upvote"/>
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
@@ -66,6 +66,15 @@
         <span class="text-gray-500"><c:out value="${answer.body}"/></span>
         <div class="flex-grow"></div>
         <div class="flex flex-row">
+            <c:if test="${answer.deletionEnabled}">
+                <form class="flex items-end mb-0" action="deleteAnswer.do" method="POST">
+                    <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
+                    <div class="flex flex-row">
+                        <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
+                        <input class="ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600 cursor-pointer" type="submit" value="Delete"/>
+                    </div>
+                </form>
+            </c:if>
             <div class="flex-grow"></div>
             <div class="flex flex-col items-end">
                 <span class="text-sm text-gray-500">

@@ -7,4 +7,5 @@ import lombok.Value;
 @Value
 public class ConnectedDTO {
     boolean connected;
+    String username;
 }

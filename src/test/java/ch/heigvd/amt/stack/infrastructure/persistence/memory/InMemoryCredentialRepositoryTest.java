@@ -5,12 +5,13 @@ import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InMemoryCredentialRepositoryTest {
 
     @Test
-    public void testDuplicatesInsertionsOfCredentialsFail() {
+    public void testCredentialUpdatesWork() {
         var repository = new InMemoryCredentialRepository();
         var credentialsId = CredentialId.create();
         var credentials = Credential.builder()
@@ -20,8 +21,27 @@ public class InMemoryCredentialRepositoryTest {
                 .build();
 
         repository.save(credentials);
-        assertThrows(AuthenticationFailedException.class, () -> {
+        assertDoesNotThrow(() -> {
             repository.save(credentials);
+        });
+    }
+
+    @Test
+    public void testDuplicateCredentialsDoNotWork() {
+        var repository = new InMemoryCredentialRepository();
+        var alice = Credential.builder()
+                .id(CredentialId.create())
+                .username("alice")
+                .hashedPassword("hashed")
+                .build();
+        var mallory = Credential.builder()
+                .id(CredentialId.create())
+                .username("alice")
+                .hashedPassword("hashed")
+                .build();
+        repository.save(alice);
+        assertThrows(AuthenticationFailedException.class, () -> {
+            repository.save(mallory);
         });
     }
 }

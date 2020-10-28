@@ -1,7 +1,5 @@
 package ch.heigvd.amt.stack.application;
 
-import ch.heigvd.amt.stack.application.AuthenticationFacade;
-import ch.heigvd.amt.stack.application.QuestionFacade;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;

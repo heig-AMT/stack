@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.time.Instant;
+import java.util.List;
 
 @Builder
 @Value
@@ -13,6 +14,7 @@ public class AnswerDTO {
     String body;
     Instant creation;
     AnswerId id;
+    List<CommentDTO> comments;
     int positiveVotesCount;
     int negativeVotesCount;
     boolean hasPositiveVote;

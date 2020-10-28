@@ -19,6 +19,7 @@ exports.config = {
     registerPage: './pages/Register.js',
     questionsPage: './pages/Questions.js',
     logoutPage: './pages/Logout.js',
+    answersPage: './pages/Answers.js',
   },
   bootstrap: null,
   mocha: {},

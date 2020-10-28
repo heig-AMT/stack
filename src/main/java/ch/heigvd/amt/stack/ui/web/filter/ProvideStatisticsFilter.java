@@ -1,14 +1,15 @@
-package ch.heigvd.amt.stack.ui.web.views;
+package ch.heigvd.amt.stack.ui.web.filter;
 
-import ch.heigvd.amt.stack.application.AuthenticationFacade;
-import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
+import ch.heigvd.amt.stack.application.StatisticsFacade;
+import ch.heigvd.amt.stack.application.statistics.dto.UsageStatisticsDTO;
+import ch.heigvd.amt.stack.application.statistics.query.UsageStatisticsQuery;
 
 import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public class ProvideConnectedFilter implements Filter {
+public class ProvideStatisticsFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -16,15 +17,15 @@ public class ProvideConnectedFilter implements Filter {
     }
 
     @Inject
-    private AuthenticationFacade authenticationFacade;
+    private StatisticsFacade statisticsFacade;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         var httpRequest = (HttpServletRequest) request;
-        var query = SessionQuery.builder()
-                .tag(httpRequest.getSession().getId())
-                .build();
-        httpRequest.setAttribute("connected", authenticationFacade.connected(query));
+
+        UsageStatisticsDTO statistics = statisticsFacade.getUsageStatistics(new UsageStatisticsQuery());
+        httpRequest.setAttribute("statistics", statistics);
+
         chain.doFilter(request, response);
     }
 

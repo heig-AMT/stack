@@ -1,8 +1,6 @@
 package ch.heigvd.amt.stack.application;
 
-import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
-import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
-import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
+import ch.heigvd.amt.stack.application.authentication.command.*;
 import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
 import ch.heigvd.amt.stack.application.authentication.query.CredentialQuery;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
@@ -78,6 +76,48 @@ public class AuthenticationFacade {
     }
 
     /**
+     * Unregisters a user, namely deleting all of their data from the website.
+     *
+     * @param command The {@link UnregisterCommand} to be executed.
+     * @throws AuthenticationFailedException if something went wrong during the process.
+     */
+    public void unregister(UnregisterCommand command) throws AuthenticationFailedException {
+        var existing = credentials.findBy(CredentialQuery.builder()
+                .username(command.getUsername())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        if (!BCrypt.checkpw(command.getPassword(), existing.getHashedPassword())) {
+            throw new AuthenticationFailedException();
+        }
+
+        credentials.remove(existing.getId());
+    }
+
+    /**
+     * Changes the password of a certain user, but without logging them out of their existing sessions.
+     *
+     * @param command The {@link ChangePasswordCommand} to be executed.
+     * @throws AuthenticationFailedException if something went wrong in during the process.
+     */
+    public void changePassword(ChangePasswordCommand command) throws AuthenticationFailedException {
+        var existing = credentials.findBy(CredentialQuery.builder()
+                .username(command.getUsername())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        if (!BCrypt.checkpw(command.getCurrentPassword(), existing.getHashedPassword())) {
+            throw new AuthenticationFailedException();
+        }
+
+        credentials.save(Credential.builder()
+                .id(existing.getId())
+                .username(existing.getUsername())
+                .hashedPassword(BCrypt.hashpw(command.getNewPassword(), BCrypt.gensalt()))
+                .build());
+    }
+
+    /**
      * Returns a {@link ConnectedDTO} that indicates whether a certain user is tagged with a certain value, and
      * therefore connected.
      *
@@ -85,11 +125,20 @@ public class AuthenticationFacade {
      * @return A {@link ConnectedDTO} with true set if the user is connected.
      */
     public ConnectedDTO connected(SessionQuery query) {
-        boolean connected = sessions.findBy(query)
-                .map(session -> session.getUser() != null)
-                .orElse(false);
-        return ConnectedDTO.builder()
-                .connected(connected)
-                .build();
+        return sessions.findBy(query)
+                .map(Session::getUser)
+                .flatMap(credentials::findById)
+
+                // Get the connected user.
+                .map(credential -> ConnectedDTO.builder()
+                        .username(credential.getUsername())
+                        .connected(true)
+                        .build())
+
+                // Or indicate that we don't know about them.
+                .orElse(ConnectedDTO.builder()
+                        .username(null)
+                        .connected(false)
+                        .build());
     }
 }
