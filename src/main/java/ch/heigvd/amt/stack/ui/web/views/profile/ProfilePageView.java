@@ -1,8 +1,5 @@
 package ch.heigvd.amt.stack.ui.web.views.profile;
 
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
-
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

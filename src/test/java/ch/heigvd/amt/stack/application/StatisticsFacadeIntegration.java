@@ -1,10 +1,7 @@
-package ch.heigvd.amt.stack.application.statistics;
+package ch.heigvd.amt.stack.application;
 
-import ch.heigvd.amt.stack.application.answer.AnswerFacade;
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
-import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.statistics.query.UsageStatisticsQuery;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
@@ -30,10 +27,28 @@ public class StatisticsFacadeIntegration {
         var sessions = new InMemorySessionRepository();
         var votes = new InMemoryVoteRepository();
 
-        this.answerFacade = new AnswerFacade(comments, credentials, answers, questions, sessions, votes);
-        this.authenticationFacade = new AuthenticationFacade(credentials, sessions);
-        this.questionFacade = new QuestionFacade(answers, credentials, questions, sessions);
-        this.statisticsFacade = new StatisticsFacade(answers, credentials, questions);
+        this.answerFacade = new AnswerFacade();
+        this.answerFacade.answerRepository = answers;
+        this.answerFacade.commentRepository = comments;
+        this.answerFacade.credentialRepository = credentials;
+        this.answerFacade.questionRepository = questions;
+        this.answerFacade.sessionRepository = sessions;
+        this.answerFacade.voteRepository = votes;
+
+        this.authenticationFacade = new AuthenticationFacade();
+        this.authenticationFacade.credentials = credentials;
+        this.authenticationFacade.sessions = sessions;
+
+        this.questionFacade = new QuestionFacade();
+        this.questionFacade.answerRepository = answers;
+        this.questionFacade.credentialRepository = credentials;
+        this.questionFacade.sessionRepository = sessions;
+        this.questionFacade.repository = questions;
+
+        this.statisticsFacade = new StatisticsFacade();
+        this.statisticsFacade.answerRepository = answers;
+        this.statisticsFacade.credentialRepository = credentials;
+        this.statisticsFacade.questionRepository = questions;
     }
 
     @Test

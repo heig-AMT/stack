@@ -1,8 +1,6 @@
 package ch.heigvd.amt.stack.ui.web.filter;
 
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
-import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
-import ch.heigvd.amt.stack.application.statistics.StatisticsFacade;
+import ch.heigvd.amt.stack.application.StatisticsFacade;
 import ch.heigvd.amt.stack.application.statistics.dto.UsageStatisticsDTO;
 import ch.heigvd.amt.stack.application.statistics.query.UsageStatisticsQuery;
 

@@ -1,16 +1,12 @@
 package ch.heigvd.amt.stack.ui.web.endpoints.answer;
 
-import ch.heigvd.amt.stack.application.answer.AnswerFacade;
-import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
+import ch.heigvd.amt.stack.application.AnswerFacade;
 import ch.heigvd.amt.stack.application.answer.command.DownvoteAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.UpvoteAnswerCommand;
-import ch.heigvd.amt.stack.application.question.QuestionFacade;
-import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.query.SingleAnswerQuery;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
-import ch.heigvd.amt.stack.domain.question.QuestionId;
-import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 
 import javax.inject.Inject;
 import javax.servlet.ServletException;

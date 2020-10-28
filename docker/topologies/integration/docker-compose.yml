@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  # We only require a PostgreSQL database for integration tests.
+  database:
+    image: postgres:13.0
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5432:5432"

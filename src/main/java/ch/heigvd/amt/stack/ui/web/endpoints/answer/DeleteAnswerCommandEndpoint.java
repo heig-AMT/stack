@@ -1,8 +1,8 @@
 package ch.heigvd.amt.stack.ui.web.endpoints.answer;
 
-import ch.heigvd.amt.stack.application.answer.AnswerFacade;
+import ch.heigvd.amt.stack.application.AnswerFacade;
+import ch.heigvd.amt.stack.application.QuestionFacade;
 import ch.heigvd.amt.stack.application.answer.command.DeleteAnswerCommand;
-import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.query.SingleAnswerQuery;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;

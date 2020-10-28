@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.application.statistics;
+package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.statistics.dto.UsageStatisticsDTO;
 import ch.heigvd.amt.stack.application.statistics.query.UsageStatisticsQuery;
@@ -10,20 +10,14 @@ import javax.inject.Inject;
 
 public class StatisticsFacade {
 
-    private final AnswerRepository answerRepository;
-    private final CredentialRepository credentialRepository;
-    private final QuestionRepository questionRepository;
+    @Inject
+    AnswerRepository answerRepository;
 
     @Inject
-    public StatisticsFacade(
-            AnswerRepository answers,
-            CredentialRepository credentials,
-            QuestionRepository questions
-    ) {
-        this.answerRepository = answers;
-        this.credentialRepository = credentials;
-        this.questionRepository = questions;
-    }
+    CredentialRepository credentialRepository;
+
+    @Inject
+    QuestionRepository questionRepository;
 
     public UsageStatisticsDTO getUsageStatistics(UsageStatisticsQuery ignored) {
         return UsageStatisticsDTO.builder()

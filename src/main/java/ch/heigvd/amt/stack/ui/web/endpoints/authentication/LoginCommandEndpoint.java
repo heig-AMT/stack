@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.ui.web.endpoints.authentication;
 
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
+import ch.heigvd.amt.stack.application.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 

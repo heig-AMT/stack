@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.application.answer;
+package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.answer.command.*;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerDTO;
@@ -22,6 +22,7 @@ import ch.heigvd.amt.stack.domain.vote.Vote;
 import ch.heigvd.amt.stack.domain.vote.VoteId;
 import ch.heigvd.amt.stack.domain.vote.VoteRepository;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Comparator;
@@ -29,14 +30,27 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class AnswerFacade {
 
-    private final CommentRepository commentRepository;
-    private final CredentialRepository credentialRepository;
-    private final AnswerRepository answerRepository;
-    private final QuestionRepository questionRepository;
-    private final SessionRepository sessionRepository;
-    private final VoteRepository voteRepository;
+    @Inject
+    CommentRepository commentRepository;
+
+    @Inject
+    CredentialRepository credentialRepository;
+
+    @Inject
+    AnswerRepository answerRepository;
+
+    @Inject
+    QuestionRepository questionRepository;
+
+    @Inject
+    SessionRepository sessionRepository;
+
+    @Inject
+    VoteRepository voteRepository;
+
     private final BiFunction<Boolean, Comment, CommentDTO> commentToDTO = new BiFunction<>() {
         @Override
         public CommentDTO apply(Boolean deletionEnabled, Comment comment) {
@@ -49,23 +63,6 @@ public class AnswerFacade {
                     .build();
         }
     };
-
-    @Inject
-    public AnswerFacade(
-            CommentRepository comments,
-            CredentialRepository credentials,
-            AnswerRepository answers,
-            QuestionRepository questions,
-            SessionRepository sessions,
-            VoteRepository votes
-    ) {
-        this.commentRepository = comments;
-        this.credentialRepository = credentials;
-        this.answerRepository = answers;
-        this.questionRepository = questions;
-        this.sessionRepository = sessions;
-        this.voteRepository = votes;
-    }
 
     /**
      * Answers a certain question, provided that the user is properly authenticated and that the question they want to

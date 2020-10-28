@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.application.authentication;
+package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.authentication.command.ChangePasswordCommand;
 import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
@@ -22,7 +22,10 @@ public class AuthenticationFacadeIntegration {
         // TODO : Switch to a DI mechanism.
         var credentials = new InMemoryCredentialRepository();
         var sessions = new InMemorySessionRepository();
-        facade = new AuthenticationFacade(credentials, sessions);
+
+        facade = new AuthenticationFacade();
+        facade.credentials = credentials;
+        facade.sessions = sessions;
     }
 
     @Test
@@ -179,7 +182,7 @@ public class AuthenticationFacadeIntegration {
                 .build();
 
         assertThrows(AuthenticationFailedException.class, () -> {
-           facade.changePassword(changePassword);
+            facade.changePassword(changePassword);
         });
     }
 
