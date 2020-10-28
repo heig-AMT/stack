@@ -83,11 +83,11 @@
             <div class="w-full px-3">
                 <c:choose>
                     <c:when test="${connected.connected}">
-                        <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-white focus:border-gray-500"
+                        <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-800 focus:border-gray-500"
                                type="submit" value="Answer question">
                     </c:when>
                     <c:otherwise>
-                        <a class="text-center p-3 block w-full bg-gray-500 text-white font-bold border border-gray-200 rounded-lg hover:bg-gray-700 focus:bg-white focus:border-gray-500"
+                        <a class="text-center p-3 block w-full bg-gray-500 text-white font-bold border border-gray-200 rounded-lg hover:bg-gray-700 focus:bg-blue-800 focus:border-gray-500"
                            href="${pageContext.request.contextPath}/login">
                             To answer, please login
                         </a>
