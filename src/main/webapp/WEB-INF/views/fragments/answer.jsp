@@ -1,8 +1,4 @@
-<%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.time.format.FormatStyle" %>
-<%@ page import="java.util.Locale" %>
-<%@ page import="java.time.ZoneId" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean scope="request" id="answer" type="ch.heigvd.amt.stack.application.answer.dto.AnswerDTO"/>
@@ -14,13 +10,13 @@
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
             <c:choose>
                 <c:when test="${answer.hasPositiveVote}">
-                    <img src="${pageContext.request.contextPath}/assets/upvote_green.svg">
+                    <img src="${pageContext.request.contextPath}/assets/upvote_green.svg" alt="upvote">
                 </c:when>
                 <c:when test="${connected.connected}">
-                    <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
+                    <input type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="upvote">
                 </c:when>
                 <c:otherwise>
-                    <img src="${pageContext.request.contextPath}/assets/vote.svg">
+                    <img src="${pageContext.request.contextPath}/assets/vote.svg" alt="upvote">
                 </c:otherwise>
             </c:choose>
         </form>
@@ -46,13 +42,13 @@
             <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
             <c:choose>
                 <c:when test="${answer.hasNegativeVote}">
-                    <img src="${pageContext.request.contextPath}/assets/downvote_red.svg">
+                    <img src="${pageContext.request.contextPath}/assets/downvote_red.svg" alt="downvote">
                 </c:when>
                 <c:when test="${connected.connected}">
-                    <input class="transform rotate-180" type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="submit">
+                    <input class="transform rotate-180" type="image" src="${pageContext.request.contextPath}/assets/vote.svg" alt="downvote">
                 </c:when>
                 <c:otherwise>
-                    <img class="transform rotate-180" src="${pageContext.request.contextPath}/assets/vote.svg">
+                    <img class="transform rotate-180" src="${pageContext.request.contextPath}/assets/vote.svg" alt="downvote">
                 </c:otherwise>
             </c:choose>
         </form>
@@ -76,16 +72,7 @@
                 </form>
             </c:if>
             <div class="flex-grow"></div>
-            <div class="flex flex-col items-end">
-                <span class="text-sm text-gray-500">
-                    <%=
-                    DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
-                            .withLocale(Locale.FRANCE)
-                            .withZone(ZoneId.systemDefault()).format(answer.getCreation())
-                    %>
-                </span>
-                <span class="text-sm text-gray-500">by <c:out value="${answer.author}"/></span>
-            </div>
+            <c:import url="fragments/authorAnswer.jsp"/>
         </div>
     </div>
 </div>
