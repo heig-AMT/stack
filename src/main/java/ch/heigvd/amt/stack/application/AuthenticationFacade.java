@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.application.authentication;
+package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.authentication.command.*;
 import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
@@ -7,21 +7,17 @@ import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
+@RequestScoped
 public class AuthenticationFacade {
 
-    private final CredentialRepository credentials;
-    private final SessionRepository sessions;
+    @Inject
+    CredentialRepository credentials;
 
     @Inject
-    public AuthenticationFacade(
-            CredentialRepository credentials,
-            SessionRepository sessions
-    ) {
-        this.credentials = credentials;
-        this.sessions = sessions;
-    }
+    SessionRepository sessions;
 
     /**
      * Logs in an existing user to a certain session. If the credentials do not match, an exception will be thrown to

@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.ui.web.views.question;
 
-import ch.heigvd.amt.stack.application.question.QuestionFacade;
+import ch.heigvd.amt.stack.application.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 

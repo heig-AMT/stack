@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.ui.web.endpoints.answer;
 
-import ch.heigvd.amt.stack.application.answer.AnswerFacade;
+import ch.heigvd.amt.stack.application.AnswerFacade;
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;

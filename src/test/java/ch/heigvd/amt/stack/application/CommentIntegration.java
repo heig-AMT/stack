@@ -1,12 +1,10 @@
-package ch.heigvd.amt.stack.application.answer;
+package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
 import ch.heigvd.amt.stack.application.answer.command.CommentAnswerCommand;
 import ch.heigvd.amt.stack.application.answer.command.DeleteCommentCommand;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
-import ch.heigvd.amt.stack.application.question.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
@@ -31,9 +29,23 @@ public class CommentIntegration {
         var sessions = new InMemorySessionRepository();
         var votes = new InMemoryVoteRepository();
 
-        this.answerFacade = new AnswerFacade(comments, credentials, answers, questions, sessions, votes);
-        this.authenticationFacade = new AuthenticationFacade(credentials, sessions);
-        this.questionFacade = new QuestionFacade(answers, credentials, questions, sessions);
+        this.answerFacade = new AnswerFacade();
+        this.answerFacade.answerRepository = answers;
+        this.answerFacade.commentRepository = comments;
+        this.answerFacade.credentialRepository = credentials;
+        this.answerFacade.questionRepository = questions;
+        this.answerFacade.sessionRepository = sessions;
+        this.answerFacade.voteRepository = votes;
+
+        this.authenticationFacade = new AuthenticationFacade();
+        this.authenticationFacade.credentials = credentials;
+        this.authenticationFacade.sessions = sessions;
+
+        this.questionFacade = new QuestionFacade();
+        this.questionFacade.answerRepository = answers;
+        this.questionFacade.credentialRepository = credentials;
+        this.questionFacade.sessionRepository = sessions;
+        this.questionFacade.repository = questions;
     }
 
     @Test

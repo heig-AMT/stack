@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.application.question;
+package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
@@ -15,6 +15,7 @@ import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
@@ -22,12 +23,18 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@RequestScoped
 public class QuestionFacade {
 
-    private final AnswerRepository answerRepository;
-    private final CredentialRepository credentialRepository;
-    private final QuestionRepository repository;
-    private final SessionRepository sessionRepository;
+    @Inject
+    AnswerRepository answerRepository;
+    @Inject
+    CredentialRepository credentialRepository;
+    @Inject
+    QuestionRepository repository;
+    @Inject
+    SessionRepository sessionRepository;
+
     private final Function<Question, QuestionDTO> questionToDto = new Function<>() {
         @Override
         public QuestionDTO apply(Question question) {
@@ -41,19 +48,6 @@ public class QuestionFacade {
                     .build();
         }
     };
-
-    @Inject
-    public QuestionFacade(
-            AnswerRepository answerRepository,
-            CredentialRepository credentialRepository,
-            QuestionRepository repository,
-            SessionRepository sessionRepository
-    ) {
-        this.answerRepository = answerRepository;
-        this.credentialRepository = credentialRepository;
-        this.repository = repository;
-        this.sessionRepository = sessionRepository;
-    }
 
     public QuestionId askQuestion(AskQuestionCommand command) throws AuthenticationFailedException {
         Session session = sessionRepository.findBy(SessionQuery.builder()

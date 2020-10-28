@@ -1,11 +1,10 @@
 package ch.heigvd.amt.stack.ui.web.views.question;
 
-import ch.heigvd.amt.stack.application.answer.AnswerFacade;
+import ch.heigvd.amt.stack.application.AnswerFacade;
 import ch.heigvd.amt.stack.application.answer.dto.AnswerListDTO;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
-import ch.heigvd.amt.stack.application.question.QuestionFacade;
+import ch.heigvd.amt.stack.application.QuestionFacade;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
-import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 
