@@ -25,10 +25,7 @@ public class UnregisterCommandEndpoint extends HttpServlet {
                     .password(req.getParameter("password"))
                     .build());
 
-            String redirect = (String) req.getSession().getAttribute("redirectUrl");
-            redirect = (redirect != null)
-                    ? redirect
-                    : getServletContext().getContextPath() + "/questions";
+            String redirect = getServletContext().getContextPath() + "/questions";
             resp.sendRedirect(redirect);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.
