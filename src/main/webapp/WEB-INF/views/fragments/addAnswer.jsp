@@ -8,7 +8,7 @@
           method="POST"
           class="w-full">
         <div class="flex flex-col -mx-3 mb-6">
-            <div class="md:w-full px-3">
+            <div class="px-3">
                 <label for="body" class="pb-4 block uppercase text-lg font-bold text-gray-700">Add your answer</label>
                 <textarea rows="6" id="body"
                           class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"

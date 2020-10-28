@@ -63,12 +63,10 @@
         <div class="flex-grow"></div>
         <div class="flex flex-row">
             <c:if test="${answer.deletionEnabled}">
-                <form class="flex items-end mb-0" action="deleteAnswer.do" method="POST">
+                <form class="flex flex-row mx-2 mb-0" action="deleteAnswer.do" method="POST">
                     <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
-                    <div class="flex flex-row">
-                        <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
-                        <input class="ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600 cursor-pointer" type="submit" value="Delete"/>
-                    </div>
+                    <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
+                    <input class="ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600 cursor-pointer" type="submit" value="Delete"/>
                 </form>
             </c:if>
             <div class="flex-grow"></div>
@@ -76,3 +74,14 @@
         </div>
     </div>
 </div>
+<c:if test="${answer.comments.size() > 0}">
+    <div class="ml-12 border-b-2 color-white">
+        <span class="px-2 text-white font-semibold">${answer.comments.size()} comments</span>
+    </div>
+
+    <c:forEach items="${answer.comments}" var="comment">
+        <c:set var="comment" value="${comment}" scope="request"/>
+        <c:import url="fragments/comment.jsp"/>
+    </c:forEach>
+</c:if>
+<c:import url="fragments/addComment.jsp"/>

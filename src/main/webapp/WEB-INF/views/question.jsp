@@ -11,8 +11,8 @@
 <body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
 <div class="pt-16"/>
-<div class="flex flex-col items-center">
-    <div class="w-full p-8">
+<div class="flex p-8 flex-col items-center">
+    <div class="w-full">
         <div class="p-6 rounded-lg
             bg-white hover:bg-gray-100
             border-b border-gray-200
@@ -31,9 +31,9 @@
         </div>
     </div>
 
-    <div class="px-16 w-full flex flex-col">
+    <div class="w-full flex flex-col">
         <div class="border-b-2 color-white">
-            <span class="px-2 text-white font-semibold">${answers.answers.size()} comments</span>
+            <span class="px-2 text-white font-semibold">${answers.answers.size()} answers</span>
         </div>
 
             <c:forEach items="${answers.answers}" var="answer">
