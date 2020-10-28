@@ -26,7 +26,6 @@ public class DeleteAccountCommandEndpoint extends HttpServlet {
                     .password(req.getParameter("password"))
                     .build());
 
-            // TODO: choose where to redirect
             String redirect = (String) req.getSession().getAttribute("redirectUrl");
             redirect = (redirect != null)
                     ? redirect

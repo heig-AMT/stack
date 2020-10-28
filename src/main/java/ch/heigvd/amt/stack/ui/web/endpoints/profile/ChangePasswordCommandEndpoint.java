@@ -27,7 +27,6 @@ public class ChangePasswordCommandEndpoint extends HttpServlet {
                     .newPassword(req.getParameter("newPassword"))
                     .build());
 
-            // TODO: choose where to redirect
             String redirect = (String) req.getSession().getAttribute("redirectUrl");
             redirect = (redirect != null)
                     ? redirect
