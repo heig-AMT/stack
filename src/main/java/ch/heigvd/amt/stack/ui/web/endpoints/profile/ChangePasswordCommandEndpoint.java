@@ -26,10 +26,7 @@ public class ChangePasswordCommandEndpoint extends HttpServlet {
                     .newPassword(req.getParameter("newPassword"))
                     .build());
 
-            String redirect = (String) req.getSession().getAttribute("redirectUrl");
-            redirect = (redirect != null)
-                    ? redirect
-                    : getServletContext().getContextPath() + "/profile";
+            String redirect = getServletContext().getContextPath() + "/profile";
             resp.sendRedirect(redirect);
         } catch (AuthenticationFailedException exception) {
             // Not matching username and password combination.
