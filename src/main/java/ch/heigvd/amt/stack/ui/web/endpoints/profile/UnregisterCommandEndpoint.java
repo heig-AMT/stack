@@ -1,7 +1,6 @@
 package ch.heigvd.amt.stack.ui.web.endpoints.profile;
 
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
-import ch.heigvd.amt.stack.application.authentication.command.ChangePasswordCommand;
+import ch.heigvd.amt.stack.application.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.UnregisterCommand;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 
