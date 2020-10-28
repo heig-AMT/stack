@@ -3,16 +3,13 @@
 
 <html>
 <jsp:include page="fragments/head.jsp">
-    <jsp:param name="pageTitle" value="Login"/>
+    <jsp:param name="pageTitle" value="Profile"/>
 </jsp:include>
-<body>
+<body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
-<div class="flex pt-16 h-screen
-            items-center justify-center
-            bg-gradient-to-r from-teal-400 to-blue-500">
-
-    <div class="p-8 max-w-xl w-full bg-white rounded-lg shadow-md">
-
+<div class="pt-16"/>
+<div class="flex my-8 items-center justify-center">
+    <div class="p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <!-- Profile title -->
         <div class="text-center">
             <h1 class="text-4xl">
