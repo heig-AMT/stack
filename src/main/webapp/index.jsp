@@ -7,10 +7,9 @@
 <jsp:include page="WEB-INF/views/fragments/head.jsp">
     <jsp:param name="pageTitle" value="Home"/>
 </jsp:include>
-<body>
+<body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="WEB-INF/views/fragments/navigation.jsp"/>
-
-<div class="flex pt-16 h-screen bg-gray-300 items-center justify-center text-center bg-gradient-to-r from-teal-400 to-blue-500">
+<div class="flex p-16 h-screen items-center justify-center text-center">
     <div>
         <h1 class="text-white text-6xl">
             stack<span class="font-bold">underflow</span>
