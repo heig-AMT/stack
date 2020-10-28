@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.application.answer;
+package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
 import ch.heigvd.amt.stack.application.answer.command.DeleteAnswerCommand;
@@ -32,26 +32,20 @@ import java.util.stream.Collectors;
 @RequestScoped
 public class AnswerFacade {
 
-    private final CredentialRepository credentialRepository;
-    private final AnswerRepository answerRepository;
-    private final QuestionRepository questionRepository;
-    private final SessionRepository sessionRepository;
-    private final VoteRepository voteRepository;
+    @Inject
+    CredentialRepository credentialRepository;
 
     @Inject
-    public AnswerFacade(
-            CredentialRepository credentials,
-            AnswerRepository answers,
-            QuestionRepository questions,
-            SessionRepository sessions,
-            VoteRepository votes
-    ) {
-        this.credentialRepository = credentials;
-        this.answerRepository = answers;
-        this.questionRepository = questions;
-        this.sessionRepository = sessions;
-        this.voteRepository = votes;
-    }
+    AnswerRepository answerRepository;
+
+    @Inject
+    QuestionRepository questionRepository;
+
+    @Inject
+    SessionRepository sessionRepository;
+
+    @Inject
+    VoteRepository voteRepository;
 
     /**
      * Answers a certain question, provided that the user is properly authenticated and that the question they want to

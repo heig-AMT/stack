@@ -1,5 +1,6 @@
-package ch.heigvd.amt.stack.application.authentication;
+package ch.heigvd.amt.stack.application;
 
+import ch.heigvd.amt.stack.application.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
 import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
@@ -21,7 +22,10 @@ public class AuthenticationFacadeIntegration {
         // TODO : Switch to a DI mechanism.
         var credentials = new InMemoryCredentialRepository();
         var sessions = new InMemorySessionRepository();
-        facade = new AuthenticationFacade(credentials, sessions);
+
+        facade = new AuthenticationFacade();
+        facade.credentials = credentials;
+        facade.sessions = sessions;
     }
 
     @Test

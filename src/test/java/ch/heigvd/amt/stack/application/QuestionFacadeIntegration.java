@@ -1,6 +1,7 @@
-package ch.heigvd.amt.stack.application.question;
+package ch.heigvd.amt.stack.application;
 
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
+import ch.heigvd.amt.stack.application.AuthenticationFacade;
+import ch.heigvd.amt.stack.application.QuestionFacade;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
@@ -32,8 +33,15 @@ public class QuestionFacadeIntegration {
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
 
-        authenticationFacade = new AuthenticationFacade(credentials, sessions);
-        questionFacade = new QuestionFacade(answers, credentials, questions, sessions);
+        authenticationFacade = new AuthenticationFacade();
+        authenticationFacade.credentials = credentials;
+        authenticationFacade.sessions = sessions;
+
+        questionFacade = new QuestionFacade();
+        questionFacade.answerRepository = answers;
+        questionFacade.credentialRepository = credentials;
+        questionFacade.sessionRepository = sessions;
+        questionFacade.repository = questions;
     }
 
     @Test

@@ -1,6 +1,6 @@
 package ch.heigvd.amt.stack.ui.web.views;
 
-import ch.heigvd.amt.stack.application.authentication.AuthenticationFacade;
+import ch.heigvd.amt.stack.application.AuthenticationFacade;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 
 import javax.inject.Inject;
