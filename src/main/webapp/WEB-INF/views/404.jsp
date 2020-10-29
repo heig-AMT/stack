@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <jsp:include page="fragments/head.jsp">
-    <jsp:param name="pageTitle" value="Login"/>
+    <jsp:param name="pageTitle" value="Error 404"/>
 </jsp:include>
 <body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
