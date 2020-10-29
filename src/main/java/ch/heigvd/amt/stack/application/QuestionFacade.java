@@ -54,11 +54,18 @@ public class QuestionFacade {
         }
     };
 
-    public QuestionId askQuestion(AskQuestionCommand command) throws AuthenticationFailedException {
-        Session session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
+    /**
+     * Returns the {@link Session} associated with a certain user tag, or throws an exception.
+     */
+    private Session requireSession(String tag) throws AuthenticationFailedException {
+        return sessionRepository.findBy(SessionQuery.builder()
+                .tag(tag)
                 .build())
                 .orElseThrow(AuthenticationFailedException::new);
+    }
+
+    public QuestionId askQuestion(AskQuestionCommand command) throws AuthenticationFailedException {
+        var session = requireSession(command.getTag());
         var id = QuestionId.create();
         repository.save(Question.builder()
                 .id(id)
@@ -72,12 +79,7 @@ public class QuestionFacade {
     }
 
     public void deleteQuestion(DeleteQuestionCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
-
-        Session session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
-
+        var session = requireSession(command.getTag());
         var question = repository.findById(command.getQuestion())
                 .orElseThrow(QuestionNotFoundException::new);
 

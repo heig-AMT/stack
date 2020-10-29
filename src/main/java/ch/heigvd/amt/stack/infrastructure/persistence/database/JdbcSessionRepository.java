@@ -6,10 +6,9 @@ import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionId;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
-import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,27 +21,25 @@ import java.util.logging.Logger;
 @Default
 public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> implements SessionRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
-    private DataSource getDataSource() {
-        return dataSource;
+    private static Session parseSession(ResultSet resultSet) throws SQLException {
+        return Session.builder()
+                .id(SessionId.from(resultSet.getString("idSession")))
+                .user(CredentialId.from(resultSet.getString("idxCredential")))
+                .tag(resultSet.getString("tag"))
+                .build();
     }
 
     @Override
     public Optional<Session> findBy(SessionQuery query) {
         setup(dataSource);
         var select = "SELECT * FROM Session WHERE tag = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, query.getTag());
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Session.builder()
-                        .id(SessionId.from(rs.getString("idSession")))
-                        .user(CredentialId.from(rs.getString("idxCredential")))
-                        .tag(rs.getString("tag")).build());
+                return Optional.of(parseSession(rs));
             } else {
                 return Optional.empty();
             }
@@ -58,7 +55,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     public void save(Session session) {
         setup(dataSource);
         var insert = "INSERT INTO Session (idSession, idxCredential, tag) VALUES (?, ?, ?);";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, session.getId().toString());
             statement.setString(2, session.getUser().toString());
@@ -74,7 +71,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     public void remove(SessionId sessionId) {
         setup(dataSource);
         var delete = "DELETE FROM Session WHERE idSession = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, sessionId.toString());
             statement.execute();
@@ -88,16 +85,13 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     public Optional<Session> findById(SessionId sessionId) {
         setup(dataSource);
         var select = "SELECT * FROM Session WHERE idSession = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, sessionId.toString());
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Session.builder()
-                        .id(SessionId.from(rs.getString("idSession")))
-                        .user(CredentialId.from(rs.getString("idxCredential")))
-                        .tag(rs.getString("tag")).build());
+                return Optional.of(parseSession(rs));
             } else {
                 return Optional.empty();
             }
@@ -114,15 +108,11 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
         setup(dataSource);
         var select = "SELECT * FROM Session;";
         Collection<Session> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
-                var session = Session.builder()
-                        .id(SessionId.from(rs.getString("idSession")))
-                        .user(CredentialId.from(rs.getString("idxCredential")))
-                        .tag(rs.getString("tag")).build();
-                result.add(session);
+                result.add(parseSession(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

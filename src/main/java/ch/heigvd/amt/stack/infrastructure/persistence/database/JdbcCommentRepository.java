@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,11 +26,14 @@ import java.util.stream.Collectors;
 @Default
 public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> implements CommentRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
-    private DataSource getDataSource() {
-        return dataSource;
+    private static Comment parseComment(ResultSet resultSet) throws SQLException {
+        return Comment.builder()
+                .id(CommentId.from(resultSet.getString("idComment")))
+                .answer(AnswerId.from(resultSet.getString("idxAnswer")))
+                .creator(CredentialId.from(resultSet.getString("idxCredential")))
+                .contents(resultSet.getString("contents"))
+                .creation(resultSet.getTimestamp("instant").toInstant())
+                .build();
     }
 
     @Override
@@ -44,7 +48,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     public void save(Comment comment) {
         setup(dataSource);
         var insert = "INSERT INTO Comment(idComment, idxCredential, idxAnswer, contents, instant) VALUES (?, ?, ?, ?, ?);";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, comment.getId().toString());
             statement.setString(2, comment.getCreator().toString());
@@ -62,7 +66,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     public void remove(CommentId commentId) {
         setup(dataSource);
         var delete = "DELETE FROM Comment WHERE idComment = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, commentId.toString());
             statement.execute();
@@ -76,19 +80,13 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     public Optional<Comment> findById(CommentId commentId) {
         setup(dataSource);
         var select = "SELECT * FROM Comment WHERE idComment = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, commentId.toString());
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Comment.builder()
-                        .id(CommentId.from(rs.getString("idComment")))
-                        .answer(AnswerId.from(rs.getString("idxAnswer")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .contents(rs.getString("contents"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build());
+                return Optional.of(parseComment(rs));
             } else {
                 return Optional.empty();
             }
@@ -105,19 +103,12 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
         setup(dataSource);
         var select = "SELECT * FROM Comment;";
         Collection<Comment> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
 
             while (rs.next()) {
-                Comment newC = Comment.builder()
-                        .id(CommentId.from(rs.getString("idComment")))
-                        .answer(AnswerId.from(rs.getString("idxAnswer")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .contents(rs.getString("contents"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build();
-                result.add(newC);
+                result.add(parseComment(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

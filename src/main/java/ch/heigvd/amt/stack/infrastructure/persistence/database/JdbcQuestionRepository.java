@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -24,11 +25,15 @@ import java.util.logging.Logger;
 @Default
 public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId> implements QuestionRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
-    private DataSource getDataSource() {
-        return dataSource;
+    private static Question parseQuestion(ResultSet resultSet) throws SQLException {
+        return Question.builder()
+                .id(QuestionId.from(resultSet.getString("idQuestion")))
+                .author(CredentialId.from(resultSet.getString("idxCredential")))
+                .title(resultSet.getString("title"))
+                .description(resultSet.getString("description"))
+                .creation((resultSet.getTimestamp("instant")).toInstant())
+                .selectedAnswer(AnswerId.from(resultSet.getString("idxSelectedAnswer")))
+                .build();
     }
 
     @Override
@@ -37,21 +42,13 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
         if (query.getShouldContain() != null) {
             var select = "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;";
             Collection<Question> result = new ArrayList<>();
-            try (var connection = getDataSource().getConnection()) {
+            try (var connection = dataSource.getConnection()) {
                 var statement = connection.prepareStatement(select);
                 statement.setString(1, "%" + query.getShouldContain().trim().toLowerCase() + "%");
                 statement.setString(2, "%" + query.getShouldContain().trim().toLowerCase() + "%");
                 var rs = statement.executeQuery();
                 while (rs.next()) {
-                    Question question = Question.builder()
-                            .id(QuestionId.from(rs.getString("idQuestion")))
-                            .author(CredentialId.from(rs.getString("idxCredential")))
-                            .title(rs.getString("title"))
-                            .description(rs.getString("description"))
-                            .creation((rs.getTimestamp("instant")).toInstant())
-                            .selectedAnswer(AnswerId.from(rs.getString("idxSelectedAnswer")))
-                            .build();
-                    result.add(question);
+                    result.add(parseQuestion(rs));
                 }
                 return result;
             } catch (SQLException ex) {
@@ -69,7 +66,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
         setup(dataSource);
         var insert = "INSERT INTO Question(idQuestion, idxCredential, idxSelectedAnswer, title, description, instant)" +
                 " VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (idQuestion) DO UPDATE SET idxSelectedAnswer = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, question.getId().toString());
             statement.setString(2, question.getAuthor().toString());
@@ -89,7 +86,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public void remove(QuestionId questionId) {
         setup(dataSource);
         var delete = "DELETE FROM Question WHERE idQuestion = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, questionId.toString());
             statement.execute();
@@ -102,20 +99,13 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public Optional<Question> findById(QuestionId questionId) {
         setup(dataSource);
         var select = "SELECT * FROM Question WHERE idQuestion = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, questionId.toString());
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Question.builder()
-                        .id(QuestionId.from(rs.getString("idQuestion")))
-                        .author(CredentialId.from(rs.getString("idxCredential")))
-                        .title(rs.getString("title"))
-                        .description(rs.getString("description"))
-                        .creation((rs.getTimestamp("instant")).toInstant())
-                        .selectedAnswer(AnswerId.from(rs.getString("idxSelectedAnswer")))
-                        .build());
+                return Optional.of(parseQuestion(rs));
             } else {
                 return Optional.empty();
             }
@@ -132,19 +122,11 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
         setup(dataSource);
         var select = "SELECT * FROM Question;";
         Collection<Question> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
-                Question question = Question.builder()
-                        .id(QuestionId.from(rs.getString("idQuestion")))
-                        .author(CredentialId.from(rs.getString("idxCredential")))
-                        .title(rs.getString("title"))
-                        .description(rs.getString("description"))
-                        .creation((rs.getTimestamp("instant")).toInstant())
-                        .selectedAnswer(AnswerId.from(rs.getString("idxSelectedAnswer")))
-                        .build();
-                result.add(question);
+                result.add(parseQuestion(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

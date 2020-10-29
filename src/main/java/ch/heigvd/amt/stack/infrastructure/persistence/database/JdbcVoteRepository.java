@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +23,15 @@ import java.util.logging.Logger;
 @ApplicationScoped
 @Default
 public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements VoteRepository {
-    @Resource(name = "database")
-    private DataSource dataSource;
 
-    private DataSource getDataSource() {
-        return dataSource;
+    private static Vote parseVote(ResultSet resultSet) throws SQLException {
+        return Vote.builder()
+                .id(VoteId.builder()
+                        .answer(AnswerId.from(resultSet.getString("idxAnswer")))
+                        .voter(CredentialId.from(resultSet.getString("idxCredential")))
+                        .build())
+                .isUpvote(resultSet.getBoolean("isUpvote"))
+                .build();
     }
 
     @Override
@@ -34,7 +39,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
         setup(dataSource);
         boolean table = query.isUpvote();
         var search = "SELECT COUNT (*) FROM Vote WHERE isUpvote = ? AND idxAnswer = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(search);
             statement.setBoolean(1, table);
             statement.setString(2, query.getForAnswer().toString());
@@ -55,7 +60,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     public void save(Vote vote) {
         setup(dataSource);
         var insert = "INSERT INTO Vote (idxAnswer, idxCredential, isUpvote) VALUES (?, ?, ?) ON CONFLICT (idxAnswer, idxCredential) DO UPDATE SET isUpvote = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, vote.getId().getAnswer().toString());
             statement.setString(2, vote.getId().getVoter().toString());
@@ -73,7 +78,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     public void remove(VoteId voteId) {
         setup(dataSource);
         var delete = "DELETE FROM Vote WHERE idxAnswer = ? AND idxCredential = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, voteId.getAnswer().toString());
             statement.setString(2, voteId.getVoter().toString());
@@ -88,20 +93,14 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     public Optional<Vote> findById(VoteId voteId) {
         setup(dataSource);
         var select = "SELECT * FROM Vote WHERE idxAnswer = ? AND idxCredential = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, voteId.getAnswer().toString());
             statement.setString(2, voteId.getVoter().toString());
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Vote.builder()
-                        .id(VoteId.builder()
-                                .answer(AnswerId.from(rs.getString("idxAnswer")))
-                                .voter(CredentialId.from(rs.getString("idxCredential")))
-                                .build())
-                        .isUpvote(rs.getBoolean("isUpvote"))
-                        .build());
+                return Optional.of(parseVote(rs));
             } else {
                 return Optional.empty();
             }
@@ -119,18 +118,11 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
 
         var select = "SELECT * FROM Vote;";
         Collection<Vote> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
-                var vote = Vote.builder()
-                        .id(VoteId.builder()
-                                .answer(AnswerId.from(rs.getString("idxAnswer")))
-                                .voter(CredentialId.from(rs.getString("idxCredential")))
-                                .build())
-                        .isUpvote(rs.getBoolean("isUpvote"))
-                        .build();
-                result.add(vote);
+                result.add(parseVote(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

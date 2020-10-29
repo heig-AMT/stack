@@ -1,11 +1,16 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
 import ch.heigvd.amt.stack.domain.Repository;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.Mapper;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * An abstract class representing a repository that will be accessed with Jdbc. It contains all the logic needed to
@@ -72,6 +77,8 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             "ALTER TABLE Question ADD COLUMN IF NOT EXISTS " +
                     "idxSelectedAnswer VARCHAR DEFAULT NULL REFERENCES Answer(idAnswer) ON UPDATE CASCADE ON DELETE SET NULL;";
 
+    @Resource(name = "database")
+    protected DataSource dataSource;
 
     protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {
@@ -87,5 +94,39 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             exception.printStackTrace();
             Logger.getLogger("JDBC").log(Level.SEVERE, "SQLException while setting up repository.");
         }
+    }
+
+    /**
+     * Returns all the elements from a certain {@link DataSource} for a certain request, mapped to a certain type.
+     *
+     * @param source  the {@link DataSource} to use for the query.
+     * @param map     the transformation function.
+     * @param request the SQL request.
+     * @param scope   a {@link PrepareStatementScope}, if necessary.
+     * @param <T>     the type of the resulting elements.
+     * @return a {@link Collection} of retrieved items.
+     */
+    protected static <T> Stream<T> findFor(DataSource source,
+                                           Mapper<T> map,
+                                           String request,
+                                           PrepareStatementScope scope) {
+        var result = Stream.<T>builder();
+        try (var connection = source.getConnection()) {
+
+            // Prepare the statement.
+            var statement = connection.prepareStatement(request);
+            scope.prepare(statement);
+
+            // Execute the query.
+            var rs = statement.executeQuery();
+            while (rs.next()) {
+                result.add(map.apply(rs));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger("JDBC").log(Level.WARNING, ex.getMessage());
+            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
+            return Stream.empty();
+        }
+        return result.build();
     }
 }

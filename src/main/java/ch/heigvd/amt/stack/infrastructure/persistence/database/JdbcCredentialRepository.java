@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,11 +23,12 @@ import java.util.logging.Logger;
 @Default
 public class JdbcCredentialRepository extends JdbcRepository<Credential, CredentialId> implements CredentialRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
-    private DataSource getDataSource() {
-        return dataSource;
+    private static Credential parseCredential(ResultSet resultSet) throws SQLException {
+        return Credential.builder()
+                .id(CredentialId.from(resultSet.getString("idCredential")))
+                .username(resultSet.getString("username"))
+                .hashedPassword(resultSet.getString("hash"))
+                .build();
     }
 
     @Override
@@ -42,7 +44,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     public void save(Credential credential) {
         setup(dataSource);
         var insert = "INSERT INTO Credential(idCredential, username, hash) VALUES (?, ?, ?) ON CONFLICT (idCredential) DO UPDATE SET hash = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, credential.getId().toString());
             statement.setString(2, credential.getUsername());
@@ -59,7 +61,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     public void remove(CredentialId credentialId) {
         setup(dataSource);
         var delete = "DELETE FROM Credential WHERE idCredential = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, credentialId.toString());
             statement.execute();
@@ -73,16 +75,13 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     public Optional<Credential> findById(CredentialId credentialId) {
         setup(dataSource);
         var select = "SELECT * FROM Credential WHERE idCredential = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, credentialId.toString());
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Credential.builder()
-                        .id(CredentialId.from(rs.getString("idCredential")))
-                        .username(rs.getString("username"))
-                        .hashedPassword(rs.getString("hash")).build());
+                return Optional.of(parseCredential(rs));
             } else {
                 return Optional.empty();
             }
@@ -99,15 +98,11 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
         setup(dataSource);
         var select = "SELECT * FROM Credential;";
         Collection<Credential> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
-                Credential credential = Credential.builder()
-                        .id(CredentialId.from(rs.getString("idCredential")))
-                        .username(rs.getString("username"))
-                        .hashedPassword(rs.getString("hash")).build();
-                result.add(credential);
+                result.add(parseCredential(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

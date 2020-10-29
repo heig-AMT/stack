@@ -6,11 +6,11 @@ import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
-import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
@@ -22,32 +22,40 @@ import java.util.stream.Collectors;
 @Default
 public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> implements AnswerRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
-    private DataSource getDataSource() {
-        return dataSource;
+    /**
+     * Parses an answer from a certain {@link ResultSet}.
+     *
+     * @param resultSet the {@link ResultSet}, at a certain index.
+     * @return the returned {@link Answer}.
+     * @throws SQLException if an {@link Answer} could not be built.
+     */
+    private static Answer parseAnswer(ResultSet resultSet) throws SQLException {
+        return Answer.builder()
+                .id(AnswerId.from(resultSet.getString("idAnswer")))
+                .question(QuestionId.from(resultSet.getString("idxQuestion")))
+                .creator(CredentialId.from(resultSet.getString("idxCredential")))
+                .body(resultSet.getString("description"))
+                .creation(resultSet.getTimestamp("instant").toInstant())
+                .build();
     }
-
 
     @Override
     public Collection<Answer> findBy(AnswerQuery query) {
         setup(dataSource);
-        if (query.getForQuestion() != null) {
-            return findAll().stream()
-                    .filter(answer -> (answer.getQuestion().equals(query.getForQuestion())))
-                    .collect(Collectors.toList());
-        } else {
-            return List.of();
-        }
+        return findFor(dataSource,
+                JdbcAnswerRepository::parseAnswer,
+                "SELECT * FROM Answer WHERE idxQuestion = ?;",
+                (ps) -> {
+                    ps.setString(1, query.getForQuestion().toString());
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     public void save(Answer answer) {
         setup(dataSource);
-        var insert = "INSERT INTO Answer(idAnswer, idxCredential, idxQuestion, description, instant)" +
-                " VALUES (?, ?, ?, ?,?);";
-        try (var connection = getDataSource().getConnection()) {
+        var insert = "INSERT INTO Answer(idAnswer, idxCredential, idxQuestion, description, instant) VALUES (?, ?, ?, ?,?);";
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, answer.getId().toString());
             statement.setString(2, answer.getCreator().toString());
@@ -65,7 +73,7 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     public void remove(AnswerId answerId) {
         setup(dataSource);
         var delete = "DELETE FROM Answer WHERE idAnswer = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, answerId.toString());
             statement.execute();
@@ -78,55 +86,20 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     @Override
     public Optional<Answer> findById(AnswerId answerId) {
         setup(dataSource);
-        var select = "SELECT * FROM Answer WHERE idAnswer = ?;";
-        try (var connection = getDataSource().getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, answerId.toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(Answer.builder()
-                        .id(AnswerId.from(rs.getString("idAnswer")))
-                        .question(QuestionId.from(rs.getString("idxQuestion")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .body(rs.getString("description"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build());
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find answer " + answerId);
-        }
-        return Optional.empty();
+        return findFor(dataSource,
+                JdbcAnswerRepository::parseAnswer,
+                "SELECT * FROM Answer WHERE idAnswer = ?;",
+                (ps) -> ps.setString(1, answerId.toString()))
+                .findFirst();
     }
 
     @Override
     public Collection<Answer> findAll() {
         setup(dataSource);
-        var select = "SELECT * FROM Answer;";
-        Collection<Answer> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
-            var statement = connection.prepareStatement(select);
-            var rs = statement.executeQuery();
-
-            while (rs.next()) {
-                Answer newA = Answer.builder()
-                        .id(AnswerId.from(rs.getString("idAnswer")))
-                        .question(QuestionId.from(rs.getString("idxQuestion")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .body(rs.getString("description"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build();
-                result.add(newA);
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-            return Collections.emptyList();
-        }
-        return result;
+        return findFor(dataSource,
+                JdbcAnswerRepository::parseAnswer,
+                "SELECT * FROM Answer;",
+                PrepareStatementScope.none())
+                .collect(Collectors.toList());
     }
 }

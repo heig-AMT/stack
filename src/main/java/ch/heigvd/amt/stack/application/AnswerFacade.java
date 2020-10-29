@@ -82,6 +82,16 @@ public class AnswerFacade {
     };
 
     /**
+     * Returns the {@link Session} associated with a certain user tag, or throws an exception.
+     */
+    private Session requireSession(String tag) throws AuthenticationFailedException {
+        return sessionRepository.findBy(SessionQuery.builder()
+                .tag(tag)
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+    }
+
+    /**
      * Answers a certain question, provided that the user is properly authenticated and that the question they want to
      * answer to actually exists.
      *
@@ -90,10 +100,7 @@ public class AnswerFacade {
      * @throws QuestionNotFoundException     if the question does not actually exist.
      */
     public AnswerId answer(AnswerQuestionCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
         var question = questionRepository.findById(command.getQuestion())
                 .orElseThrow(QuestionNotFoundException::new);
         var id = AnswerId.create();
@@ -119,10 +126,7 @@ public class AnswerFacade {
      * @throws AnswerNotFoundException       if the answer does not actually exist.
      */
     public CommentId comment(CommentAnswerCommand command) throws AuthenticationFailedException, AnswerNotFoundException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
         var answer = answerRepository.findById(command.getAnswer())
                 .orElseThrow(AnswerNotFoundException::new);
         CommentId id = CommentId.create();
@@ -147,10 +151,7 @@ public class AnswerFacade {
      * @throws AnswerNotFoundException       if the answer does not exist.
      */
     public void delete(DeleteAnswerCommand command) throws AuthenticationFailedException, AnswerNotFoundException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
         var answer = answerRepository.findById(command.getAnswer())
                 .orElseThrow(AnswerNotFoundException::new);
         if (!session.getUser().equals(answer.getCreator())) {
@@ -170,10 +171,7 @@ public class AnswerFacade {
      */
     public void deleteComment(DeleteCommentCommand command) throws
             AuthenticationFailedException, AnswerNotFoundException, CommentNotFoundException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
         var comment = commentRepository.findById(command.getComment())
                 .orElseThrow(CommentNotFoundException::new);
         var answer = answerRepository.findById(comment.getAnswer())
@@ -193,10 +191,7 @@ public class AnswerFacade {
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      */
     public void upvote(UpvoteAnswerCommand command) throws AuthenticationFailedException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
         voteRepository.save(Vote.builder()
                 .id(VoteId.builder()
                         .voter(session.getUser())
@@ -213,10 +208,7 @@ public class AnswerFacade {
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      */
     public void downvote(DownvoteAnswerCommand command) throws AuthenticationFailedException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
         voteRepository.save(Vote.builder()
                 .id(VoteId.builder()
                         .voter(session.getUser())
@@ -234,10 +226,7 @@ public class AnswerFacade {
      * @throws QuestionNotFoundException     if the question could not be found.
      */
     public void select(SelectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
         var question = questionRepository.findById(command.getForQuestion())
                 .orElseThrow(QuestionNotFoundException::new);
 
@@ -264,10 +253,7 @@ public class AnswerFacade {
      * @throws QuestionNotFoundException     if the question couldd not be found.
      */
     public void unselect(UnselectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
-        var session = sessionRepository.findBy(SessionQuery.builder()
-                .tag(command.getTag())
-                .build())
-                .orElseThrow(AuthenticationFailedException::new);
+        var session = requireSession(command.getTag());
 
         var question = questionRepository.findById(command.getForQuestion())
                 .orElseThrow(QuestionNotFoundException::new);
