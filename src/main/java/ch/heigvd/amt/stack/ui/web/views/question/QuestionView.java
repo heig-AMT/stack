@@ -33,6 +33,7 @@ public class QuestionView extends HttpServlet {
         var questionQueryBuilder = SingleQuestionQuery.builder();
 
         questionQueryBuilder.id(questionId);
+        questionQueryBuilder.tag(req.getSession().getId());
 
         var built = questionQueryBuilder.build();
 

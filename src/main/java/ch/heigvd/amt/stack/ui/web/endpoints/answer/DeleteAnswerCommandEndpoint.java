@@ -34,6 +34,7 @@ public class DeleteAnswerCommandEndpoint extends HttpServlet {
 
             Optional<QuestionDTO> question = questionFacade.getQuestion(SingleAnswerQuery.builder()
                     .id(answerId)
+                    .tag(req.getSession().getId())
                     .build());
 
             if (question.isPresent()) {
