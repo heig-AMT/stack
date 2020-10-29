@@ -7,4 +7,5 @@ import lombok.Value;
 @Value
 public class QuestionQuery {
     String shouldContain;
+    String tag;
 }
