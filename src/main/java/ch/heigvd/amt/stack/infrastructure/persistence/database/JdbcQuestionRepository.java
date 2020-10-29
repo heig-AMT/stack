@@ -27,17 +27,13 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Resource(name = "database")
     private DataSource dataSource;
 
-    private DataSource getDataSource() {
-        return dataSource;
-    }
-
     @Override
     public Collection<Question> findBy(QuestionQuery query) {
         setup(dataSource);
         if (query.getShouldContain() != null) {
             var select = "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;";
             Collection<Question> result = new ArrayList<>();
-            try (var connection = getDataSource().getConnection()) {
+            try (var connection = dataSource.getConnection()) {
                 var statement = connection.prepareStatement(select);
                 statement.setString(1, "%" + query.getShouldContain().trim().toLowerCase() + "%");
                 statement.setString(2, "%" + query.getShouldContain().trim().toLowerCase() + "%");
@@ -69,7 +65,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
         setup(dataSource);
         var insert = "INSERT INTO Question(idQuestion, idxCredential, idxSelectedAnswer, title, description, instant)" +
                 " VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (idQuestion) DO UPDATE SET idxSelectedAnswer = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, question.getId().toString());
             statement.setString(2, question.getAuthor().toString());
@@ -89,7 +85,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public void remove(QuestionId questionId) {
         setup(dataSource);
         var delete = "DELETE FROM Question WHERE idQuestion = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, questionId.toString());
             statement.execute();
@@ -102,7 +98,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public Optional<Question> findById(QuestionId questionId) {
         setup(dataSource);
         var select = "SELECT * FROM Question WHERE idQuestion = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, questionId.toString());
             var rs = statement.executeQuery();
@@ -132,7 +128,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
         setup(dataSource);
         var select = "SELECT * FROM Question;";
         Collection<Question> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
