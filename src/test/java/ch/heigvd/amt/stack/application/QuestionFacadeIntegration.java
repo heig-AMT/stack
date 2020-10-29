@@ -1,11 +1,14 @@
 package ch.heigvd.amt.stack.application;
 
+import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
+import ch.heigvd.amt.stack.application.question.query.SingleAnswerQuery;
 import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
+import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryAnswerRepository;
@@ -188,6 +191,41 @@ public class QuestionFacadeIntegration {
 
         assertDoesNotThrow(() -> {
             questionFacade.deleteQuestion(delete);
+        });
+    }
+
+    @Test
+    public void testAuthenticatedUserCannotDeleteSomeoneElsesQuestion() {
+        final String tagAlice = "tagAlice";
+        final String tagBob = "tagBob";
+
+        var register1 = RegisterCommand.builder()
+                .username("alice")
+                .password("password1")
+                .tag(tagAlice)
+                .build();
+        var register2 = RegisterCommand.builder()
+                .username("bob")
+                .password("password2")
+                .tag(tagBob)
+                .build();
+        var askAlice = AskQuestionCommand.builder()
+                .title("What is love")
+                .description("Description")
+                .tag(tagAlice)
+                .build();
+
+        authenticationFacade.register(register1);
+        authenticationFacade.register(register2);
+        var questionId = questionFacade.askQuestion(askAlice);
+
+        var bobDelete = DeleteQuestionCommand.builder()
+                .question(questionId)
+                .tag(tagBob)
+                .build();
+
+        assertThrows(AuthenticationFailedException.class, () -> {
+            questionFacade.deleteQuestion(bobDelete);
         });
     }
 }
