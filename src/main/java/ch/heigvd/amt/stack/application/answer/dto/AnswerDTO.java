@@ -21,4 +21,5 @@ public class AnswerDTO {
     boolean hasNegativeVote;
     boolean deletionEnabled;
     boolean selectionEnabled;
+    boolean selected;
 }

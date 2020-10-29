@@ -250,66 +250,64 @@ public class AnswerFacade {
                         .build()).stream())
                 .map(Session::getUser)
                 .findAny();
+        // Retrieve the question.
         var answers = answerRepository.findBy(query).stream()
-                .map(answer -> AnswerDTO.builder()
-                        .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
-                        .body(answer.getBody())
-                        .creation(answer.getCreation())
-                        .id(answer.getId())
-                        .positiveVotesCount(voteRepository.count(VoteCountQuery.builder()
-                                .forAnswer(answer.getId())
-                                .isUpvote(true)
-                                .build()))
-                        .negativeVotesCount(voteRepository.count(VoteCountQuery.builder()
-                                .forAnswer(answer.getId())
-                                .isUpvote(false)
-                                .build()))
-                        .hasPositiveVote(
-                                user.isPresent() && voteRepository.findById(VoteId.builder()
-                                        .answer(answer.getId())
-                                        .voter(user.get())
-                                        .build())
-                                        // True if user has upvote.
-                                        .map(Vote::isUpvote)
-                                        // Otherwise nothing
-                                        .orElse(false)
-                        )
-                        .hasNegativeVote(
-                                user.isPresent() && voteRepository.findById(VoteId.builder()
-                                        .answer(answer.getId())
-                                        .voter(user.get())
-                                        .build())
-                                        // True if user has downvote.
-                                        .map(Vote::isUpvote)
-                                        .map(up -> !up)
-                                        // Otherwise nothing.
-                                        .orElse(false)
-                        )
-                        .comments(
-                                // Fetch all the comments for the given answer.
-                                commentRepository.findBy(CommentQuery.builder()
-                                        .forAnswer(answer.getId())
-                                        .build()).stream()
-                                        // Map all the individual comments.
-                                        .map(comment -> {
-                                            var credential = user.orElse(null);
-                                            // Enable deletions for comments owned by this user or the answer creator.
-                                            var deletionEnabled = credential != null && (
-                                                    credential.equals(comment.getCreator()) ||
-                                                            credential.equals(answer.getCreator())
-                                            );
-                                            return commentToDTO.apply(deletionEnabled, comment);
-                                        }).collect(Collectors.toList()))
-                        .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
-                        .selectionEnabled(
-                                // Retrieve the question.
-                                questionRepository.findById(answer.getQuestion())
-                                        // Keep it if the user matches the question creator.
-                                        .filter(q -> user.map(u -> u.equals(q.getAuthor()))
-                                                // Otherwise, we're not allowed to select questions.
-                                                .orElse(false)).isPresent())
-                        .build()
-                )
+                .map(answer -> {
+                    var question = questionRepository.findById(answer.getQuestion());
+                    return AnswerDTO.builder()
+                            .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
+                            .body(answer.getBody())
+                            .creation(answer.getCreation())
+                            .id(answer.getId())
+                            .positiveVotesCount(voteRepository.count(VoteCountQuery.builder()
+                                    .forAnswer(answer.getId())
+                                    .isUpvote(true)
+                                    .build()))
+                            .negativeVotesCount(voteRepository.count(VoteCountQuery.builder()
+                                    .forAnswer(answer.getId())
+                                    .isUpvote(false)
+                                    .build()))
+                            .hasPositiveVote(
+                                    user.isPresent() && voteRepository.findById(VoteId.builder()
+                                            .answer(answer.getId())
+                                            .voter(user.get())
+                                            .build())
+                                            // True if user has upvote.
+                                            .map(Vote::isUpvote)
+                                            // Otherwise nothing
+                                            .orElse(false)
+                            )
+                            .hasNegativeVote(
+                                    user.isPresent() && voteRepository.findById(VoteId.builder()
+                                            .answer(answer.getId())
+                                            .voter(user.get())
+                                            .build())
+                                            // True if user has downvote.
+                                            .map(Vote::isUpvote)
+                                            .map(up -> !up)
+                                            // Otherwise nothing.
+                                            .orElse(false)
+                            )
+                            .comments(
+                                    // Fetch all the comments for the given answer.
+                                    commentRepository.findBy(CommentQuery.builder()
+                                            .forAnswer(answer.getId())
+                                            .build()).stream()
+                                            // Map all the individual comments.
+                                            .map(comment -> {
+                                                var credential = user.orElse(null);
+                                                // Enable deletions for comments owned by this user or the answer creator.
+                                                var deletionEnabled = credential != null && (
+                                                        credential.equals(comment.getCreator()) ||
+                                                                credential.equals(answer.getCreator())
+                                                );
+                                                return commentToDTO.apply(deletionEnabled, comment);
+                                            }).collect(Collectors.toList()))
+                            .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
+                            .selectionEnabled(question.isPresent() && question.map(Question::getAuthor).equals(user))
+                            .selected(question.isPresent() && question.get().getSelectedAnswer().equals(answer.getId()))
+                            .build();
+                })
                 .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
                 .collect(Collectors.toUnmodifiableList());
         return AnswerListDTO.builder()
