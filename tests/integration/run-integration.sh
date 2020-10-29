@@ -1,13 +1,16 @@
 #!/bin/sh
 
-# Move to the root of the repository.
+# Move to the root of the repository
 cd ../..
 
-set PORT='9081'
-set JDBC_DATABASE_URL='localhost:5432'
-set JDBC_DATABASE_NAME='postgres'
-set JDBC_DATABASE_PASSWORD='123456'
-set JDBC_DATABASE_USERNAME='postgres'
+PWD=$(pwd)
+
+export PORT=9081
+export JDBC_DATABASE_URL=localhost:5432
+export JDBC_DATABASE_NAME=root
+export JDBC_DATABASE_PASSWORD=123456
+export JDBC_DATABASE_USERNAME=root
+export WLP_HOME=$PWD/target/liberty/wlp/
 
 # Cleanup and package.
 mvn liberty:stop
@@ -15,10 +18,9 @@ mvn clean package
 
 # Start a local open-liberty deployment server.
 mvn liberty:create liberty:install-feature liberty:deploy
-mvn liberty:configure-arquillian
 
-# Verify that the tests were successful.
-mvn verify
+# Use the OL runtime during verification. This allows us to use ... environment variables :D
+mvn verify -Druntime=ol
 
 # Cleanup.
 mvn liberty:stop
