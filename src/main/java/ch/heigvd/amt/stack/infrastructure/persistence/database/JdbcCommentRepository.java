@@ -80,13 +80,12 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     @Override
     public Optional<Comment> findById(CommentId commentId) {
         setup(dataSource);
-        List<Comment> comments = findFor(dataSource,
+        return findFor(dataSource,
                 JdbcCommentRepository::parseComment,
                 "SELECT * FROM Comment WHERE idComment = ?;",
                 (ps) -> {
                     ps.setString(1, commentId.toString());
-                }).collect(Collectors.toList());
-        return (comments.size() == 1 ? Optional.of(comments.get(0)) : Optional.empty());
+                }).findFirst();
     }
 
     @Override

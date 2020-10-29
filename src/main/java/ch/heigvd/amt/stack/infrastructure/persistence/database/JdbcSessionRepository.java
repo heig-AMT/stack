@@ -31,13 +31,12 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     @Override
     public Optional<Session> findBy(SessionQuery query) {
         setup(dataSource);
-        List<Session> sessionList = findFor(dataSource,
+        return findFor(dataSource,
                 JdbcSessionRepository::parseSession,
                 "SELECT * FROM Session WHERE tag = ?;",
                 (ps) -> {
                     ps.setString(1, query.getTag());
-                }).collect(Collectors.toList());
-        return (sessionList.size()==1? Optional.of(sessionList.get(0)): Optional.empty());
+                }).findFirst();
     }
 
     @Override
@@ -73,13 +72,12 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     @Override
     public Optional<Session> findById(SessionId sessionId) {
         setup(dataSource);
-        List<Session> sessionList = findFor(dataSource,
+        return findFor(dataSource,
                 JdbcSessionRepository::parseSession,
                 "SELECT * FROM Session WHERE idSession = ?;",
                 (ps) -> {
                     ps.setString(1, sessionId.toString());
-                }).collect(Collectors.toList());
-        return (sessionList.size()==1? Optional.of(sessionList.get(0)): Optional.empty());
+                }).findFirst();
     }
 
     @Override

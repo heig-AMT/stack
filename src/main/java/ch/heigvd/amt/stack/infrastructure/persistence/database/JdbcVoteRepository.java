@@ -91,14 +91,13 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     @Override
     public Optional<Vote> findById(VoteId voteId) {
         setup(dataSource);
-        List<Vote> votes = findFor(dataSource,
+        return findFor(dataSource,
                 JdbcVoteRepository::parseVote,
                 "SELECT * FROM Vote WHERE idxAnswer = ? AND idxCredential = ?;",
                 (ps) -> {
                     ps.setString(1, voteId.getAnswer().toString());
                     ps.setString(2, voteId.getVoter().toString());
-                }).collect(Collectors.toList());
-        return (votes.size() == 1 ? Optional.of(votes.get(0)) : Optional.empty());
+                }).findFirst();
     }
 
     @Override

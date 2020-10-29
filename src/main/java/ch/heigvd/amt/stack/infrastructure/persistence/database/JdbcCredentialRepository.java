@@ -34,21 +34,12 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public Optional<Credential> findBy(CredentialQuery query) {
         setup(dataSource);
-        //It's dirty. But I love dirty things (at least in code)
-        return (findFor(dataSource,
+        return findFor(dataSource,
                 JdbcCredentialRepository::parseCredential,
                 "SELECT * FROM Credential WHERE username = ?;",
                 (ps) -> {
                     ps.setString(1, query.getUsername());
-                }).count() == 1 ? Optional.of(
-                findFor(dataSource,
-                        JdbcCredentialRepository::parseCredential,
-                        "SELECT * FROM Credential WHERE username = ?;",
-                        (ps) -> {
-                            ps.setString(1, query.getUsername());
-                        })
-                        .collect(Collectors.toList()).get(0)
-        ) : Optional.empty());
+                }).findFirst();
     }
 
     @Override
@@ -85,13 +76,12 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public Optional<Credential> findById(CredentialId credentialId) {
         setup(dataSource);
-        List<Credential> credList = findFor(dataSource,
+        return findFor(dataSource,
                 JdbcCredentialRepository::parseCredential,
                 "SELECT * FROM Credential WHERE idCredential = ?;",
                 (ps) -> {
                     ps.setString(1, credentialId.toString());
-                }).collect(Collectors.toList());
-        return (credList.size() == 1 ? Optional.of(credList.get(0)) : Optional.empty());
+                }).findFirst();
     }
 
     @Override

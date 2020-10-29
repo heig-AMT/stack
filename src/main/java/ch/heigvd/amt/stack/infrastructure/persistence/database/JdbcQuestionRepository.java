@@ -85,13 +85,12 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public Optional<Question> findById(QuestionId questionId) {
         setup(dataSource);
-        List<Question> questionList = findFor(dataSource,
+        return findFor(dataSource,
                 JdbcQuestionRepository::parseQuestion,
                 "SELECT * FROM Question WHERE idQuestion = ?;",
                 (ps) -> {
                     ps.setString(1, questionId.toString());
-                }).collect(Collectors.toList());
-        return (questionList.size() == 1 ? Optional.of(questionList.get(0)) : Optional.empty());
+                }).findFirst();
     }
 
     @Override
