@@ -15,8 +15,7 @@ import java.util.Optional;
 public class InMemoryCredentialRepository extends InMemoryRepository<Credential, CredentialId> implements CredentialRepository {
 
     @Override
-    public void save(Credential entity) {
-        // TODO : Make this portion of code thread-safe.
+    public synchronized void save(Credential entity) {
         Optional<Credential> previous = findBy(CredentialQuery.builder()
                 .username(entity.getUsername())
                 .build());

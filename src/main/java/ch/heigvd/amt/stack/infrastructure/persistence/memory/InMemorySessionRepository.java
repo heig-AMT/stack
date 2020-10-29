@@ -14,10 +14,7 @@ import java.util.Optional;
 public class InMemorySessionRepository extends InMemoryRepository<Session, SessionId> implements SessionRepository {
 
     @Override
-    public void save(Session entity) {
-        // TODO : Make this portion of code thread-safe.
-        // TODO : Rather than writing an empty credential for an identifier, we may want to remove the item from the
-        //
+    public synchronized void save(Session entity) {
         findBy(SessionQuery.builder().tag(entity.getTag()).build())
                 .ifPresent(session -> super.remove(session.getId()));
         super.save(entity);

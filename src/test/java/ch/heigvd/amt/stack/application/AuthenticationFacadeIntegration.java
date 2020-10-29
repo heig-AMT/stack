@@ -16,7 +16,6 @@ public class AuthenticationFacadeIntegration {
 
     @BeforeEach
     public void prepare() {
-        // TODO : Switch to a DI mechanism.
         var credentials = new InMemoryCredentialRepository();
         var sessions = new InMemorySessionRepository();
 
