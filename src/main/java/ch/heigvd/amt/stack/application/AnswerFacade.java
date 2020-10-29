@@ -97,6 +97,7 @@ public class AnswerFacade {
      * Comments a certain answer, provided that the user is properly authenticated and that the answer they want to
      * comment on actually exists.
      *
+     * @return {@link CommentId} id of the comment created
      * @param command the {@link CommentAnswerCommand} that should be fulfilled.
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      * @throws AnswerNotFoundException       if the answer does not actually exist.
