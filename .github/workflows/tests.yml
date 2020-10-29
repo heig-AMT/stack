@@ -66,7 +66,7 @@ jobs:
           CI: true
 
       - name: Run Arquillian tests 🛸
-        run |
+        run: |
           cd tests/integration
           # Run in the same database than e2e tests.
           ./run-integration
