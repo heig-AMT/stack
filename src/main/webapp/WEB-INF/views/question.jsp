@@ -13,7 +13,7 @@
 <div class="pt-16"/>
 <div class="flex p-8 flex-col items-center">
     <div class="w-full">
-        <div class="p-6 rounded-lg
+        <div class="p-6 pb-1 rounded-lg
             bg-white hover:bg-gray-100
             border-b border-gray-200
             shadow hover:shadow-lg
@@ -25,6 +25,13 @@
             </div>
             <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
             <div class="flex flex-row mt-2 items-center">
+                <c:if test="${question.deletionEnabled}">
+                    <form class="flex flex-row mx-2 mb-0" action="deleteQuestion.do" method="POST">
+                        <input type="hidden" name="question" value="<c:out value="${question.id.toString()}"/>"/>
+                        <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
+                        <input class="ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600 cursor-pointer" type="submit" value="Delete"/>
+                    </form>
+                </c:if>
                 <div class="flex-grow"></div>
                 <c:import url="fragments/authorQuestion.jsp"/>
             </div>
