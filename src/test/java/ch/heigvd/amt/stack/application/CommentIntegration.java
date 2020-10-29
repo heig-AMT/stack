@@ -8,6 +8,7 @@ import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
+import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -161,7 +162,58 @@ public class CommentIntegration {
             assertEquals("This is a stupid answer", commentDTO.getContents());
             assertFalse(commentDTO.isDeletionEnabled());
         });
+    }
 
+    @Test
+    public void testWrongUserCanNotRemoveComment() {
+
+        final String tagAlice = "tagAlice";
+        final String tagBob = "tagBob";
+
+        var registerAlice = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag(tagAlice)
+                .build();
+
+        var registerBob = RegisterCommand.builder()
+                .username("bob")
+                .password("password")
+                .tag(tagBob)
+                .build();
+        authenticationFacade.register(registerAlice);
+        authenticationFacade.register(registerBob);
+
+        var askQuestion = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag(tagAlice)
+                .build();
+
+        var questionId = questionFacade.askQuestion(askQuestion);
+
+        var answerQuestion = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag(tagAlice)
+                .build();
+
+        var answerId = assertDoesNotThrow(() ->
+            answerFacade.answer(answerQuestion)
+        );
+            var comment = CommentAnswerCommand.builder()
+                    .answer(answerId)
+                    .body("This is a stupid answer")
+                    .tag(tagAlice)
+                    .build();
+
+            var commentId = assertDoesNotThrow(() -> answerFacade.comment(comment));
+
+        assertThrows(AuthenticationFailedException.class, () ->
+                answerFacade.deleteComment(DeleteCommentCommand.builder()
+                        .comment(commentId)
+                        .tag(tagBob)
+                        .build()));
     }
 
     @Test

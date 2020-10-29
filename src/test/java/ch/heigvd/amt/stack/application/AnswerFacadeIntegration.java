@@ -298,31 +298,42 @@ public class AnswerFacadeIntegration {
     @Test
     public void testUnauthenticatedUserCanNotDeleteAnAnswer() {
 
+        final String tagAlice;
+        final String tagBob;
+
         // Register.
-        var register = RegisterCommand.builder()
+        var registerAlice = RegisterCommand.builder()
                 .username("alice")
                 .password("password")
-                .tag("tag")
+                .tag("tagAlice")
                 .build();
+
+        var registerBob = RegisterCommand.builder()
+                .username("bob")
+                .password("password2")
+                .tag("tagBob")
+                .build();
+
         var question = AskQuestionCommand.builder()
                 .title("Title")
                 .description("Description")
-                .tag("tag")
+                .tag("tagAlice")
                 .build();
-        authenticationFacade.register(register);
+        authenticationFacade.register(registerAlice);
+        authenticationFacade.register(registerBob);
 
         // Ask a question and answer.
         var questionId = questionFacade.askQuestion(question);
         var answer = AnswerQuestionCommand.builder()
                 .question(questionId)
                 .body("This is a stupid question")
-                .tag("tag")
+                .tag("tagAlice")
                 .build();
         assertDoesNotThrow(() -> answerFacade.answer(answer));
 
         // Make sure the question was added.
         var answers = answerFacade.getAnswers(AnswerQuery.builder()
-                .tag("anotherTag")
+                .tag("tagBob")
                 .forQuestion(questionId)
                 .build())
                 .getAnswers();
@@ -333,11 +344,12 @@ public class AnswerFacadeIntegration {
         // Try to delete the answer.
         assertThrows(AuthenticationFailedException.class, () -> answerFacade.delete(DeleteAnswerCommand.builder()
                 .answer(answers.get(0).getId())
+                .tag("tagBob")
                 .build()));
 
         // Check the question count.
         assertEquals(1, answerFacade.getAnswers(AnswerQuery.builder()
-                .tag("tag")
+                .tag("tagAlice")
                 .forQuestion(questionId)
                 .build())
                 .getAnswers()
@@ -433,7 +445,7 @@ public class AnswerFacadeIntegration {
         var registerBob = RegisterCommand.builder()
                 .username("bob")
                 .password("password2")
-                .tag(tagAlice)
+                .tag(tagBob)
                 .build();
 
         var question = AskQuestionCommand.builder()
@@ -461,8 +473,6 @@ public class AnswerFacadeIntegration {
                     .getAnswers();
             assertEquals(1, answers.size());
 
-
-            // TODO: This test is behaving weirdly regarding code coverage in AnswerFacade.select (throw new AuthenticationFailedException())
             // try to select the answer.
             assertThrows(AuthenticationFailedException.class, () ->
                     answerFacade.select(SelectAnswerCommand.builder()
@@ -546,7 +556,7 @@ public class AnswerFacadeIntegration {
         var registerBob = RegisterCommand.builder()
                 .username("bob")
                 .password("password2")
-                .tag(tagAlice)
+                .tag(tagBob)
                 .build();
 
         var question = AskQuestionCommand.builder()
@@ -574,8 +584,6 @@ public class AnswerFacadeIntegration {
                 .getAnswers();
         assertEquals(1, answers.size());
 
-
-        // TODO: This test is behaving weirdly regarding code coverage in AnswerFacade.unselect (throw new AuthenticationFailedException())
         // select the answer.
         assertDoesNotThrow(() ->
                 answerFacade.select(SelectAnswerCommand.builder()
@@ -628,9 +636,9 @@ public class AnswerFacadeIntegration {
                 .build();
 
 
-        var postedAnswer1 = assertDoesNotThrow(() -> answerFacade.answer(answer1));
-        var postedAnswer2 = assertDoesNotThrow(() -> answerFacade.answer(answer2));
-        var postedAnswer3 = assertDoesNotThrow(() -> answerFacade.answer(answer3));
+        assertDoesNotThrow(() -> answerFacade.answer(answer1));
+        assertDoesNotThrow(() -> answerFacade.answer(answer2));
+        assertDoesNotThrow(() -> answerFacade.answer(answer3));
 
         // Get the answers.
         var unorderedAnswers = answerFacade.getAnswers(AnswerQuery.builder()
