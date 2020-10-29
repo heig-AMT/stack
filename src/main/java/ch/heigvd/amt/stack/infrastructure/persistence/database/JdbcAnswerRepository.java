@@ -6,11 +6,10 @@ import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -22,9 +21,6 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 @Default
 public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> implements AnswerRepository {
-
-    @Resource(name = "database")
-    private DataSource dataSource;
 
     /**
      * Parses an answer from a certain {@link ResultSet}.

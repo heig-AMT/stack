@@ -1,7 +1,10 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
 import ch.heigvd.amt.stack.domain.Repository;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.Mapper;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -74,6 +77,8 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             "ALTER TABLE Question ADD COLUMN IF NOT EXISTS " +
                     "idxSelectedAnswer VARCHAR DEFAULT NULL REFERENCES Answer(idAnswer) ON UPDATE CASCADE ON DELETE SET NULL;";
 
+    @Resource(name = "database")
+    protected DataSource dataSource;
 
     protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {

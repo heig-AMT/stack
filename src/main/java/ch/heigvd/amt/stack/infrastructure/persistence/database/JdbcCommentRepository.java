@@ -26,9 +26,6 @@ import java.util.stream.Collectors;
 @Default
 public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> implements CommentRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
     private static Comment parseComment(ResultSet resultSet) throws SQLException {
         return Comment.builder()
                 .id(CommentId.from(resultSet.getString("idComment")))

@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.infrastructure.persistence.database;
+package ch.heigvd.amt.stack.infrastructure.persistence.database.dsl;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

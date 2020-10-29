@@ -25,9 +25,6 @@ import java.util.logging.Logger;
 @Default
 public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId> implements QuestionRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
     private static Question parseQuestion(ResultSet resultSet) throws SQLException {
         return Question.builder()
                 .id(QuestionId.from(resultSet.getString("idQuestion")))

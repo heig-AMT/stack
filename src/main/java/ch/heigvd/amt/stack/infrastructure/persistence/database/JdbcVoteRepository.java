@@ -23,8 +23,6 @@ import java.util.logging.Logger;
 @ApplicationScoped
 @Default
 public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements VoteRepository {
-    @Resource(name = "database")
-    private DataSource dataSource;
 
     private static Vote parseVote(ResultSet resultSet) throws SQLException {
         return Vote.builder()
