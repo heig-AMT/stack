@@ -90,42 +90,20 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     @Override
     public Optional<Answer> findById(AnswerId answerId) {
         setup(dataSource);
-        var select = "SELECT * FROM Answer WHERE idAnswer = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, answerId.toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseAnswer(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find answer " + answerId);
-        }
-        return Optional.empty();
+        return findFor(dataSource,
+                JdbcAnswerRepository::parseAnswer,
+                "SELECT * FROM Answer WHERE idAnswer = ?;",
+                (ps) -> ps.setString(1, answerId.toString()))
+                .findFirst();
     }
 
     @Override
     public Collection<Answer> findAll() {
         setup(dataSource);
-        var select = "SELECT * FROM Answer;";
-        Collection<Answer> result = new ArrayList<>();
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            var rs = statement.executeQuery();
-
-            while (rs.next()) {
-                result.add(parseAnswer(rs));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-            return Collections.emptyList();
-        }
-        return result;
+        return findFor(dataSource,
+                JdbcAnswerRepository::parseAnswer,
+                "SELECT * FROM Answer;",
+                PrepareStatementScope.none())
+                .collect(Collectors.toList());
     }
 }
