@@ -91,3 +91,18 @@ Scenario('A question can be deleted by it\'s creator', ({ I, profilePage, questi
 
   I.dontSee(question.title);
 });
+
+Scenario('A question cannot be deleted by not it\'s creator', ({ I, profilePage, questionsPage }) => {
+  profilePage.register();
+  const question = questionsPage.addQuestion();
+
+  I.see(question.title);
+  I.see(question.description);
+
+  profilePage.logout();
+  profilePage.register();
+
+  I.click(question.title);
+
+  I.dontSeeElement({css: 'form[action^=deleteQuestion] input[type=submit]'});
+});
