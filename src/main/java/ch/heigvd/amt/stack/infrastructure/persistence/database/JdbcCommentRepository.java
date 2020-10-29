@@ -28,10 +28,6 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     @Resource(name = "database")
     private DataSource dataSource;
 
-    private DataSource getDataSource() {
-        return dataSource;
-    }
-
     @Override
     public Collection<Comment> findBy(CommentQuery query) {
         setup(dataSource);
@@ -44,7 +40,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     public void save(Comment comment) {
         setup(dataSource);
         var insert = "INSERT INTO Comment(idComment, idxCredential, idxAnswer, contents, instant) VALUES (?, ?, ?, ?, ?);";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, comment.getId().toString());
             statement.setString(2, comment.getCreator().toString());
@@ -62,7 +58,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     public void remove(CommentId commentId) {
         setup(dataSource);
         var delete = "DELETE FROM Comment WHERE idComment = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, commentId.toString());
             statement.execute();
@@ -76,7 +72,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     public Optional<Comment> findById(CommentId commentId) {
         setup(dataSource);
         var select = "SELECT * FROM Comment WHERE idComment = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, commentId.toString());
             var rs = statement.executeQuery();
@@ -105,7 +101,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
         setup(dataSource);
         var select = "SELECT * FROM Comment;";
         Collection<Comment> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
 
