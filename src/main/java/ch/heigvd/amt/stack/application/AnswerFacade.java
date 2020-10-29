@@ -27,6 +27,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -305,7 +306,7 @@ public class AnswerFacade {
                                             }).collect(Collectors.toList()))
                             .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
                             .selectionEnabled(question.isPresent() && question.map(Question::getAuthor).equals(user))
-                            .selected(question.isPresent() && question.get().getSelectedAnswer().equals(answer.getId()))
+                            .selected(question.isPresent() && Objects.equals(question.get().getSelectedAnswer(), answer.getId()))
                             .build();
                 })
                 .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
