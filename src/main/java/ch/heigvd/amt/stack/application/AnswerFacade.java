@@ -68,6 +68,20 @@ public class AnswerFacade {
     };
 
     /**
+     * An implementation of {@link Comparator} that takes care of ordering {@link AnswerDTO} instances based on their
+     * selection status as well as their vote counts.
+     */
+    private static final Comparator<AnswerDTO> COMPARATOR = (f, s) -> {
+        int comp = Boolean.compare(s.isSelected(), f.isSelected()); // reversed.
+        if (comp != 0) {
+            return comp;
+        } else {
+            return (s.getPositiveVotesCount() - s.getNegativeVotesCount()) -
+                    (f.getPositiveVotesCount() - f.getNegativeVotesCount());
+        }
+    };
+
+    /**
      * Answers a certain question, provided that the user is properly authenticated and that the question they want to
      * answer to actually exists.
      *
@@ -99,8 +113,8 @@ public class AnswerFacade {
      * Comments a certain answer, provided that the user is properly authenticated and that the answer they want to
      * comment on actually exists.
      *
-     * @return {@link CommentId} id of the comment created
      * @param command the {@link CommentAnswerCommand} that should be fulfilled.
+     * @return {@link CommentId} id of the comment created
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      * @throws AnswerNotFoundException       if the answer does not actually exist.
      */
@@ -111,7 +125,7 @@ public class AnswerFacade {
                 .orElseThrow(AuthenticationFailedException::new);
         var answer = answerRepository.findById(command.getAnswer())
                 .orElseThrow(AnswerNotFoundException::new);
-        CommentId id=CommentId.create();
+        CommentId id = CommentId.create();
         commentRepository.save(
                 Comment.builder()
                         .id(id)
@@ -344,7 +358,7 @@ public class AnswerFacade {
                             .selected(question.isPresent() && Objects.equals(question.get().getSelectedAnswer(), answer.getId()))
                             .build();
                 })
-                .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
+                .sorted(COMPARATOR)
                 .collect(Collectors.toUnmodifiableList());
         return AnswerListDTO.builder()
                 .answers(answers)
