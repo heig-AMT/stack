@@ -6,7 +6,7 @@
         <configuration>
             <property name="wlpHome">${env.WLP_HOME}</property>
             <property name="serverName">defaultServer</property>
-            <property name="httpPort">8090</property>
+            <property name="httpPort">${env.PORT}</property>
             <property name="allowConnectingToRunningServer">true</property>
         </configuration>
     </container>

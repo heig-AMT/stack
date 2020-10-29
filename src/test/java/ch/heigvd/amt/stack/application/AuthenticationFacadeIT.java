@@ -5,6 +5,7 @@ import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.authentication.dto.ConnectedDTO;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
+import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import lombok.extern.java.Log;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -16,7 +17,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 //import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
@@ -55,19 +56,17 @@ public class AuthenticationFacadeIT {
                 .tag("tag")
                 .build());
 
-        Assert.assertTrue(connected.isConnected());
+        assertTrue(connected.isConnected());
     }
 
     @Test
     public void testTwoDifferentUsersCanSignUp() {
-        Assert.assertNotNull(authenticationFacade);
-
         authenticationFacade.register(RegisterCommand.builder()
-                .username("aloy")
-                .password("chieftain")
-                .tag("scorcher")
+                .username("talanah")
+                .password("sunhawk")
+                .tag("redmaw")
                 .build());
-        ConnectedDTO connectedFirstUser = authenticationFacade.connected(SessionQuery.builder().tag("scorcher").build());
+        ConnectedDTO connectedFirstUser = authenticationFacade.connected(SessionQuery.builder().tag("redmaw").build());
 
         authenticationFacade.register(RegisterCommand.builder()
                 .username("ikrie")
@@ -76,37 +75,35 @@ public class AuthenticationFacadeIT {
                 .build());
         ConnectedDTO connectedSecondUser = authenticationFacade.connected(SessionQuery.builder().tag("scrapper").build());
 
-        Assert.assertTrue(connectedFirstUser.isConnected());
-        Assert.assertTrue(connectedSecondUser.isConnected());
+        assertTrue(connectedFirstUser.isConnected());
+        assertTrue(connectedSecondUser.isConnected());
     }
 
-    /*@Test
+    @Test
     public void testOneUserCanNotSignUpTwoTimes() {
-
-
         authenticationFacade.register(RegisterCommand.builder()
-                .username("aloy")
-                .password("chieftain")
-                .tag("scorcher")
+                .username("varga")
+                .password("oseram")
+                .tag("icerail")
                 .build());
 
         assertThrows(AuthenticationFailedException.class, () -> {
             authenticationFacade.register(RegisterCommand.builder()
-                    .username("aloy")
-                    .password("chieftain")
-                    .tag("scorcher")
+                    .username("varga")
+                    .password("oseram")
+                    .tag("icerail")
                     .build());
         });
-
     }
 
-    /*@Test
-    public void oneUserCanRegisterThenLogin() {
+    @Test
+    public void testOneUserCanRegisterAndLoginAndLogout() {
         authenticationFacade.register(RegisterCommand.builder()
                 .username("aloy")
                 .password("chieftain")
                 .tag("scorcher")
                 .build());
+        ConnectedDTO connectedAuth = authenticationFacade.connected(SessionQuery.builder().tag("scorcher").build());
 
         authenticationFacade.login(LoginCommand.builder()
                 .username("aloy")
@@ -115,8 +112,14 @@ public class AuthenticationFacadeIT {
                 .build());
         ConnectedDTO connectedLogin = authenticationFacade.connected(SessionQuery.builder().tag("scorcher").build());
 
-        assertTrue(connectedLogin.isConnected());
+        authenticationFacade.logout(LogoutCommand.builder()
+                .tag("scorcher")
+                .build());
+        ConnectedDTO connectedLogout = authenticationFacade.connected(SessionQuery.builder().tag("scorcher").build());
 
+        assertTrue(connectedAuth.isConnected());
+        assertTrue(connectedLogin.isConnected());
+        assertFalse(connectedLogout.isConnected());
     }
 
     @Test
@@ -124,29 +127,11 @@ public class AuthenticationFacadeIT {
 
         assertThrows(AuthenticationFailedException.class, () -> {
             authenticationFacade.login(LoginCommand.builder()
-                    .username("aloy")
-                    .password("chieftain")
-                    .tag("scorcher")
+                    .username("varl")
+                    .password("nora")
+                    .tag("hunter")
                     .build());
         });
 
     }
-
-    @Test
-    public void oneUserCanRegisterThenLogout() {
-
-
-        authenticationFacade.register(RegisterCommand.builder()
-                .username("aloy")
-                .password("chieftain")
-                .tag("scorcher")
-                .build());
-
-        authenticationFacade.logout(LogoutCommand.builder()
-                .tag("scorcher")
-                .build());
-        ConnectedDTO connectedLogin = authenticationFacade.connected(SessionQuery.builder().tag("scorcher").build());
-
-        assertTrue(connectedLogin.isConnected());
-    }*/
 }
