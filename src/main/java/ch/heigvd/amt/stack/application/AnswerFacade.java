@@ -14,6 +14,7 @@ import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.comment.Comment;
+import ch.heigvd.amt.stack.domain.comment.CommentId;
 import ch.heigvd.amt.stack.domain.comment.CommentNotFoundException;
 import ch.heigvd.amt.stack.domain.comment.CommentRepository;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
@@ -100,21 +101,24 @@ public class AnswerFacade {
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      * @throws AnswerNotFoundException       if the answer does not actually exist.
      */
-    public void comment(CommentAnswerCommand command) throws AuthenticationFailedException, AnswerNotFoundException {
+    public CommentId comment(CommentAnswerCommand command) throws AuthenticationFailedException, AnswerNotFoundException {
         var session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
                 .build())
                 .orElseThrow(AuthenticationFailedException::new);
         var answer = answerRepository.findById(command.getAnswer())
                 .orElseThrow(AnswerNotFoundException::new);
+        CommentId id=CommentId.create();
         commentRepository.save(
                 Comment.builder()
+                        .id(id)
                         .answer(answer.getId())
                         .creation(Instant.now())
                         .contents(command.getBody())
                         .creator(session.getUser())
                         .build()
         );
+        return id;
     }
 
     /**
