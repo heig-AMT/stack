@@ -16,10 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -42,26 +39,13 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public Collection<Question> findBy(QuestionQuery query) {
         setup(dataSource);
-        if (query.getShouldContain() != null) {
-            var select = "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;";
-            Collection<Question> result = new ArrayList<>();
-            try (var connection = dataSource.getConnection()) {
-                var statement = connection.prepareStatement(select);
-                statement.setString(1, "%" + query.getShouldContain().trim().toLowerCase() + "%");
-                statement.setString(2, "%" + query.getShouldContain().trim().toLowerCase() + "%");
-                var rs = statement.executeQuery();
-                while (rs.next()) {
-                    result.add(parseQuestion(rs));
-                }
-                return result;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-                return Collections.emptyList();
-            }
-        } else {
-            return findAll();
-        }
+        return findFor(dataSource,
+                JdbcQuestionRepository::parseQuestion,
+                "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;",
+                    (ps) -> {
+                    ps.setString(1, "%" + query.getShouldContain().trim().toLowerCase() + "%");
+                    ps.setString(2, "%" + query.getShouldContain().trim().toLowerCase() + "%");
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -101,23 +85,13 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public Optional<Question> findById(QuestionId questionId) {
         setup(dataSource);
-        var select = "SELECT * FROM Question WHERE idQuestion = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, questionId.toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseQuestion(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find question " + questionId);
-        }
-        return Optional.empty();
+        List<Question> questionList = findFor(dataSource,
+                JdbcQuestionRepository::parseQuestion,
+                "SELECT * FROM Question WHERE idQuestion = ?;",
+                (ps) -> {
+                    ps.setString(1, questionId.toString());
+                }).collect(Collectors.toList());
+        return (questionList.size() == 1 ? Optional.of(questionList.get(0)) : Optional.empty());
     }
 
     @Override

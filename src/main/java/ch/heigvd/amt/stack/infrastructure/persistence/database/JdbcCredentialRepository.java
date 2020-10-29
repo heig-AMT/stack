@@ -36,13 +36,21 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public Optional<Credential> findBy(CredentialQuery query) {
         setup(dataSource);
-        return Optional.of(findFor(dataSource,
+        //It's dirty. But I love dirty things (at least in code)
+        return (findFor(dataSource,
                 JdbcCredentialRepository::parseCredential,
                 "SELECT * FROM Credential WHERE username = ?;",
                 (ps) -> {
                     ps.setString(1, query.getUsername());
-                })
-                .collect(Collectors.toList()).get(0));
+                }).count() ==1 ? Optional.of(
+                findFor(dataSource,
+                        JdbcCredentialRepository::parseCredential,
+                        "SELECT * FROM Credential WHERE username = ?;",
+                        (ps) -> {
+                            ps.setString(1, query.getUsername());
+                        })
+                        .collect(Collectors.toList()).get(0)
+        ) : Optional.empty());
     }
 
     @Override
