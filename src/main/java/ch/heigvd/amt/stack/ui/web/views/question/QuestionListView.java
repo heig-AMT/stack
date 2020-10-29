@@ -20,7 +20,8 @@ public class QuestionListView extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        var builder = QuestionQuery.builder();
+        var builder = QuestionQuery.builder()
+                .tag(req.getSession().getId());
         var query = req.getParameter("search");
         if (query != null) {
             builder.shouldContain(query);
