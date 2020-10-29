@@ -37,12 +37,13 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public Collection<Question> findBy(QuestionQuery query) {
         setup(dataSource);
+        var text = query.getShouldContain() != null ? query.getShouldContain().trim().toLowerCase() : "";
         return findFor(dataSource,
                 JdbcQuestionRepository::parseQuestion,
                 "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;",
                     (ps) -> {
-                    ps.setString(1, "%" + query.getShouldContain().trim().toLowerCase() + "%");
-                    ps.setString(2, "%" + query.getShouldContain().trim().toLowerCase() + "%");
+                    ps.setString(1, "%" + text + "%");
+                    ps.setString(2, "%" + text + "%");
                 }).collect(Collectors.toList());
     }
 
