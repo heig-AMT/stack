@@ -66,7 +66,7 @@ public class QuestionFacadeIntegrationIT {
                     .tag("zirael")
                     .build());
         } catch (QuestionNotFoundException e) {
-            e.printStackTrace();
+            Assert.fail();
         }
         questions = questionFacade.getQuestions(QuestionQuery.builder()
                 .shouldContain("Do you dream of Scorchers ?").build())
