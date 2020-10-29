@@ -79,3 +79,15 @@ Scenario('When a user deletes his profile, his questions are deleted', ({ I, pro
   I.amOnPage('/questions');
   I.dontSee(question.title);
 });
+
+Scenario('A question can be deleted by it\'s creator', ({ I, profilePage, questionsPage }) => {
+  profilePage.register();
+  const question = questionsPage.addQuestion();
+
+  I.see(question.title);
+  I.see(question.description);
+
+  questionsPage.deleteQuestion();
+
+  I.dontSee(question.title);
+});

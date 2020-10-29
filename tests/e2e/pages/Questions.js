@@ -17,5 +17,11 @@ module.exports = {
     I.click("Publish question");
 
     return { title: randomTitle, description: randomDesc }
+  },
+
+  deleteQuestion() {
+    // Have to be on the question's view, not in the list of questions
+    I.seeElement({css: 'form[action^=deleteQuestion] input[type=submit]'});
+    I.click({css: 'form[action^=deleteQuestion] input[type=submit]'});
   }
 }
