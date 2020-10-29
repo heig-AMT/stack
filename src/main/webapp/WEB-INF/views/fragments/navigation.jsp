@@ -17,7 +17,7 @@
             method="GET"
             class="flex flex-grow justify-between px-4 py-1 my-0 mr-4 rounded-full border border-gray-400">
         <input type="text" name="search" class="flex-grow"
-               placeholder="Search by content in the title, description or tags !" required>
+               placeholder="Search by content in the title, description or tags !">
         <input type="image" src="${pageContext.request.contextPath}/assets/magnify.svg" alt="submit">
     </form>
 

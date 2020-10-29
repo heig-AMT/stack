@@ -56,7 +56,7 @@ public class AuthorizationFilter implements Filter {
                         , "/register"
                         , "/questions"
                         , "/question"
-                        , "/error404"
+                        , "/error"
                 );
 
         boolean onHomePage = uri.equals("/") || uri.equals("");
