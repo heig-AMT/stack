@@ -7,7 +7,7 @@ exports.config = {
   output: './output',
   helpers: {
     WebDriver: {
-      url: 'http://localhost:8080',
+      url: 'http://localhost:8090/mvc-simple',
       browser: 'chrome',
       host: '127.0.0.1',
       port: 4444,
