@@ -29,5 +29,11 @@ module.exports = {
     votes.down = await I.grabTextFrom(".voteBox:nth-of-type(" + n + ") span:nth-of-type(2)")
 
     return votes;
+  },
+
+  deleteAnswer() {
+    // Have to be on the question's view, not in the list of questions
+    I.seeElement({css: 'form[action^=deleteAnswer] input[type=submit]'});
+    I.click({css: 'form[action^=deleteAnswer] input[type=submit]'});
   }
 }

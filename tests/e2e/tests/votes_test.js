@@ -131,3 +131,29 @@ Scenario('Multiple people can vote', async ({ I, profilePage, questionsPage, ans
   assert.equal(3, votes.up);
   assert.equal(0, votes.down);
 });
+
+Scenario('When a user deletes his profile, his votes are deleted', async ({ I, profilePage, questionsPage }) => {
+  profilePage.register();
+  const question = questionsPage.addQuestion();
+  answersPage.addAnswer();
+
+  profilePage.logout();
+  const register = profilePage.register();
+
+  I.amOnPage('/questions');
+  I.click(question.title);
+
+  answersPage.upvoteForAns(1);
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(1, votes.up);
+  assert.equal(0, votes.down);
+
+  profilePage.deleteAccount(register.password);
+
+  I.amOnPage('/questions');
+  I.click(question.title);
+
+  votes = await answersPage.getVotesForAns(1);
+  assert.equal(0, votes.up);
+  assert.equal(0, votes.down);
+});
