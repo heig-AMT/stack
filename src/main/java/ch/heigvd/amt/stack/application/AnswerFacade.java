@@ -212,7 +212,7 @@ public class AnswerFacade {
      *
      * @param command the {@link SelectAnswerCommand} that should be fulfilled.
      * @throws AuthenticationFailedException if the user is not properly authenticated.
-     * @throws QuestionNotFoundException     if the question could not found.
+     * @throws QuestionNotFoundException     if the question could not be found.
      */
     public void select(SelectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
         var session = sessionRepository.findBy(SessionQuery.builder()
@@ -233,6 +233,37 @@ public class AnswerFacade {
                 .id(question.getId())
                 .title(question.getTitle())
                 .selectedAnswer(command.getAnswer())
+                .build();
+        questionRepository.save(updated);
+    }
+
+    /**
+     * Unselects a certain answer, provided that the user is properly authenticated.
+     *
+     * @param command the {@link UnselectAnswerCommand} that should be fulfilled.
+     * @throws AuthenticationFailedException if the user is not properly authenticated.
+     * @throws QuestionNotFoundException     if the question couldd not be found.
+     */
+    public void unselect(UnselectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
+        var session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        var question = questionRepository.findById(command.getForQuestion())
+                .orElseThrow(QuestionNotFoundException::new);
+
+        if (!question.getAuthor().equals(session.getUser())) {
+            throw new AuthenticationFailedException();
+        }
+
+        var updated = Question.builder()
+                .author(question.getAuthor())
+                .creation(question.getCreation())
+                .description(question.getDescription())
+                .id(question.getId())
+                .title(question.getTitle())
+                .selectedAnswer(null)
                 .build();
         questionRepository.save(updated);
     }
