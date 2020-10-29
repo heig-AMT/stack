@@ -46,7 +46,6 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                     Question question = Question.builder()
                             .id(QuestionId.from(rs.getString("idQuestion")))
                             .author(CredentialId.from(rs.getString("idxCredential")))
-                            .resolved(rs.getBoolean("resolved"))
                             .title(rs.getString("title"))
                             .description(rs.getString("description"))
                             .creation((rs.getTimestamp("instant")).toInstant())
@@ -67,17 +66,16 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public void save(Question question) {
         setup(dataSource);
-        var insert = "INSERT INTO Question(idQuestion, idxCredential, resolved, title, description, instant, idxSelectedAnswer)" +
-                " VALUES (?, ?, ?, ?,?, ?, ?);";
+        var insert = "INSERT INTO Question(idQuestion, idxCredential, idxSelectedAnswer, title, description, instant)" +
+                " VALUES (?, ?, ?, ?, ?, ?);";
         try (var connection = getDataSource().getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, question.getId().toString());
             statement.setString(2, question.getAuthor().toString());
-            statement.setBoolean(3, question.isResolved());
+            statement.setString(3, question.getSelectedAnswer().toString());
             statement.setString(4, question.getTitle());
             statement.setString(5, question.getDescription());
             statement.setTimestamp(6, Timestamp.from(question.getCreation()));
-            statement.setString(7, question.getSelectedAnswer().toString());
             statement.execute();
         } catch (SQLException ex) {
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not add question " + question.getId());
@@ -110,7 +108,6 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                 return Optional.of(Question.builder()
                         .id(QuestionId.from(rs.getString("idQuestion")))
                         .author(CredentialId.from(rs.getString("idxCredential")))
-                        .resolved(rs.getBoolean("resolved"))
                         .title(rs.getString("title"))
                         .description(rs.getString("description"))
                         .creation((rs.getTimestamp("instant")).toInstant())
@@ -138,7 +135,6 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                 Question question = Question.builder()
                         .id(QuestionId.from(rs.getString("idQuestion")))
                         .author(CredentialId.from(rs.getString("idxCredential")))
-                        .resolved(rs.getBoolean("resolved"))
                         .title(rs.getString("title"))
                         .description(rs.getString("description"))
                         .creation((rs.getTimestamp("instant")).toInstant())

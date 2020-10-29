@@ -40,6 +40,6 @@ public class QuestionTest {
         var id = QuestionId.create();
         var question = Question.builder().id(id).build();
 
-        assertFalse(question.isResolved());
+        assertNull(question.getSelectedAnswer());
     }
 }

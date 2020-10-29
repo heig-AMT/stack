@@ -16,8 +16,6 @@ public class Question implements Entity<QuestionId> {
     QuestionId id = QuestionId.create();
     CredentialId author;
 
-    @Builder.Default
-    boolean resolved = false;
     String title;
     String description;
     Instant creation;

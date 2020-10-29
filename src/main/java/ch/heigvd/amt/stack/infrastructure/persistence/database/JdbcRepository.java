@@ -34,7 +34,6 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             "CREATE TABLE IF NOT EXISTS Question" +
                     "( idQuestion VARCHAR PRIMARY KEY" +
                     ", idxCredential VARCHAR" +
-                    ", resolved BOOLEAN" +
                     ", title VARCHAR(50)" +
                     ", description VARCHAR(200)" +
                     ", instant TIMESTAMP" +

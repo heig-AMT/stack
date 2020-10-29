@@ -231,7 +231,6 @@ public class AnswerFacade {
                 .creation(question.getCreation())
                 .description(question.getDescription())
                 .id(question.getId())
-                .resolved(question.isResolved())
                 .title(question.getTitle())
                 .selectedAnswer(command.getAnswer())
                 .build();
