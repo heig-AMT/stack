@@ -6,8 +6,6 @@ import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
-import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
-import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -18,10 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class QuestionFacadeIntegrationIT {
@@ -47,12 +42,12 @@ public class QuestionFacadeIntegrationIT {
                 .build());
 
         questionFacade.askQuestion(AskQuestionCommand.builder()
-                .title("Do you dream of Scorchers ?")
+                .title("Do you dream of the Wild Hunt ?")
                 .description("They are so lovely...")
                 .tag("zirael").build());
 
         List<QuestionDTO> questions = questionFacade.getQuestions(QuestionQuery.builder()
-                .shouldContain("Do you dream of Scorchers ?").build())
+                .shouldContain("Do you dream of the Wild Hunt ?").build())
                 .getQuestions();
 
         Assert.assertEquals(1, questions.size());
