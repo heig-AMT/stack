@@ -1,18 +1,19 @@
 package ch.heigvd.amt.stack.application;
 
-import ch.heigvd.amt.stack.application.answer.command.AnswerQuestionCommand;
-import ch.heigvd.amt.stack.application.answer.command.DeleteAnswerCommand;
-import ch.heigvd.amt.stack.application.answer.command.DownvoteAnswerCommand;
-import ch.heigvd.amt.stack.application.answer.command.UpvoteAnswerCommand;
+import ch.heigvd.amt.stack.application.answer.command.*;
 import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
+import ch.heigvd.amt.stack.application.question.query.SingleAnswerQuery;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -341,5 +342,252 @@ public class AnswerFacadeIntegration {
                 .build())
                 .getAnswers()
                 .size());
+    }
+
+    @Test
+    public void testGettingQuestionFromAnswerReturnsCorrectQuestionDTO() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var ask = AskQuestionCommand.builder()
+                .title("What is love")
+                .description("Description")
+                .tag("tag")
+                .build();
+
+        authenticationFacade.register(register);
+        QuestionId questionId = questionFacade.askQuestion(ask);
+
+        var answer = AnswerQuestionCommand.builder()
+                .body("Baby don't hurt me")
+                .question(questionId)
+                .tag("tag")
+                .build();
+
+        var answerId = assertDoesNotThrow(() -> answerFacade.answer(answer));
+
+            Optional<QuestionDTO> questionDTO = questionFacade.getQuestion(SingleAnswerQuery.builder()
+                    .id(answerId)
+                    .tag("tag")
+                    .build());
+
+            assertEquals(questionId, questionDTO.get().getId());
+    }
+
+    @Test
+    public void testQuestionOwnerCanSelectAnswerAsAccepted() {
+
+        // Register.
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var question = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag("tag")
+                .build();
+        authenticationFacade.register(register);
+
+        // Ask a question and answer.
+        var questionId = questionFacade.askQuestion(question);
+        var answer = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag("tag")
+                .build();
+        var answerId = assertDoesNotThrow(() -> answerFacade.answer(answer));
+
+            // Make sure the question was added.
+            var answers = answerFacade.getAnswers(AnswerQuery.builder()
+                    .tag("tag")
+                    .forQuestion(questionId)
+                    .build())
+                    .getAnswers();
+            assertEquals(1, answers.size());
+
+            // select the answer.
+            assertDoesNotThrow(() -> answerFacade.select(SelectAnswerCommand.builder()
+                            .forQuestion(questionId)
+                            .answer(answerId)
+                            .tag("tag")
+                            .build()));
+    }
+
+    @Test
+    public void testNonQuestionOwnerCanNotSelectAnswerAsAccepted() {
+
+        final String tagAlice = "tagAlice";
+        final String tagBob = "tagBob";
+
+        // Register.
+        var registerAlice = RegisterCommand.builder()
+                .username("alice")
+                .password("password1")
+                .tag(tagAlice)
+                .build();
+
+        var registerBob = RegisterCommand.builder()
+                .username("bob")
+                .password("password2")
+                .tag(tagAlice)
+                .build();
+
+        var question = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag(tagAlice)
+                .build();
+        authenticationFacade.register(registerAlice);
+        authenticationFacade.register(registerBob);
+
+        // Ask a question and answer.
+        var questionId = questionFacade.askQuestion(question);
+        var answer = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag(tagAlice)
+                .build();
+        var answerId = assertDoesNotThrow(() -> answerFacade.answer(answer));
+
+            // Make sure the question was added.
+            var answers = answerFacade.getAnswers(AnswerQuery.builder()
+                    .tag(tagAlice)
+                    .forQuestion(questionId)
+                    .build())
+                    .getAnswers();
+            assertEquals(1, answers.size());
+
+
+            // TODO: This test is behaving weirdly regarding code coverage in AnswerFacade.select (throw new AuthenticationFailedException())
+            // try to select the answer.
+            assertThrows(AuthenticationFailedException.class, () ->
+                    answerFacade.select(SelectAnswerCommand.builder()
+                    .forQuestion(questionId)
+                    .answer(answerId)
+                    .tag(tagBob)
+                    .build()));
+    }
+
+    @Test
+    public void testQuestionOwnerCanUnselectAcceptedAnswer() {
+
+        // Register.
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var question = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag("tag")
+                .build();
+        authenticationFacade.register(register);
+
+        // Ask a question and answer.
+        var questionId = questionFacade.askQuestion(question);
+        var answer = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag("tag")
+                .build();
+        var answerId = assertDoesNotThrow(() -> answerFacade.answer(answer));
+
+        // Make sure the question was added.
+        var answersBefore = answerFacade.getAnswers(AnswerQuery.builder()
+                .tag("tag")
+                .forQuestion(questionId)
+                .build())
+                .getAnswers();
+        assertEquals(1, answersBefore.size());
+
+        // select the answer.
+        assertDoesNotThrow(() -> answerFacade.select(SelectAnswerCommand.builder()
+                .forQuestion(questionId)
+                .answer(answerId)
+                .tag("tag")
+                .build()));
+
+        // unselect the answer.
+        assertDoesNotThrow(() -> answerFacade.unselect(UnselectAnswerCommand.builder()
+                .forQuestion(questionId)
+                .tag("tag")
+                .build()));
+
+        // verify answer is not selected
+        var answersAfter = answerFacade.getAnswers(AnswerQuery.builder()
+                .tag("tag")
+                .forQuestion(questionId)
+                .build())
+                .getAnswers();
+
+        assertEquals(answersAfter.size(), 1);
+
+        assertEquals(answersAfter.get(0).isSelected(), false);
+    }
+
+    @Test
+    public void testNonQuestionOwnerCanNotUnselectAnswer() {
+
+        final String tagAlice = "tagAlice";
+        final String tagBob = "tagBob";
+
+        // Register.
+        var registerAlice = RegisterCommand.builder()
+                .username("alice")
+                .password("password1")
+                .tag(tagAlice)
+                .build();
+
+        var registerBob = RegisterCommand.builder()
+                .username("bob")
+                .password("password2")
+                .tag(tagAlice)
+                .build();
+
+        var question = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag(tagAlice)
+                .build();
+        authenticationFacade.register(registerAlice);
+        authenticationFacade.register(registerBob);
+
+        // Ask a question and answer.
+        var questionId = questionFacade.askQuestion(question);
+        var answer = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag(tagAlice)
+                .build();
+        var answerId = assertDoesNotThrow(() -> answerFacade.answer(answer));
+
+        // Make sure the question was added.
+        var answers = answerFacade.getAnswers(AnswerQuery.builder()
+                .tag(tagAlice)
+                .forQuestion(questionId)
+                .build())
+                .getAnswers();
+        assertEquals(1, answers.size());
+
+
+        // TODO: This test is behaving weirdly regarding code coverage in AnswerFacade.unselect (throw new AuthenticationFailedException())
+        // select the answer.
+        assertDoesNotThrow(() ->
+                answerFacade.select(SelectAnswerCommand.builder()
+                        .forQuestion(questionId)
+                        .answer(answerId)
+                        .tag(tagAlice)
+                        .build()));
+
+        // try to unselect the answer as bob.
+        assertThrows(AuthenticationFailedException.class, () -> answerFacade.unselect(UnselectAnswerCommand.builder()
+                .forQuestion(questionId)
+                .tag(tagBob)
+                .build()));
     }
 }
