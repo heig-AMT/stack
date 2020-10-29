@@ -12,7 +12,7 @@
 
         <c:choose>
             <c:when test="<%=response.getStatus() == 403 %>">
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/authentication.svg"
                             alt="authentication"
@@ -25,7 +25,7 @@
                 </div>
             </c:when>
             <c:when test="<%=response.getStatus() == 404 %>">
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/taken.svg"
                             alt="aliens"
@@ -36,7 +36,7 @@
                 </div>
             </c:when>
             <c:when test="<%=response.getStatus() == 418 %>">
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/tea.svg"
                             alt="tea"
@@ -46,7 +46,7 @@
                 </div>
             </c:when>
             <c:when test="<%=response.getStatus() >= 200 && response.getStatus() < 300 %>">
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/chilling.svg"
                             alt="chilling"
@@ -57,7 +57,7 @@
                 </div>
             </c:when>
             <c:when test="<%=response.getStatus() >= 300 && response.getStatus() < 400 %>">
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/redirect.svg"
                             alt="redirect"
@@ -68,7 +68,7 @@
                 </div>
             </c:when>
             <c:when test="<%=response.getStatus() >= 400 && response.getStatus() < 500 %>">
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/bug.svg"
                             alt="bug"
@@ -81,7 +81,7 @@
                 </div>
             </c:when>
             <c:when test="<%=response.getStatus() >= 500 && response.getStatus() < 600 %>">
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/serverdown.svg"
                             alt="serverdown"
@@ -94,7 +94,7 @@
                 </div>
             </c:when>
             <c:otherwise>
-                <div class="w-5/12 rounded-md p-16 text-center">
+                <div class="w-8/12 rounded-md p-16 text-center">
                     <img
                             src="${pageContext.request.contextPath}/assets/engineer.svg"
                             alt="engineer"

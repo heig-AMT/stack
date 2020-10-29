@@ -45,7 +45,7 @@
 
             <form action="changePassword.do"
                   method="POST"
-                  class="mt-4"><!-- TODO: Change to PUT -->
+                  class="mt-4">
                 <div class="flex flex-col">
                     <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
                     <div class="">
@@ -81,7 +81,7 @@
 
         <form action="deleteAccount.do"
               method="POST"
-              class="mt-4"><!-- TODO: Change to DELETE -->
+              class="mt-4">
             <div class="flex flex-col">
                 <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
                 <div class="">
