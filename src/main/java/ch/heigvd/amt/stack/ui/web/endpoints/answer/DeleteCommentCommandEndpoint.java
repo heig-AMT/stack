@@ -32,7 +32,6 @@ public class DeleteCommentCommandEndpoint extends HttpServlet {
                     .tag(req.getSession().getId())
                     .build());
 
-            // TODO: Reload question page
                 String path = getServletContext().getContextPath() + "/question?id=" + req.getParameter("question");
                 resp.sendRedirect(path);
 

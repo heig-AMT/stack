@@ -23,7 +23,6 @@ public class CommentCommandEndpoint extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
         try {
             answerFacade.comment(CommentAnswerCommand.builder()
                     .answer(AnswerId.from(req.getParameter("answer")))
@@ -31,7 +30,6 @@ public class CommentCommandEndpoint extends HttpServlet {
                     .tag(req.getSession().getId())
                     .build());
 
-            // TODO: Find out how to remove question id from request and use referer or something
             String path = getServletContext().getContextPath() + "/question?id=" + req.getParameter("question");
             resp.sendRedirect(path);
         } catch (AuthenticationFailedException exception) {
