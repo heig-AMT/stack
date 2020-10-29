@@ -5,6 +5,7 @@ import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
+import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
 import javax.annotation.Resource;
@@ -13,10 +14,7 @@ import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -42,7 +40,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
                 "SELECT * FROM Credential WHERE username = ?;",
                 (ps) -> {
                     ps.setString(1, query.getUsername());
-                }).count() ==1 ? Optional.of(
+                }).count() == 1 ? Optional.of(
                 findFor(dataSource,
                         JdbcCredentialRepository::parseCredential,
                         "SELECT * FROM Credential WHERE username = ?;",
@@ -87,23 +85,13 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public Optional<Credential> findById(CredentialId credentialId) {
         setup(dataSource);
-        var select = "SELECT * FROM Credential WHERE idCredential = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, credentialId.toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseCredential(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find credential " + credentialId);
-        }
-        return Optional.empty();
+        List<Credential> credList = findFor(dataSource,
+                JdbcCredentialRepository::parseCredential,
+                "SELECT * FROM Credential WHERE idCredential = ?;",
+                (ps) -> {
+                    ps.setString(1, credentialId.toString());
+                }).collect(Collectors.toList());
+        return (credList.size() == 1 ? Optional.of(credList.get(0)) : Optional.empty());
     }
 
     @Override

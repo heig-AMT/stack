@@ -5,17 +5,16 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionId;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Default
@@ -32,23 +31,13 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     @Override
     public Optional<Session> findBy(SessionQuery query) {
         setup(dataSource);
-        var select = "SELECT * FROM Session WHERE tag = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, query.getTag());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseSession(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find session with tag " + query.getTag());
-        }
-        return Optional.empty();
+        List<Session> sessionList = findFor(dataSource,
+                JdbcSessionRepository::parseSession,
+                "SELECT * FROM Session WHERE tag = ?;",
+                (ps) -> {
+                    ps.setString(1, query.getTag());
+                }).collect(Collectors.toList());
+        return (sessionList.size()==1? Optional.of(sessionList.get(0)): Optional.empty());
     }
 
     @Override
@@ -84,41 +73,21 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
     @Override
     public Optional<Session> findById(SessionId sessionId) {
         setup(dataSource);
-        var select = "SELECT * FROM Session WHERE idSession = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, sessionId.toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseSession(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find session " + sessionId);
-        }
-        return Optional.empty();
+        List<Session> sessionList = findFor(dataSource,
+                JdbcSessionRepository::parseSession,
+                "SELECT * FROM Session WHERE idSession = ?;",
+                (ps) -> {
+                    ps.setString(1, sessionId.toString());
+                }).collect(Collectors.toList());
+        return (sessionList.size()==1? Optional.of(sessionList.get(0)): Optional.empty());
     }
 
     @Override
     public Collection<Session> findAll() {
         setup(dataSource);
-        var select = "SELECT * FROM Session;";
-        Collection<Session> result = new ArrayList<>();
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            var rs = statement.executeQuery();
-            while (rs.next()) {
-                result.add(parseSession(rs));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-            return Collections.emptyList();
-        }
-        return result;
+        return findFor(dataSource,
+                JdbcSessionRepository::parseSession,
+                "SELECT * FROM Session;",
+                PrepareStatementScope.none()).collect(Collectors.toList());
     }
 }

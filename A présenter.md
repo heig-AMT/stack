@@ -30,3 +30,4 @@
 + Façades complètes et fonctionnelles
 + Classes de commande, de DTO, de requêtes...
 + Code très "pro" -> très fiable
++ Mots de passe chiffrés
