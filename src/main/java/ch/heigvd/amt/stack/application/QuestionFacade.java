@@ -2,6 +2,7 @@ package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
@@ -13,6 +14,7 @@ import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
+import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
 import javax.enterprise.context.RequestScoped;
@@ -64,6 +66,23 @@ public class QuestionFacade {
                 .build()
         );
         return id;
+    }
+
+    public void deleteQuestion(DeleteQuestionCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
+
+        Session session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        var question = repository.findById(command.getQuestion())
+                .orElseThrow(QuestionNotFoundException::new);
+
+        if (!session.getUser().equals(question.getAuthor())) {
+            throw new AuthenticationFailedException();
+        }
+
+        repository.remove(command.getQuestion());
     }
 
     public Optional<QuestionDTO> getQuestion(SingleQuestionQuery query) {

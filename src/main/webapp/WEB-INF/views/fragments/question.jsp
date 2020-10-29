@@ -2,7 +2,7 @@
 <%@ page import="java.time.format.FormatStyle" %>
 <%@ page import="java.util.Locale" %>
 <%@ page import="java.time.ZoneId" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean scope="request" id="question" type="ch.heigvd.amt.stack.application.question.dto.QuestionDTO"/>
@@ -14,17 +14,7 @@
             transition-all duration-200
             flex flex-col">
     <div class="flex flex-row items-center">
-        <c:choose>
-            <c:when test="${question.status eq 'New'}">
-                <div class="border-2 rounded-full px-4 border-blue-500 text-blue-500">New</div>
-            </c:when>
-            <c:when test="${question.status eq 'Resolved'}">
-                <div class="border-2 rounded-full px-4 border-green-500 text-green-500">Resolved</div>
-            </c:when>
-            <c:otherwise>
-                <div class="border-2 rounded-full px-4 border-gray-500 text-gray-500">Open</div>
-            </c:otherwise>
-        </c:choose>
+        <c:import url="fragments/shields.jsp"/>
         <a class="ml-4"
            href="${pageContext.request.contextPath}/question?id=<c:out value="${question.id.toString()}"/>"><c:out
                 value="${question.title}"/></a>

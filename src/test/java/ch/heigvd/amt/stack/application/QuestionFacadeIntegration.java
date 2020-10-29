@@ -2,6 +2,7 @@ package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
@@ -137,5 +138,56 @@ public class QuestionFacadeIntegration {
                 .build();
         var answer = questionFacade.getQuestion(query);
         assertEquals(Optional.empty(), answer);
+    }
+
+    @Test
+    public void testNonAuthenticatedUserCanNotDeleteQuestion() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var ask = AskQuestionCommand.builder()
+                .title("What is love")
+                .description("Description")
+                .tag("tag")
+                .build();
+
+        authenticationFacade.register(register);
+        var id = questionFacade.askQuestion(ask);
+
+        var delete = DeleteQuestionCommand.builder()
+                .question(id)
+                .tag("anotherTag")
+                .build();
+
+        assertThrows(AuthenticationFailedException.class, () -> {
+           questionFacade.deleteQuestion(delete);
+        });
+    }
+
+    @Test
+    public void testAuthenticatedUserCanDeleteTheirOwnQuestion() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var ask = AskQuestionCommand.builder()
+                .title("What is love")
+                .description("Description")
+                .tag("tag")
+                .build();
+
+        authenticationFacade.register(register);
+        var id = questionFacade.askQuestion(ask);
+        var delete = DeleteQuestionCommand.builder()
+                .question(id)
+                .tag("tag")
+                .build();
+
+        assertDoesNotThrow(() -> {
+            questionFacade.deleteQuestion(delete);
+        });
     }
 }
