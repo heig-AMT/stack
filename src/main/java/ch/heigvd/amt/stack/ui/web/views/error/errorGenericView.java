@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(name = "errorGenericView", urlPatterns = "/errorGeneric")
+@WebServlet(name = "errorView", urlPatterns = "/error")
 public class errorGenericView extends HttpServlet {
 
     @Override
@@ -31,6 +31,6 @@ public class errorGenericView extends HttpServlet {
     }
 
     private void getRequestDispatcher(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("WEB-INF/views/errorGeneric.jsp").forward(req, resp);
+        req.getRequestDispatcher("WEB-INF/views/error.jsp").forward(req, resp);
     }
 }

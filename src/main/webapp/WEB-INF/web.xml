@@ -6,25 +6,25 @@
     <display-name>StackUnderflow</display-name>
 
     <!-- Error handling. -->
-
     <error-page>
         <error-code>403</error-code>
-        <location>/errorGeneric</location>
+        <location>/error</location>
     </error-page>
-
     <error-page>
         <error-code>404</error-code>
-        <location>/error404</location>
+        <location>/error</location>
     </error-page>
-
+    <error-page>
+        <error-code>405</error-code>
+        <location>/error</location>
+    </error-page>
     <error-page>
         <error-code>500</error-code>
-        <location>/errorGeneric</location>
+        <location>/error</location>
     </error-page>
-
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/errorGeneric</location>
+        <location>/error</location>
     </error-page>
 
     <!-- Filters -->
