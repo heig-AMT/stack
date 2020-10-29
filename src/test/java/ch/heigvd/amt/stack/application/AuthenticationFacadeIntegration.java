@@ -1,9 +1,6 @@
 package ch.heigvd.amt.stack.application;
 
-import ch.heigvd.amt.stack.application.authentication.command.ChangePasswordCommand;
-import ch.heigvd.amt.stack.application.authentication.command.LoginCommand;
-import ch.heigvd.amt.stack.application.authentication.command.LogoutCommand;
-import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
+import ch.heigvd.amt.stack.application.authentication.command.*;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
@@ -197,5 +194,41 @@ public class AuthenticationFacadeIntegration {
         assertThrows(AuthenticationFailedException.class, () -> {
             facade.changePassword(changePassword);
         });
+    }
+
+    @Test
+    public void testUserWithCorrectPasswordCanUnregister() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+
+        facade.register(register);
+
+        var unregister = UnregisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .build();
+
+        assertDoesNotThrow(() -> facade.unregister(unregister));
+    }
+
+    @Test
+    public void testUserWithWrongPasswordCanNotUnregister() {
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+
+        facade.register(register);
+
+        var unregister = UnregisterCommand.builder()
+                .username("alice")
+                .password("notPassword")
+                .build();
+
+        assertThrows(AuthenticationFailedException.class, () -> facade.unregister(unregister));
     }
 }
