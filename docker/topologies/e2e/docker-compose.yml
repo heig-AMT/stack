@@ -1,21 +1,24 @@
 version: '3'
 services:
-  # payara:
-  #   build: ../../images/payara
-  #   environment:
-  #    - PORT=8080
-  #   ports:
-  #    - "8081:8080"
-
-  openliberty:
-    build: ../../images/openliberty
+  payara:
+    build: ../../images/payara
     depends_on:
       - "database"
     environment:
-      - PORT=1234
+      - PORT=8080
       - DATABASE_URL=postgres://root:123456@database:5432/root
     ports:
-      - "8080:1234"
+      - "8080:8080"
+
+  #openliberty:
+    #build: ../../images/openliberty
+    #depends_on:
+      #- "database"
+    #environment:
+      #- PORT=1234
+      #- DATABASE_URL=postgres://root:123456@database:5432/root
+    #ports:
+      #- "8080:1234"
 
   database:
     image: postgres:13.0
