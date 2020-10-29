@@ -20,6 +20,7 @@ import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -101,6 +102,7 @@ public class QuestionFacade {
     public QuestionListDTO getQuestions(QuestionQuery query) {
         List<QuestionDTO> questions = repository.findBy(query).stream()
                 .map(questionToDto)
+                .sorted(Comparator.comparing(QuestionDTO::getCreation).reversed())
                 .collect(Collectors.toUnmodifiableList());
         return QuestionListDTO.builder()
                 .questions(questions)
