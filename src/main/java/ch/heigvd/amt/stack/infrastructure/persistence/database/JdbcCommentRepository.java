@@ -6,6 +6,7 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.comment.Comment;
 import ch.heigvd.amt.stack.domain.comment.CommentId;
 import ch.heigvd.amt.stack.domain.comment.CommentRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
@@ -14,10 +15,7 @@ import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,9 +37,12 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     @Override
     public Collection<Comment> findBy(CommentQuery query) {
         setup(dataSource);
-        return findAll().stream()
-                .filter(comment -> comment.getAnswer().equals(query.getForAnswer()))
-                .collect(Collectors.toList());
+        return findFor(dataSource,
+                JdbcCommentRepository::parseComment,
+                "SELECT * FROM Comment WHERE idxAnswer = ?;",
+                (ps) -> {
+                    ps.setString(1, query.getForAnswer().toString());
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -79,42 +80,20 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     @Override
     public Optional<Comment> findById(CommentId commentId) {
         setup(dataSource);
-        var select = "SELECT * FROM Comment WHERE idComment = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, commentId.toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseComment(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find comment " + commentId);
-        }
-        return Optional.empty();
+        return findFor(dataSource,
+                JdbcCommentRepository::parseComment,
+                "SELECT * FROM Comment WHERE idComment = ?;",
+                (ps) -> {
+                    ps.setString(1, commentId.toString());
+                }).findFirst();
     }
 
     @Override
     public Collection<Comment> findAll() {
         setup(dataSource);
-        var select = "SELECT * FROM Comment;";
-        Collection<Comment> result = new ArrayList<>();
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            var rs = statement.executeQuery();
-
-            while (rs.next()) {
-                result.add(parseComment(rs));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-            return Collections.emptyList();
-        }
-        return result;
+        return findFor(dataSource,
+                JdbcCommentRepository::parseComment,
+                "SELECT * FROM Comment;",
+                PrepareStatementScope.none()).collect(Collectors.toList());
     }
 }

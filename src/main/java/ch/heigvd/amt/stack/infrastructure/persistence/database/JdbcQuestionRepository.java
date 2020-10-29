@@ -6,20 +6,18 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Default
@@ -39,26 +37,14 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public Collection<Question> findBy(QuestionQuery query) {
         setup(dataSource);
-        if (query.getShouldContain() != null) {
-            var select = "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;";
-            Collection<Question> result = new ArrayList<>();
-            try (var connection = dataSource.getConnection()) {
-                var statement = connection.prepareStatement(select);
-                statement.setString(1, "%" + query.getShouldContain().trim().toLowerCase() + "%");
-                statement.setString(2, "%" + query.getShouldContain().trim().toLowerCase() + "%");
-                var rs = statement.executeQuery();
-                while (rs.next()) {
-                    result.add(parseQuestion(rs));
-                }
-                return result;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-                Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-                return Collections.emptyList();
-            }
-        } else {
-            return findAll();
-        }
+        var text = query.getShouldContain() != null ? query.getShouldContain().trim().toLowerCase() : "";
+        return findFor(dataSource,
+                JdbcQuestionRepository::parseQuestion,
+                "SELECT * FROM Question WHERE LOWER(description) LIKE ? OR LOWER(title) LIKE ?;",
+                    (ps) -> {
+                    ps.setString(1, "%" + text + "%");
+                    ps.setString(2, "%" + text + "%");
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -98,41 +84,21 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public Optional<Question> findById(QuestionId questionId) {
         setup(dataSource);
-        var select = "SELECT * FROM Question WHERE idQuestion = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, questionId.toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseQuestion(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find question " + questionId);
-        }
-        return Optional.empty();
+        return findFor(dataSource,
+                JdbcQuestionRepository::parseQuestion,
+                "SELECT * FROM Question WHERE idQuestion = ?;",
+                (ps) -> {
+                    ps.setString(1, questionId.toString());
+                }).findFirst();
     }
 
     @Override
     public Collection<Question> findAll() {
         setup(dataSource);
-        var select = "SELECT * FROM Question;";
-        Collection<Question> result = new ArrayList<>();
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            var rs = statement.executeQuery();
-            while (rs.next()) {
-                result.add(parseQuestion(rs));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-            return Collections.emptyList();
-        }
-        return result;
+        return findFor(dataSource,
+                JdbcQuestionRepository::parseQuestion,
+                "SELECT * FROM Question;",
+                PrepareStatementScope.none())
+                .collect(Collectors.toList());
     }
 }

@@ -6,6 +6,7 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.vote.Vote;
 import ch.heigvd.amt.stack.domain.vote.VoteId;
 import ch.heigvd.amt.stack.domain.vote.VoteRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
@@ -13,12 +14,10 @@ import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Default
@@ -92,43 +91,21 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
     @Override
     public Optional<Vote> findById(VoteId voteId) {
         setup(dataSource);
-        var select = "SELECT * FROM Vote WHERE idxAnswer = ? AND idxCredential = ?;";
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            statement.setString(1, voteId.getAnswer().toString());
-            statement.setString(2, voteId.getVoter().toString());
-            var rs = statement.executeQuery();
-
-            if (rs.next()) {
-                return Optional.of(parseVote(rs));
-            } else {
-                return Optional.empty();
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not find vote " + voteId);
-        }
-        return Optional.empty();
+        return findFor(dataSource,
+                JdbcVoteRepository::parseVote,
+                "SELECT * FROM Vote WHERE idxAnswer = ? AND idxCredential = ?;",
+                (ps) -> {
+                    ps.setString(1, voteId.getAnswer().toString());
+                    ps.setString(2, voteId.getVoter().toString());
+                }).findFirst();
     }
 
     @Override
     public Collection<Vote> findAll() {
         setup(dataSource);
-
-        var select = "SELECT * FROM Vote;";
-        Collection<Vote> result = new ArrayList<>();
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            var rs = statement.executeQuery();
-            while (rs.next()) {
-                result.add(parseVote(rs));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-            return Collections.emptyList();
-        }
-        return result;
+        return findFor(dataSource,
+                JdbcVoteRepository::parseVote,
+                "SELECT * FROM Vote;",
+                PrepareStatementScope.none()).collect(Collectors.toList());
     }
 }
