@@ -69,9 +69,9 @@ public class AnswerFacadeIT {
                 .description("They are so lovely...")
                 .tag("zirael").build());
 
-        AnswerId idA1=null;
+        AnswerId idA1 = null;
         try {
-            idA1=(answerFacade.answer(AnswerQuestionCommand.builder()
+            idA1 = (answerFacade.answer(AnswerQuestionCommand.builder()
                     .question(id)
                     .body("No, 'cause I killed their king.")
                     .tag("witcher").build()));
@@ -126,7 +126,7 @@ public class AnswerFacadeIT {
             questionFacade.deleteQuestion(DeleteQuestionCommand.builder()
                     .question(id)
                     .tag("zirael").build());
-        }catch (Exception e) {
+        } catch (Exception e) {
             Assert.fail();
         }
 
@@ -157,9 +157,9 @@ public class AnswerFacadeIT {
         }
         Assert.assertNotNull(idA2);
 
-        CommentId idC1=null;
+        CommentId idC1 = null;
         try {
-            idC1=answerFacade.comment(CommentAnswerCommand.builder()
+            idC1 = answerFacade.comment(CommentAnswerCommand.builder()
                     .answer(idA2)
                     .body("I knew this, Yenna...")
                     .tag("zirael").build());
