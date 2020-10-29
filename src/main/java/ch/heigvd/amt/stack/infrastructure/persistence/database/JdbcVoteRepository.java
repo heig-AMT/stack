@@ -45,6 +45,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             return rs.getInt(1);
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Query didn't work");
         }
         return 0;
@@ -63,6 +64,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
 
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not add vote " + vote.getId() + ": " + ex.toString());
         }
     }
@@ -77,6 +79,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             statement.setString(2, voteId.getVoter().toString());
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not remove vote " + voteId);
         }
     }
@@ -104,6 +107,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not find vote " + voteId);
         }
         return Optional.empty();
@@ -129,6 +133,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
                 result.add(vote);
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
             return Collections.emptyList();
         }

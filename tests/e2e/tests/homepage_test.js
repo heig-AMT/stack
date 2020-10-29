@@ -1,6 +1,6 @@
 Feature('homepage');
 
-Scenario('Visiting the homepage', (I) => {
+Scenario('Visiting the homepage', ({ I }) => {
   I.amOnPage("/");
 
   I.see("stackunderflow");
