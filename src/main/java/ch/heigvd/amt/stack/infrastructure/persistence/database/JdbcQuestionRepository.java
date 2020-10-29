@@ -67,7 +67,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     public void save(Question question) {
         setup(dataSource);
         var insert = "INSERT INTO Question(idQuestion, idxCredential, idxSelectedAnswer, title, description, instant)" +
-                " VALUES (?, ?, ?, ?, ?, ?);";
+                " VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT (idQuestion) DO UPDATE SET idxSelectedAnswer = ?;";
         try (var connection = getDataSource().getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, question.getId().toString());
@@ -76,8 +76,10 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
             statement.setString(4, question.getTitle());
             statement.setString(5, question.getDescription());
             statement.setTimestamp(6, Timestamp.from(question.getCreation()));
+            statement.setString(7, question.getSelectedAnswer() != null ? question.getSelectedAnswer().toString() : null);
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not add question " + question.getId());
         }
     }
