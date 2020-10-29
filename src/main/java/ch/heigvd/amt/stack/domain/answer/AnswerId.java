@@ -15,7 +15,11 @@ public class AnswerId extends AbstractId {
     }
 
     public static AnswerId from(String backing) {
-        return new AnswerId(UUID.fromString(backing));
+        if (backing == null) {
+            return null;
+        } else {
+            return new AnswerId(UUID.fromString(backing));
+        }
     }
 
     protected AnswerId(UUID backing) {
