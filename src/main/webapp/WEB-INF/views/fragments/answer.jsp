@@ -53,12 +53,13 @@
             </c:choose>
         </form>
     </div>
-    <div class="px-4 py-2 w-full rounded-lg
-            bg-white hover:bg-gray-100
-            border-b border-gray-200
-            shadow hover:shadow-lg
-            transition-all duration-200
-            flex flex-col">
+    <c:if test="${answer.selected}">
+
+    </c:if>
+    <div class="px-4 py-2 flex flex-col w-full
+                rounded-lg bg-white hover:bg-gray-100 shadow hover:shadow-lg transition-all duration-200
+                <c:if test="${answer.selected}"> border-4 border-green-600 </c:if>
+                ">
         <span class="text-gray-500"><c:out value="${answer.body}"/></span>
         <div class="flex-grow"></div>
         <div class="flex flex-row">
@@ -68,6 +69,26 @@
                     <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
                     <input class="ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600 cursor-pointer" type="submit" value="Delete"/>
                 </form>
+            </c:if>
+
+            <c:if test="${answer.selectionEnabled}">
+                <c:choose>
+                    <c:when test="${!answer.selected}">
+                        <form class="flex flex-row mx-2 mb-0" action="selectAnswer.do" method="POST">
+                            <input type="hidden" name="question" value="<c:out value="${question.id.toString()}"/>"/>
+                            <input type="hidden" name="answer" value="<c:out value="${answer.id.toString()}"/>"/>
+                            <input type="image" src="${pageContext.request.contextPath}/assets/check_green.svg" alt="accept">
+                            <input class="ml-1 bg-transparent font-semibold text-green-600 hover:text-green-700 cursor-pointer" type="submit" value="Accept"/>
+                        </form>
+                    </c:when>
+                    <c:otherwise>
+                        <form class="flex flex-row mx-2 mb-0" action="unselectAnswer.do" method="POST">
+                            <input type="hidden" name="question" value="<c:out value="${question.id.toString()}"/>"/>
+                            <input type="image" src="${pageContext.request.contextPath}/assets/check_gray.svg" alt="unaccept">
+                            <input class="ml-1 bg-transparent font-semibold text-gray-500 hover:text-gray-600 cursor-pointer" type="submit" value="Unaccept"/>
+                        </form>
+                    </c:otherwise>
+                </c:choose>
             </c:if>
             <div class="flex-grow"></div>
             <c:import url="fragments/authorAnswer.jsp"/>
