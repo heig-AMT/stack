@@ -1,13 +1,9 @@
-<%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="java.time.format.FormatStyle" %>
-<%@ page import="java.util.Locale" %>
-<%@ page import="java.time.ZoneId" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean scope="request" id="question" type="ch.heigvd.amt.stack.application.question.dto.QuestionDTO"/>
 
-<div class="m-2 p-6 rounded-lg
+<div class="m-2 p-6 pb-1 rounded-lg
             bg-white hover:bg-gray-100
             border-b border-gray-200
             shadow hover:shadow-lg
@@ -22,16 +18,14 @@
     <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
     <div class="flex flex-row mt-4 items-center">
         <span class="text-sm text-gray-500">0 comments</span>
+        <c:if test="${question.deletionEnabled}">
+            <form class="flex flex-row mx-2 mb-0" action="deleteQuestion.do" method="POST">
+                <input type="hidden" name="question" value="<c:out value="${question.id.toString()}"/>"/>
+                <input type="image" src="${pageContext.request.contextPath}/assets/delete.svg" alt="delete">
+                <input class="ml-1 bg-transparent font-semibold text-red-500 hover:text-red-600 cursor-pointer" type="submit" value="Delete"/>
+            </form>
+        </c:if>
         <div class="flex-grow"></div>
-        <div class="flex flex-col items-end">
-            <span class="text-sm text-gray-500">
-                <%=
-                DateTimeFormatter.ofLocalizedDateTime( FormatStyle.SHORT )
-                        .withLocale(Locale.FRANCE)
-                        .withZone(ZoneId.systemDefault()).format(question.getCreation())
-                %>
-            </span>
-            <span class="text-sm text-gray-500">by <c:out value="${question.author}"/></span>
-        </div>
+        <c:import url="fragments/authorQuestion.jsp"/>
     </div>
 </div>

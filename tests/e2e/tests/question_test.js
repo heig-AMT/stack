@@ -1,9 +1,13 @@
 Feature('addQuestions');
 
-const { I, registerPage, loginPage, questionsPage, logoutPage } = inject();
+const {
+  I,
+  questionsPage,
+  profilePage
+} = inject();
 
-Scenario('When adding a question, must be redirected to it\'s own page', (I, registerPage, questionsPage) => {
-  registerPage.register();
+Scenario('When adding a question, must be redirected to it\'s own page', (I, profilePage, questionsPage) => {
+  profilePage.register();
 
   const question = questionsPage.addQuestion();
 
@@ -12,8 +16,8 @@ Scenario('When adding a question, must be redirected to it\'s own page', (I, reg
   I.see(question.description);
 });
 
-Scenario('When adding a question, it must appear in question list', (I, registerPage, questionsPage) => {
-  registerPage.register();
+Scenario('When adding a question, it must appear in question list', (I, profilePage, questionsPage) => {
+  profilePage.register();
 
   const question = questionsPage.addQuestion();
 
@@ -22,19 +26,19 @@ Scenario('When adding a question, it must appear in question list', (I, register
   I.see(question.description);
 });
 
-Scenario('/ask redirects to /login when logged out', (I, registerPage, logoutPage) => {
-  registerPage.register();
+Scenario('/ask redirects to /login when logged out', (I, profilePage) => {
+  profilePage.register();
 
-  logoutPage.logout();
+  profilePage.logout();
 
   I.amOnPage('/ask');
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
-  const register = registerPage.register();
+Scenario('Filter questions', (I, profilePage, questionsPage) => {
+  const register = profilePage.register();
 
-  loginPage.login(register.user, register.password);
+  profilePage.login(register.user, register.password);
 
   const question1 = questionsPage.addQuestion();
   const question2 = questionsPage.addQuestion();
@@ -61,4 +65,17 @@ Scenario('Filter questions', (I, registerPage, loginPage, questionsPage) => {
   I.dontSee(question1.description);
   I.dontSee(question3.description);
   I.dontSee(question4.description);
+});
+
+Scenario('When a user deletes his profile, his questions are deleted', (I, profilePage, questionsPage) => {
+  const register = profilePage.register();
+  const question = questionsPage.addQuestion();
+
+  I.amOnPage('/questions');
+  I.see(question.title);
+
+  profilePage.deleteAccount(register.password);
+
+  I.amOnPage('/questions');
+  I.dontSee(question.title);
 });
