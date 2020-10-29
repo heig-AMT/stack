@@ -2,6 +2,7 @@ package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
 import ch.heigvd.amt.stack.application.question.dto.QuestionDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionListDTO;
 import ch.heigvd.amt.stack.application.question.dto.QuestionStatusDTO;
@@ -13,14 +14,16 @@ import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
+import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @RequestScoped
@@ -35,9 +38,9 @@ public class QuestionFacade {
     @Inject
     SessionRepository sessionRepository;
 
-    private final Function<Question, QuestionDTO> questionToDto = new Function<>() {
+    private final BiFunction<CredentialId, Question, QuestionDTO> questionToDto = new BiFunction<>() {
         @Override
-        public QuestionDTO apply(Question question) {
+        public QuestionDTO apply(CredentialId user, Question question) {
             return QuestionDTO.builder()
                     .author(credentialRepository.findById(question.getAuthor()).map(Credential::getUsername).get())
                     .title(question.getTitle())
@@ -45,6 +48,7 @@ public class QuestionFacade {
                     .creation(question.getCreation())
                     .status(QuestionStatusDTO.from(question, Instant.now()))
                     .id(question.getId())
+                    .deletionEnabled(Objects.equals(question.getAuthor(), user))
                     .build();
         }
     };
@@ -66,22 +70,47 @@ public class QuestionFacade {
         return id;
     }
 
+    public void deleteQuestion(DeleteQuestionCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
+
+        Session session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        var question = repository.findById(command.getQuestion())
+                .orElseThrow(QuestionNotFoundException::new);
+
+        if (!session.getUser().equals(question.getAuthor())) {
+            throw new AuthenticationFailedException();
+        }
+
+        repository.remove(command.getQuestion());
+    }
+
+    private CredentialId getCredential(String forTag) {
+        return sessionRepository.findBy(SessionQuery.builder()
+                .tag(forTag)
+                .build())
+                .map(Session::getUser)
+                .orElse(null);
+    }
+
     public Optional<QuestionDTO> getQuestion(SingleQuestionQuery query) {
         return repository.findById(query.getId())
-                .map(questionToDto);
+                .map(q -> questionToDto.apply(getCredential(query.getTag()), q));
     }
 
     public Optional<QuestionDTO> getQuestion(SingleAnswerQuery query) {
         return answerRepository.findById(query.getId()).stream()
                 .map(Answer::getQuestion)
                 .flatMap(id -> repository.findById(id).stream())
-                .map(questionToDto)
+                .map(q -> questionToDto.apply(getCredential(query.getTag()), q))
                 .findFirst();
     }
 
     public QuestionListDTO getQuestions(QuestionQuery query) {
         List<QuestionDTO> questions = repository.findBy(query).stream()
-                .map(questionToDto)
+                .map(q -> questionToDto.apply(getCredential(query.getTag()), q))
                 .collect(Collectors.toUnmodifiableList());
         return QuestionListDTO.builder()
                 .questions(questions)

@@ -1,13 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <jsp:include page="fragments/head.jsp">
     <jsp:param name="pageTitle" value="Login"/>
 </jsp:include>
-<body>
+<body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
-<div class="flex pt-16 h-screen
-            items-center justify-center
-            bg-gradient-to-r from-teal-400 to-blue-500">
+<div class="pt-16"/>
+<div class="flex mt-8 items-center justify-center">
     <div class="p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <div class="text-center">
             <h1 class="text-4xl">
@@ -31,7 +31,7 @@
                            type="text" name="username" placeholder="xX-MyKickAssName-Xx" required>
                 </div>
 
-                <div class="md:w-full px-3 mb-3">
+                <div class="px-3 mb-3">
                     <label for="password" class="mb-2 block uppercase text-xs font-bold text-gray-700">Password</label>
                     <input id="password"
                            class="p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"

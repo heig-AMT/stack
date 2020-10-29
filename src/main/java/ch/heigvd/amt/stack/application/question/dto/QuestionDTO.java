@@ -15,4 +15,5 @@ public class QuestionDTO {
     Instant creation;
     QuestionStatusDTO status;
     QuestionId id;
+    boolean deletionEnabled;
 }

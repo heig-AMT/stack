@@ -23,7 +23,7 @@
 
     <c:choose>
         <c:when test="${connected.connected}">
-            <a class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-500 focus:bg-blue-700 focus:border-gray-500"
+            <a class="px-4 py-2 whitespace-no-wrap rounded bg-blue-600 text-white hover:bg-blue-500 focus:bg-blue-700 focus:border-gray-500"
                href="${pageContext.request.contextPath}/ask">Ask something</a>
             <a class="mx-2 px-4 py-2 rounded border border-gray-400 bg-white text-black hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-300 focus:border-gray-400" href="${pageContext.request.contextPath}/profile">Profile</a>
             <form action="logout.do"
