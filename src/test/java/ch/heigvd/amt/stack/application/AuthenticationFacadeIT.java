@@ -122,7 +122,6 @@ public class AuthenticationFacadeIT {
 
     @Test
     public void oneUserWhoDoesNotExistCannotLogin() {
-
         assertThrows(AuthenticationFailedException.class, () -> {
             authenticationFacade.login(LoginCommand.builder()
                     .username("varl")
@@ -130,6 +129,5 @@ public class AuthenticationFacadeIT {
                     .tag("hunter")
                     .build());
         });
-
     }
 }
