@@ -1,6 +1,7 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.database;
 
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
+import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
@@ -18,7 +19,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Default
@@ -50,6 +50,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                             .title(rs.getString("title"))
                             .description(rs.getString("description"))
                             .creation((rs.getTimestamp("instant")).toInstant())
+                            .selectedAnswer(AnswerId.from(rs.getString("idxSelectedAnswer")))
                             .build();
                     result.add(question);
                 }
@@ -66,8 +67,8 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
     @Override
     public void save(Question question) {
         setup(dataSource);
-        var insert = "INSERT INTO Question(idQuestion, idxCredential, resolved, title, description, instant)" +
-                " VALUES (?, ?, ?, ?,?, ?);";
+        var insert = "INSERT INTO Question(idQuestion, idxCredential, resolved, title, description, instant, idxSelectedAnswer)" +
+                " VALUES (?, ?, ?, ?,?, ?, ?);";
         try (var connection = getDataSource().getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, question.getId().toString());
@@ -76,6 +77,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
             statement.setString(4, question.getTitle());
             statement.setString(5, question.getDescription());
             statement.setTimestamp(6, Timestamp.from(question.getCreation()));
+            statement.setString(7, question.getSelectedAnswer().toString());
             statement.execute();
         } catch (SQLException ex) {
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not add question " + question.getId());
@@ -112,6 +114,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                         .title(rs.getString("title"))
                         .description(rs.getString("description"))
                         .creation((rs.getTimestamp("instant")).toInstant())
+                        .selectedAnswer(AnswerId.from(rs.getString("idxSelectedAnswer")))
                         .build());
             } else {
                 return Optional.empty();
@@ -139,6 +142,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                         .title(rs.getString("title"))
                         .description(rs.getString("description"))
                         .creation((rs.getTimestamp("instant")).toInstant())
+                        .selectedAnswer(AnswerId.from(rs.getString("idxSelectedAnswer")))
                         .build();
                 result.add(question);
             }

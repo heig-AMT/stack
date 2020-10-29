@@ -62,12 +62,17 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
 
     private static final String CREATE_VOTES =
             "CREATE TABLE IF NOT EXISTS Vote" +
-                    "( idxAnswer VARCHAR "+
+                    "( idxAnswer VARCHAR " +
                     ", idxCredential VARCHAR" +
                     ", isUpvote BOOLEAN" +
-                    ", PRIMARY KEY (idxAnswer, idxCredential)"+
+                    ", PRIMARY KEY (idxAnswer, idxCredential)" +
                     ", CONSTRAINT fkVoteCredential FOREIGN KEY (idxCredential) REFERENCES Credential (idCredential) ON UPDATE CASCADE ON DELETE CASCADE" +
                     ", CONSTRAINT fkVoteAnswer FOREIGN KEY (idxAnswer) REFERENCES Answer (idAnswer) ON UPDATE CASCADE ON DELETE CASCADE);";
+
+    public static final String UPDATE_QUESTIONS =
+            "ALTER TABLE Question ADD COLUMN IF NOT EXISTS " +
+                    "idxSelectedAnswer VARCHAR DEFAULT NULL REFERENCES Answer(idAnswer) ON UPDATE CASCADE ON DELETE SET NULL;";
+
 
     protected void setup(DataSource dataSource) {
         try (var connection = dataSource.getConnection()) {
@@ -77,6 +82,7 @@ public abstract class JdbcRepository<Entity, Id> implements Repository<Entity, I
             connection.prepareStatement(CREATE_ANSWERS).execute();
             connection.prepareStatement(CREATE_COMMENTS).execute();
             connection.prepareStatement(CREATE_VOTES).execute();
+            connection.prepareStatement(UPDATE_QUESTIONS).execute();
 
         } catch (SQLException exception) {
             exception.printStackTrace();

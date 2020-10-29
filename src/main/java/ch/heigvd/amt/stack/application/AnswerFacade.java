@@ -16,6 +16,7 @@ import ch.heigvd.amt.stack.domain.authentication.*;
 import ch.heigvd.amt.stack.domain.comment.Comment;
 import ch.heigvd.amt.stack.domain.comment.CommentNotFoundException;
 import ch.heigvd.amt.stack.domain.comment.CommentRepository;
+import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 import ch.heigvd.amt.stack.domain.vote.Vote;
@@ -203,6 +204,30 @@ public class AnswerFacade {
                         .build())
                 .isUpvote(false)
                 .build());
+    }
+
+    public void select(SelectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
+        var session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+        var question = questionRepository.findById(command.getForQuestion())
+                .orElseThrow(QuestionNotFoundException::new);
+
+        if (!question.getAuthor().equals(session.getUser())) {
+            throw new AuthenticationFailedException();
+        }
+
+        var updated = Question.builder()
+                .author(question.getAuthor())
+                .creation(question.getCreation())
+                .description(question.getDescription())
+                .id(question.getId())
+                .resolved(question.isResolved())
+                .title(question.getTitle())
+                .selectedAnswer(command.getAnswer())
+                .build();
+        questionRepository.save(updated);
     }
 
     /**
