@@ -3,18 +3,16 @@ Feature('votes');
 const assert = require('assert');
 const {
   I,
-  registerPage,
-  loginPage,
   questionsPage,
-  logoutPage,
+  profilePage,
   answersPage
 } = inject();
 
 
-Scenario('Votes are updated', async (I, registerPage, questionsPage, answersPage) => {
+Scenario('Votes are updated', async (I, profilePage, questionsPage, answersPage) => {
   let votes = null;
 
-  registerPage.register();
+  profilePage.register();
   const question = questionsPage.addQuestion();
   I.click("Questions")
   I.click(question.title);
@@ -41,10 +39,10 @@ Scenario('Votes are updated', async (I, registerPage, questionsPage, answersPage
   assert.equal(1, votes.down);
 });
 
-Scenario('Cannot vote twice', async (I, registerPage, questionsPage, answersPage) => {
+Scenario('Cannot vote twice', async (I, profilePage, questionsPage, answersPage) => {
   let votes = null;
 
-  registerPage.register();
+  profilePage.register();
   const question = questionsPage.addQuestion();
   I.click("Questions")
   I.click(question.title);
@@ -73,23 +71,23 @@ Scenario('Cannot vote twice', async (I, registerPage, questionsPage, answersPage
   assert.equal(1, votes.down);
 });
 
-Scenario('Cannot vote when logged out', async (I, registerPage, logoutPage, questionsPage, answersPage) => {
-  registerPage.register();
+Scenario('Cannot vote when logged out', async (I, profilePage, questionsPage, answersPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
   I.click("Questions")
   I.click(question.title);
 
   answersPage.addAnswer();
-  logoutPage.logout();
+  profilePage.logout();
 
   I.dontSeeElement({css: '.voteBox:nth-of-type(1) form:nth-of-type(1) input[type="image"]'});
   I.dontSeeElement({css: '.voteBox:nth-of-type(1) form:nth-of-type(2) input[type="image"]'});
 });
 
-Scenario('Multiple people can vote', async (I, logoutPage, registerPage, questionsPage, answersPage) => {
+Scenario('Multiple people can vote', async (I, profilePage, questionsPage, answersPage) => {
   let votes = null;
 
-  registerPage.register();
+  profilePage.register();
   const question = questionsPage.addQuestion();
   I.click("Questions")
   I.click(question.title);
@@ -107,10 +105,10 @@ Scenario('Multiple people can vote', async (I, logoutPage, registerPage, questio
   assert.equal(1, votes.up);
   assert.equal(0, votes.down);
 
-  logoutPage.logout();
+  profilePage.logout();
 
   // Second user
-  registerPage.register();
+  profilePage.register();
 
   I.click("Questions")
   I.click(question.title);
@@ -120,10 +118,10 @@ Scenario('Multiple people can vote', async (I, logoutPage, registerPage, questio
   assert.equal(2, votes.up);
   assert.equal(0, votes.down);
 
-  logoutPage.logout();
+  profilePage.logout();
 
   // Third user
-  registerPage.register();
+  profilePage.register();
 
   I.click("Questions")
   I.click(question.title);
