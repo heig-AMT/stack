@@ -53,9 +53,6 @@
             </c:choose>
         </form>
     </div>
-    <c:if test="${answer.selected}">
-
-    </c:if>
     <div class="px-4 py-2 flex flex-col w-full
                 rounded-lg bg-white hover:bg-gray-100 shadow hover:shadow-lg transition-all duration-200
                 <c:if test="${answer.selected}"> border-4 border-green-600 </c:if>
