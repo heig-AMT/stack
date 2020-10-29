@@ -6,6 +6,8 @@ import ch.heigvd.amt.stack.application.answer.query.AnswerQuery;
 import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.authentication.command.UnregisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
+import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
+import ch.heigvd.amt.stack.domain.answer.Answer;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
 import ch.heigvd.amt.stack.domain.comment.CommentId;
@@ -60,21 +62,35 @@ public class AnswerFacadeIT {
 
 
     @Test
-    public void testAnUserCanAnswerAQuestionOfOtherUser() {
+    public void testAnUserCanAnswerAQuestionOfOtherUserAndDeleteIt() {
         register();
         var id = questionFacade.askQuestion(AskQuestionCommand.builder()
                 .title("Do you dream of the Wild Hunt ?")
                 .description("They are so lovely...")
                 .tag("zirael").build());
 
+        AnswerId idA1=null;
         try {
-            Assert.assertNotNull(answerFacade.answer(AnswerQuestionCommand.builder()
+            idA1=(answerFacade.answer(AnswerQuestionCommand.builder()
                     .question(id)
                     .body("No, 'cause I killed their king.")
                     .tag("witcher").build()));
         } catch (QuestionNotFoundException e) {
             Assert.fail();
         }
+        Assert.assertNotNull(idA1);
+
+        try {
+            answerFacade.delete(DeleteAnswerCommand.builder()
+                    .answer(idA1)
+                    .tag("witcher").build());
+        } catch (AnswerNotFoundException e) {
+            Assert.fail();
+        }
+        Assert.assertEquals(0, answerFacade.getAnswers(AnswerQuery.builder()
+                .forQuestion(id)
+                .tag("zirael").build()).getAnswers().size());
+
         unregister();
     }
 
@@ -107,13 +123,10 @@ public class AnswerFacadeIT {
                 .tag("zirael").build()).getAnswers().size());
 
         try {
-            answerFacade.delete(DeleteAnswerCommand.builder()
-                    .answer(idA1)
-                    .tag("witcher").build());
-            answerFacade.delete(DeleteAnswerCommand.builder()
-                    .answer(idA2)
-                    .tag("magic").build());
-        } catch (AnswerNotFoundException e) {
+            questionFacade.deleteQuestion(DeleteQuestionCommand.builder()
+                    .question(id)
+                    .tag("zirael").build());
+        }catch (Exception e) {
             Assert.fail();
         }
 
