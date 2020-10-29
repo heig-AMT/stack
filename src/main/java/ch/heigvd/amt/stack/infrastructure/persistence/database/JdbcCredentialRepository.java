@@ -5,6 +5,7 @@ import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.database.dsl.PrepareStatementScope;
 
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Default
@@ -34,10 +36,13 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public Optional<Credential> findBy(CredentialQuery query) {
         setup(dataSource);
-        // TODO : Offer an optimized implementation, with SQL-specific optimizations.
-        return findAll().stream()
-                .filter(cred -> cred.getUsername().equals(query.getUsername()))
-                .findAny();
+        return Optional.of(findFor(dataSource,
+                JdbcCredentialRepository::parseCredential,
+                "SELECT * FROM Credential WHERE username = ?;",
+                (ps) -> {
+                    ps.setString(1, query.getUsername());
+                })
+                .collect(Collectors.toList()).get(0));
     }
 
     @Override
@@ -96,19 +101,10 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
     @Override
     public Collection<Credential> findAll() {
         setup(dataSource);
-        var select = "SELECT * FROM Credential;";
-        Collection<Credential> result = new ArrayList<>();
-        try (var connection = dataSource.getConnection()) {
-            var statement = connection.prepareStatement(select);
-            var rs = statement.executeQuery();
-            while (rs.next()) {
-                result.add(parseCredential(rs));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
-            return Collections.emptyList();
-        }
-        return result;
+        return findFor(dataSource,
+                JdbcCredentialRepository::parseCredential,
+                "SELECT * FROM Credential;",
+                PrepareStatementScope.none())
+                .collect(Collectors.toList());
     }
 }
