@@ -206,6 +206,13 @@ public class AnswerFacade {
                 .build());
     }
 
+    /**
+     * Selects a certain answer, provided that the user is properly authenticated.
+     *
+     * @param command the {@link SelectAnswerCommand} that should be fulfilled.
+     * @throws AuthenticationFailedException if the user is not properly authenticated.
+     * @throws QuestionNotFoundException     if the question could not found.
+     */
     public void select(SelectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
         var session = sessionRepository.findBy(SessionQuery.builder()
                 .tag(command.getTag())
