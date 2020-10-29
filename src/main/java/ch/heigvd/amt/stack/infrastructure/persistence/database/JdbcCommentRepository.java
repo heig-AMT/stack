@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -27,6 +28,16 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
 
     @Resource(name = "database")
     private DataSource dataSource;
+
+    private Comment parseComment(ResultSet resultSet) throws SQLException {
+        return Comment.builder()
+                .id(CommentId.from(resultSet.getString("idComment")))
+                .answer(AnswerId.from(resultSet.getString("idxAnswer")))
+                .creator(CredentialId.from(resultSet.getString("idxCredential")))
+                .contents(resultSet.getString("contents"))
+                .creation(resultSet.getTimestamp("instant").toInstant())
+                .build();
+    }
 
     @Override
     public Collection<Comment> findBy(CommentQuery query) {
@@ -78,13 +89,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Comment.builder()
-                        .id(CommentId.from(rs.getString("idComment")))
-                        .answer(AnswerId.from(rs.getString("idxAnswer")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .contents(rs.getString("contents"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build());
+                return Optional.of(parseComment(rs));
             } else {
                 return Optional.empty();
             }
@@ -106,14 +111,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
             var rs = statement.executeQuery();
 
             while (rs.next()) {
-                Comment newC = Comment.builder()
-                        .id(CommentId.from(rs.getString("idComment")))
-                        .answer(AnswerId.from(rs.getString("idxAnswer")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .contents(rs.getString("contents"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build();
-                result.add(newC);
+                result.add(parseComment(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
