@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
@@ -25,10 +26,22 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     @Resource(name = "database")
     private DataSource dataSource;
 
-    private DataSource getDataSource() {
-        return dataSource;
+    /**
+     * Parses an answer from a certain {@link ResultSet}.
+     *
+     * @param resultSet the {@link ResultSet}, at a certain index.
+     * @return the returned {@link Answer}.
+     * @throws SQLException if an {@link Answer} could not be built.
+     */
+    private Answer parseAnswer(ResultSet resultSet) throws SQLException {
+        return Answer.builder()
+                .id(AnswerId.from(resultSet.getString("idAnswer")))
+                .question(QuestionId.from(resultSet.getString("idxQuestion")))
+                .creator(CredentialId.from(resultSet.getString("idxCredential")))
+                .body(resultSet.getString("description"))
+                .creation(resultSet.getTimestamp("instant").toInstant())
+                .build();
     }
-
 
     @Override
     public Collection<Answer> findBy(AnswerQuery query) {
@@ -45,9 +58,8 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     @Override
     public void save(Answer answer) {
         setup(dataSource);
-        var insert = "INSERT INTO Answer(idAnswer, idxCredential, idxQuestion, description, instant)" +
-                " VALUES (?, ?, ?, ?,?);";
-        try (var connection = getDataSource().getConnection()) {
+        var insert = "INSERT INTO Answer(idAnswer, idxCredential, idxQuestion, description, instant) VALUES (?, ?, ?, ?,?);";
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(insert);
             statement.setString(1, answer.getId().toString());
             statement.setString(2, answer.getCreator().toString());
@@ -65,7 +77,7 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     public void remove(AnswerId answerId) {
         setup(dataSource);
         var delete = "DELETE FROM Answer WHERE idAnswer = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(delete);
             statement.setString(1, answerId.toString());
             statement.execute();
@@ -79,19 +91,13 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     public Optional<Answer> findById(AnswerId answerId) {
         setup(dataSource);
         var select = "SELECT * FROM Answer WHERE idAnswer = ?;";
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             statement.setString(1, answerId.toString());
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Answer.builder()
-                        .id(AnswerId.from(rs.getString("idAnswer")))
-                        .question(QuestionId.from(rs.getString("idxQuestion")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .body(rs.getString("description"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build());
+                return Optional.of(parseAnswer(rs));
             } else {
                 return Optional.empty();
             }
@@ -108,19 +114,12 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
         setup(dataSource);
         var select = "SELECT * FROM Answer;";
         Collection<Answer> result = new ArrayList<>();
-        try (var connection = getDataSource().getConnection()) {
+        try (var connection = dataSource.getConnection()) {
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
 
             while (rs.next()) {
-                Answer newA = Answer.builder()
-                        .id(AnswerId.from(rs.getString("idAnswer")))
-                        .question(QuestionId.from(rs.getString("idxQuestion")))
-                        .creator(CredentialId.from(rs.getString("idxCredential")))
-                        .body(rs.getString("description"))
-                        .creation(rs.getTimestamp("instant").toInstant())
-                        .build();
-                result.add(newA);
+                result.add(parseAnswer(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
