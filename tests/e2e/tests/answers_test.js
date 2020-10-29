@@ -2,19 +2,17 @@ Feature('answers');
 
 const {
   I,
-  registerPage,
-  loginPage,
+  profilePage,
   questionsPage,
-  logoutPage,
   answersPage
 } = inject();
 
-Scenario('Add an answer', (I, logoutPage, registerPage, questionsPage, answersPage) => {
-  registerPage.register();
+Scenario('Add an answer', (I, profilePage, questionsPage, answersPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
-  logoutPage.logout();
+  profilePage.logout();
 
-  const user2 = registerPage.register();
+  const user2 = profilePage.register();
   I.click("Questions")
   I.click(question.title);
 
@@ -24,10 +22,10 @@ Scenario('Add an answer', (I, logoutPage, registerPage, questionsPage, answersPa
   I.see(answer);
 });
 
-Scenario('Cannot add an answer, when not logged in', (I, logoutPage, registerPage, questionsPage) => {
-  registerPage.register();
+Scenario('Cannot add an answer, when not logged in', (I, profilePage, questionsPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
-  logoutPage.logout();
+  profilePage.logout();
 
   I.click("Questions")
   I.click(question.title);
@@ -37,8 +35,8 @@ Scenario('Cannot add an answer, when not logged in', (I, logoutPage, registerPag
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Can delete my answer', (I, registerPage, questionsPage, answersPage) => {
-  registerPage.register();
+Scenario('Can delete my answer', (I, questionsPage, answersPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
 
   I.click("Questions");
@@ -52,8 +50,8 @@ Scenario('Can delete my answer', (I, registerPage, questionsPage, answersPage) =
   I.dontSee(answer);
 });
 
-Scenario('Cannot delete someone\'s answer', (I, logoutPage, registerPage, questionsPage, answersPage) => {
-  registerPage.register();
+Scenario('Cannot delete someone\'s answer', (I, profilePage, questionsPage, answersPage) => {
+  profilePage.register();
   const question = questionsPage.addQuestion();
 
   I.click("Questions");
@@ -61,7 +59,7 @@ Scenario('Cannot delete someone\'s answer', (I, logoutPage, registerPage, questi
 
   answersPage.addAnswer();
 
-  logoutPage.logout();
+  profilePage.logout();
 
   I.click("Questions");
   I.click(question.title);

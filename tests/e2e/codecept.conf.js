@@ -15,18 +15,17 @@ exports.config = {
   },
   include: {
     I: './steps_file.js',
-    loginPage: './pages/Login.js',
-    registerPage: './pages/Register.js',
     questionsPage: './pages/Questions.js',
-    logoutPage: './pages/Logout.js',
     answersPage: './pages/Answers.js',
+    profilePage: './pages/Profile.js',
   },
   bootstrap: null,
   mocha: {},
   name: 'e2e',
   plugins: {
     retryFailedStep: {
-      enabled: true
+      enabled: true,
+      retries: 20,
     },
     screenshotOnFail: {
       enabled: true
