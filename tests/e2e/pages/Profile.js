@@ -36,5 +36,18 @@ module.exports = {
 
   logout() {
     I.click("form input[value='Log out']");
+  },
+
+  changePassword(currentPassword) {
+    const newPassword = randomString(10);
+
+    I.amOnPage('/profile');
+
+    I.fillField("#currentPassword", currentPassword);
+    I.fillField("#newPassword", newPassword);
+
+    I.click("Change password");
+
+    return newPassword;
   }
 }
