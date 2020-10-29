@@ -6,12 +6,29 @@ exports.config = {
   tests: './tests/*_test.js',
   output: './output',
   helpers: {
-    Puppeteer: {
+    /*
+     *Puppeteer: {
+     *  url: 'http://localhost:8080',
+     *  show: false,
+     *  windowSize: '1600x900',
+     *  waitForAction: 300,
+     *}
+     */
+    WebDriver: {
       url: 'http://localhost:8080',
-      show: false,
-      windowSize: '1600x900',
-      waitForAction: 300,
-    }
+      browser: 'chrome',
+      host: '127.0.0.1',
+      port: 4444,
+      path: '/wd/hub',
+      restart: false,
+      windowSize: '1920x1680',
+      manualStart: false,
+      desiredCapabilities: {
+        chromeOptions: {
+          args: ["--headless", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage"]
+        }
+      }
+    },
   },
   include: {
     I: './steps_file.js',
