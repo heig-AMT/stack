@@ -52,7 +52,7 @@ public class QuestionView extends HttpServlet {
 
             req.getRequestDispatcher("WEB-INF/views/question.jsp").forward(req, resp);
         } else {
-            req.getRequestDispatcher("WEB-INF/views/questions.jsp").forward(req, resp);
+            resp.sendRedirect(getServletContext().getContextPath() + "/questions");
         }
     }
 }
