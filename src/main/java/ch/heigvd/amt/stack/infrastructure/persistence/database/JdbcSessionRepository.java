@@ -6,10 +6,8 @@ import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionId;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 
-import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,9 +20,6 @@ import java.util.logging.Logger;
 @ApplicationScoped
 @Default
 public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> implements SessionRepository {
-
-    @Resource(name = "database")
-    private DataSource dataSource;
 
     private static Session parseSession(ResultSet resultSet) throws SQLException {
         return Session.builder()
@@ -44,10 +39,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Session.builder()
-                        .id(SessionId.from(rs.getString("idSession")))
-                        .user(CredentialId.from(rs.getString("idxCredential")))
-                        .tag(rs.getString("tag")).build());
+                return Optional.of(parseSession(rs));
             } else {
                 return Optional.empty();
             }
@@ -99,10 +91,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Session.builder()
-                        .id(SessionId.from(rs.getString("idSession")))
-                        .user(CredentialId.from(rs.getString("idxCredential")))
-                        .tag(rs.getString("tag")).build());
+                return Optional.of(parseSession(rs));
             } else {
                 return Optional.empty();
             }
@@ -123,11 +112,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
-                var session = Session.builder()
-                        .id(SessionId.from(rs.getString("idSession")))
-                        .user(CredentialId.from(rs.getString("idxCredential")))
-                        .tag(rs.getString("tag")).build();
-                result.add(session);
+                result.add(parseSession(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

@@ -23,9 +23,6 @@ import java.util.logging.Logger;
 @Default
 public class JdbcCredentialRepository extends JdbcRepository<Credential, CredentialId> implements CredentialRepository {
 
-    @Resource(name = "database")
-    private DataSource dataSource;
-
     private static Credential parseCredential(ResultSet resultSet) throws SQLException {
         return Credential.builder()
                 .id(CredentialId.from(resultSet.getString("idCredential")))
