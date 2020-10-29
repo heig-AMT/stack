@@ -7,7 +7,7 @@ const {
   answersPage
 } = inject();
 
-Scenario('Add an answer', (I, profilePage, questionsPage, answersPage) => {
+Scenario('Add an answer', ({ I, profilePage, questionsPage, answersPage }) => {
   profilePage.register();
   const question = questionsPage.addQuestion();
   profilePage.logout();
@@ -22,7 +22,7 @@ Scenario('Add an answer', (I, profilePage, questionsPage, answersPage) => {
   I.see(answer);
 });
 
-Scenario('Cannot add an answer, when not logged in', (I, profilePage, questionsPage) => {
+Scenario('Cannot add an answer, when not logged in', ({ I, profilePage, questionsPage }) => {
   profilePage.register();
   const question = questionsPage.addQuestion();
   profilePage.logout();
@@ -35,7 +35,7 @@ Scenario('Cannot add an answer, when not logged in', (I, profilePage, questionsP
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Can delete my answer', (I, questionsPage, answersPage) => {
+Scenario('Can delete my answer', ({ I, questionsPage, answersPage }) => {
   profilePage.register();
   const question = questionsPage.addQuestion();
 
@@ -50,7 +50,7 @@ Scenario('Can delete my answer', (I, questionsPage, answersPage) => {
   I.dontSee(answer);
 });
 
-Scenario('Cannot delete someone\'s answer', (I, profilePage, questionsPage, answersPage) => {
+Scenario('Cannot delete someone\'s answer', ({ I, profilePage, questionsPage, answersPage }) => {
   profilePage.register();
   const question = questionsPage.addQuestion();
 

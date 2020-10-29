@@ -7,7 +7,7 @@ const {
   profilePage
 } = inject();
 
-Scenario('user accesses non existing page', (I, profilePage) => {
+Scenario('user accesses non existing page', ({ I, profilePage }) => {
   profilePage.register();
 
   I.amOnPage("/" + uid.v4());
