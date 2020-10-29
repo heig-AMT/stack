@@ -590,4 +590,85 @@ public class AnswerFacadeIntegration {
                 .tag(tagBob)
                 .build()));
     }
+
+    @Test
+    public void testAnswerOrderingIsCorrect() {
+
+        // Register.
+        var register = RegisterCommand.builder()
+                .username("alice")
+                .password("password")
+                .tag("tag")
+                .build();
+        var question = AskQuestionCommand.builder()
+                .title("Title")
+                .description("Description")
+                .tag("tag")
+                .build();
+        authenticationFacade.register(register);
+
+        // Ask a question and 3 answer.
+        var questionId = questionFacade.askQuestion(question);
+        var answer1 = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a stupid question")
+                .tag("tag")
+                .build();
+
+        var answer2 = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a second stupid question")
+                .tag("tag")
+                .build();
+
+        var answer3 = AnswerQuestionCommand.builder()
+                .question(questionId)
+                .body("This is a third stupid question")
+                .tag("tag")
+                .build();
+
+
+        var postedAnswer1 = assertDoesNotThrow(() -> answerFacade.answer(answer1));
+        var postedAnswer2 = assertDoesNotThrow(() -> answerFacade.answer(answer2));
+        var postedAnswer3 = assertDoesNotThrow(() -> answerFacade.answer(answer3));
+
+        // Get the answers.
+        var unorderedAnswers = answerFacade.getAnswers(AnswerQuery.builder()
+                .tag("tag")
+                .forQuestion(questionId)
+                .build())
+                .getAnswers();
+        assertEquals(3, unorderedAnswers.size());
+
+        // Upvote, downvote and select answers.
+        var upvote = UpvoteAnswerCommand.builder()
+                .answer(unorderedAnswers.get(0).getId())
+                .tag("tag")
+                .build();
+        answerFacade.upvote(upvote);
+
+        var downvote = DownvoteAnswerCommand.builder()
+                .answer(unorderedAnswers.get(1).getId())
+                .tag("tag")
+                .build();
+        answerFacade.downvote(downvote);
+
+        assertDoesNotThrow(() -> answerFacade.select(SelectAnswerCommand.builder()
+                .forQuestion(questionId)
+                .answer(unorderedAnswers.get(2).getId())
+                .tag("tag")
+                .build()));
+
+        var orderedAnswers = answerFacade.getAnswers(AnswerQuery.builder()
+                .forQuestion(questionId)
+                .build())
+                .getAnswers();
+        // Selected answer
+        assertEquals(orderedAnswers.get(0).getId(), unorderedAnswers.get(2).getId());
+        // Upvoted answer
+        assertEquals(orderedAnswers.get(1).getId(), unorderedAnswers.get(0).getId());
+        // Downvoted answer
+        assertEquals(orderedAnswers.get(2).getId(), unorderedAnswers.get(1).getId());
+
+    }
 }
