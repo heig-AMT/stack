@@ -5,13 +5,13 @@ const {
   profilePage
 } = inject();
 
-Scenario('User is redirect to /questions after registering', (I, profilePage) => {
+Scenario('User is redirect to /questions after registering', ({ I, profilePage }) => {
   profilePage.register();
 
   I.seeInCurrentUrl('/questions');
 });
 
-Scenario('User can change his password', (I, profilePage) => {
+Scenario('User can change his password', ({ I, profilePage }) => {
   const register = profilePage.register();
   profilePage.logout();
 

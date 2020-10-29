@@ -6,7 +6,7 @@ const {
   profilePage
 } = inject();
 
-Scenario('See questions when not logged in', (I, profilePage, questionsPage) => {
+Scenario('See questions when not logged in', ({ I, profilePage, questionsPage }) => {
   profilePage.register();
 
   const question1 = questionsPage.addQuestion();

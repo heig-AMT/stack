@@ -50,7 +50,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
             statement.setString(4, credential.getHashedPassword());
             statement.execute();
         } catch (SQLException ex) {
-            // TODO : Make sure that duplicates are properly handed.
+            ex.printStackTrace();
             throw new AuthenticationFailedException();
         }
     }
@@ -64,6 +64,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
             statement.setString(1, credentialId.toString());
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not remove credential " + credentialId);
         }
     }
@@ -87,6 +88,7 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
             }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not find credential " + credentialId);
         }
         return Optional.empty();
@@ -108,8 +110,8 @@ public class JdbcCredentialRepository extends JdbcRepository<Credential, Credent
                 result.add(credential);
             }
         } catch (SQLException ex) {
-            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
             ex.printStackTrace();
+            Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
             return Collections.emptyList();
         }
         return result;

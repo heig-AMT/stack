@@ -6,7 +6,7 @@ const {
   profilePage
 } = inject();
 
-Scenario('When adding a question, must be redirected to it\'s own page', (I, profilePage, questionsPage) => {
+Scenario('When adding a question, must be redirected to it\'s own page', ({ I, profilePage, questionsPage }) => {
   profilePage.register();
 
   const question = questionsPage.addQuestion();
@@ -16,7 +16,7 @@ Scenario('When adding a question, must be redirected to it\'s own page', (I, pro
   I.see(question.description);
 });
 
-Scenario('When adding a question, it must appear in question list', (I, profilePage, questionsPage) => {
+Scenario('When adding a question, it must appear in question list', ({ I, profilePage, questionsPage }) => {
   profilePage.register();
 
   const question = questionsPage.addQuestion();
@@ -26,7 +26,7 @@ Scenario('When adding a question, it must appear in question list', (I, profileP
   I.see(question.description);
 });
 
-Scenario('/ask redirects to /login when logged out', (I, profilePage) => {
+Scenario('/ask redirects to /login when logged out', ({ I, profilePage }) => {
   profilePage.register();
 
   profilePage.logout();
@@ -35,7 +35,7 @@ Scenario('/ask redirects to /login when logged out', (I, profilePage) => {
   I.waitInUrl('/login', 2);
 });
 
-Scenario('Filter questions', (I, profilePage, questionsPage) => {
+Scenario('Filter questions', ({ I, profilePage, questionsPage }) => {
   const register = profilePage.register();
 
   profilePage.login(register.user, register.password);
@@ -67,7 +67,7 @@ Scenario('Filter questions', (I, profilePage, questionsPage) => {
   I.dontSee(question4.description);
 });
 
-Scenario('When a user deletes his profile, his questions are deleted', (I, profilePage, questionsPage) => {
+Scenario('When a user deletes his profile, his questions are deleted', ({ I, profilePage, questionsPage }) => {
   const register = profilePage.register();
   const question = questionsPage.addQuestion();
 

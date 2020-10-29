@@ -55,6 +55,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                 }
                 return result;
             } catch (SQLException ex) {
+                ex.printStackTrace();
                 Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
                 return Collections.emptyList();
             }
@@ -120,6 +121,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
             }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not find question " + questionId);
         }
         return Optional.empty();
@@ -145,6 +147,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
                 result.add(question);
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
             return Collections.emptyList();
         }

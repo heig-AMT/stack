@@ -9,7 +9,7 @@ const {
 } = inject();
 
 
-Scenario('Votes are updated', async (I, profilePage, questionsPage, answersPage) => {
+Scenario('Votes are updated', async ({ I, profilePage, questionsPage, answersPage }) => {
   let votes = null;
 
   profilePage.register();
@@ -39,7 +39,7 @@ Scenario('Votes are updated', async (I, profilePage, questionsPage, answersPage)
   assert.equal(1, votes.down);
 });
 
-Scenario('Cannot vote twice', async (I, profilePage, questionsPage, answersPage) => {
+Scenario('Cannot vote twice', async ({ I, profilePage, questionsPage, answersPage }) => {
   let votes = null;
 
   profilePage.register();
@@ -71,7 +71,7 @@ Scenario('Cannot vote twice', async (I, profilePage, questionsPage, answersPage)
   assert.equal(1, votes.down);
 });
 
-Scenario('Cannot vote when logged out', async (I, profilePage, questionsPage, answersPage) => {
+Scenario('Cannot vote when logged out', async ({ I, profilePage, questionsPage, answersPage }) => {
   profilePage.register();
   const question = questionsPage.addQuestion();
   I.click("Questions")
@@ -84,7 +84,7 @@ Scenario('Cannot vote when logged out', async (I, profilePage, questionsPage, an
   I.dontSeeElement({css: '.voteBox:nth-of-type(1) form:nth-of-type(2) input[type="image"]'});
 });
 
-Scenario('Multiple people can vote', async (I, profilePage, questionsPage, answersPage) => {
+Scenario('Multiple people can vote', async ({ I, profilePage, questionsPage, answersPage }) => {
   let votes = null;
 
   profilePage.register();
