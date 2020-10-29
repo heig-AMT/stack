@@ -48,6 +48,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not find session with tag " + query.getTag());
         }
         return Optional.empty();
@@ -64,6 +65,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             statement.setString(3, session.getTag());
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not add session " + session.getId());
         }
     }
@@ -77,6 +79,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             statement.setString(1, sessionId.toString());
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not remove session " + sessionId);
         }
     }
@@ -100,6 +103,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
             }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not find session " + sessionId);
         }
         return Optional.empty();
@@ -121,6 +125,7 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
                 result.add(session);
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
             return Collections.emptyList();
         }
