@@ -17,7 +17,6 @@
     </div>
     <span class="text-gray-500 mt-2"><c:out value="${question.description}"/></span>
     <div class="flex flex-row mt-4 items-center">
-        <span class="text-sm text-gray-500">0 comments</span>
         <c:if test="${question.deletionEnabled}">
             <form class="flex flex-row mx-2 mb-0" action="deleteQuestion.do" method="POST">
                 <input type="hidden" name="question" value="<c:out value="${question.id.toString()}"/>"/>
