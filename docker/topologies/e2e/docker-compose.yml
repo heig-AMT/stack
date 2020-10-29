@@ -22,6 +22,8 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=123456
+    ports:
+      - "5432:5432"
 
   selenium:
     image: selenium/standalone-chrome
