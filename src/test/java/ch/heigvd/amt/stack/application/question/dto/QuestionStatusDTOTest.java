@@ -1,5 +1,6 @@
 package ch.heigvd.amt.stack.application.question.dto;
 
+import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class QuestionStatusDTOTest {
     @Test
     public void testResolvedQuestionMakesResolvedDTO() {
         var question = Question.builder()
-                .resolved(true)
+                .selectedAnswer(AnswerId.create())
                 .build();
         assertEquals(QuestionStatusDTO.Resolved, QuestionStatusDTO.from(question, Instant.now()));
     }

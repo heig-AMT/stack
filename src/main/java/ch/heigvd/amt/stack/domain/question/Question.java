@@ -1,6 +1,7 @@
 package ch.heigvd.amt.stack.domain.question;
 
 import ch.heigvd.amt.stack.domain.Entity;
+import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import lombok.Builder;
 import lombok.Value;
@@ -15,9 +16,8 @@ public class Question implements Entity<QuestionId> {
     QuestionId id = QuestionId.create();
     CredentialId author;
 
-    @Builder.Default
-    boolean resolved = false;
     String title;
     String description;
     Instant creation;
+    AnswerId selectedAnswer;
 }
