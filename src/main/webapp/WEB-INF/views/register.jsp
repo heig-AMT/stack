@@ -5,11 +5,10 @@
 <jsp:include page="fragments/head.jsp">
     <jsp:param name="pageTitle" value="Register"/>
 </jsp:include>
-<body>
+<body class="bg-gradient-to-r from-teal-400 to-blue-500">
 <jsp:include page="fragments/navigation.jsp"/>
-<div class="flex pt-16 h-screen
-            items-center justify-center
-            bg-gradient-to-r from-teal-400 to-blue-500">
+<div class="pt-16"/>
+<div class="flex mt-8 items-center justify-center">
     <div class="p-6 max-w-xl w-full bg-white rounded-lg shadow-md">
         <div class="text-center">
             <h1 class="text-4xl">
@@ -42,7 +41,7 @@
 
             </div>
             <div class="w-full px-3">
-                <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-white focus:border-gray-500"
+                <input class="p-3 block w-full bg-blue-600 text-gray-100 font-bold border border-gray-200 rounded-lg hover:bg-blue-500 focus:bg-blue-800 focus:border-gray-500"
                        type="submit" value="Register"/>
             </div>
         </form>
