@@ -42,13 +42,13 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
     @Override
     public Collection<Answer> findBy(AnswerQuery query) {
         setup(dataSource);
-        if (query.getForQuestion() != null) {
-            return findAll().stream()
-                    .filter(answer -> (answer.getQuestion().equals(query.getForQuestion())))
-                    .collect(Collectors.toList());
-        } else {
-            return List.of();
-        }
+        return findFor(dataSource,
+                JdbcAnswerRepository::parseAnswer,
+                "SELECT * FROM Answer WHERE idxQuestion = ?;",
+                (ps) -> {
+                    ps.setString(1, query.getForQuestion().toString());
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
