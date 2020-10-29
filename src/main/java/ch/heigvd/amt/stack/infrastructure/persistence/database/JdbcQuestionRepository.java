@@ -72,7 +72,7 @@ public class JdbcQuestionRepository extends JdbcRepository<Question, QuestionId>
             var statement = connection.prepareStatement(insert);
             statement.setString(1, question.getId().toString());
             statement.setString(2, question.getAuthor().toString());
-            statement.setString(3, question.getSelectedAnswer().toString());
+            statement.setString(3, question.getSelectedAnswer() != null ? question.getSelectedAnswer().toString() : null);
             statement.setString(4, question.getTitle());
             statement.setString(5, question.getDescription());
             statement.setTimestamp(6, Timestamp.from(question.getCreation()));
