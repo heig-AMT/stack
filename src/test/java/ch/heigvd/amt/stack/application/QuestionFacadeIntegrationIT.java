@@ -55,7 +55,7 @@ public class QuestionFacadeIntegrationIT {
                 .shouldContain("Do you dream of Scorchers ?").build())
                 .getQuestions();
 
-        assert (questions.size() == 1);
+        Assert.assertEquals(1, questions.size());
 
         //AssertDoesNoThrow seems not exist anymore...
         try {
@@ -72,7 +72,7 @@ public class QuestionFacadeIntegrationIT {
                 .shouldContain("Do you dream of Scorchers ?").build())
                 .getQuestions();
 
-        assert (questions.size() == 0);
+        Assert.assertEquals(0, questions.size());
 
         authenticationFacade.unregister(UnregisterCommand.builder()
                 .username("ciri")
