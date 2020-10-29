@@ -22,8 +22,9 @@ import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 @RequestScoped
@@ -38,9 +39,9 @@ public class QuestionFacade {
     @Inject
     SessionRepository sessionRepository;
 
-    private final Function<Question, QuestionDTO> questionToDto = new Function<>() {
+    private final BiFunction<CredentialId, Question, QuestionDTO> questionToDto = new BiFunction<>() {
         @Override
-        public QuestionDTO apply(Question question) {
+        public QuestionDTO apply(CredentialId user, Question question) {
             return QuestionDTO.builder()
                     .author(credentialRepository.findById(question.getAuthor()).map(Credential::getUsername).get())
                     .title(question.getTitle())
@@ -48,6 +49,7 @@ public class QuestionFacade {
                     .creation(question.getCreation())
                     .status(QuestionStatusDTO.from(question, Instant.now()))
                     .id(question.getId())
+                    .deletionEnabled(Objects.equals(question.getAuthor(), user))
                     .build();
         }
     };
@@ -86,22 +88,30 @@ public class QuestionFacade {
         repository.remove(command.getQuestion());
     }
 
+    private CredentialId getCredential(String forTag) {
+        return sessionRepository.findBy(SessionQuery.builder()
+                .tag(forTag)
+                .build())
+                .map(Session::getUser)
+                .orElse(null);
+    }
+
     public Optional<QuestionDTO> getQuestion(SingleQuestionQuery query) {
         return repository.findById(query.getId())
-                .map(questionToDto);
+                .map(q -> questionToDto.apply(getCredential(query.getTag()), q));
     }
 
     public Optional<QuestionDTO> getQuestion(SingleAnswerQuery query) {
         return answerRepository.findById(query.getId()).stream()
                 .map(Answer::getQuestion)
                 .flatMap(id -> repository.findById(id).stream())
-                .map(questionToDto)
+                .map(q -> questionToDto.apply(getCredential(query.getTag()), q))
                 .findFirst();
     }
 
     public QuestionListDTO getQuestions(QuestionQuery query) {
         List<QuestionDTO> questions = repository.findBy(query).stream()
-                .map(questionToDto)
+                .map(q -> questionToDto.apply(getCredential(query.getTag()), q))
                 .sorted(Comparator.comparing(QuestionDTO::getCreation).reversed())
                 .collect(Collectors.toUnmodifiableList());
         return QuestionListDTO.builder()
