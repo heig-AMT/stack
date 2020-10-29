@@ -301,6 +301,13 @@ public class AnswerFacade {
                                             return commentToDTO.apply(deletionEnabled, comment);
                                         }).collect(Collectors.toList()))
                         .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
+                        .selectionEnabled(
+                                // Retrieve the question.
+                                questionRepository.findById(answer.getQuestion())
+                                        // Keep it if the user matches the question creator.
+                                        .filter(q -> user.map(u -> u.equals(q.getAuthor()))
+                                                // Otherwise, we're not allowed to select questions.
+                                                .orElse(false)).isPresent())
                         .build()
                 )
                 .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
