@@ -31,7 +31,6 @@ public class CommentCommandEndpoint extends HttpServlet {
                     .tag(req.getSession().getId())
                     .build());
 
-            // TODO: Find out how to remove question id from request and use referer or something
             String path = getServletContext().getContextPath() + "/question?id=" + req.getParameter("question");
             resp.sendRedirect(path);
         } catch (AuthenticationFailedException exception) {
