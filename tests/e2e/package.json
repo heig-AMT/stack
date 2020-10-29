@@ -1,20 +1,29 @@
 {
-  "name": "e2e",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "npx codeceptjs run --steps"
-  },
-  "keywords": [],
-  "author": "heig-AMT group",
-  "license": "Copyright",
-  "private": true,
-  "devDependencies": {
-    "codeceptjs": "^2.6.11",
-    "puppeteer": "^5.3.1"
-  },
-  "dependencies": {
-    "uuid": "^8.3.0"
-  }
+    "name": "e2e",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "npx codeceptjs run --steps",
+        "codeceptjs": "codeceptjs run --steps",
+        "codeceptjs:headless": "HEADLESS=true codeceptjs run --steps",
+        "codeceptjs:ui": "codecept-ui --app",
+        "codeceptjs:demo": "codeceptjs run --steps -c node_modules/@codeceptjs/examples/codecept.webdriver.conf.js",
+        "codeceptjs:demo:headless": "HEADLESS=true codeceptjs run --steps -c node_modules/@codeceptjs/examples/codecept.webdriver.conf.js",
+        "codeceptjs:demo:ui": "codecept-ui --app  -c node_modules/@codeceptjs/examples/codecept.webdriver.conf.js"
+    },
+    "keywords": [],
+    "author": "heig-AMT group",
+    "license": "Copyright",
+    "private": true,
+    "devDependencies": {
+        "@codeceptjs/configure": "^0.6.0",
+        "@codeceptjs/examples": "^1.2.1",
+        "@codeceptjs/ui": "^0.4.2",
+        "codeceptjs": "^3.0.1",
+        "webdriverio": "^6.7.0"
+    },
+    "dependencies": {
+        "uuid": "^8.3.1"
+    }
 }

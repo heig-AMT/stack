@@ -1,3 +1,3 @@
 #!/bin/sh
 
-npx codeceptjs run --steps
+npx codeceptjs run --plugins retryFailedStep --steps

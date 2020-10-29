@@ -53,6 +53,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
             statement.setTimestamp(5, Timestamp.from(comment.getCreation()));
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not add comment " + comment.getId());
         }
     }
@@ -66,6 +67,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
             statement.setString(1, commentId.toString());
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not remove comment " + commentId);
         }
     }
@@ -92,6 +94,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
             }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not find comment " + commentId);
         }
         return Optional.empty();
@@ -117,6 +120,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
                 result.add(newC);
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
             return Collections.emptyList();
         }

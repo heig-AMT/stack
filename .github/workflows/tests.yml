@@ -61,6 +61,6 @@ jobs:
         run: |
           cd tests/e2e
           npm install
-          npx codeceptjs run --override '{"helpers": {"Puppeteer": {"show": false}}}' --steps
+          ./e2e-tests.sh
         env:
           CI: true

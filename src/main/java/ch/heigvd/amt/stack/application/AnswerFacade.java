@@ -17,6 +17,7 @@ import ch.heigvd.amt.stack.domain.comment.Comment;
 import ch.heigvd.amt.stack.domain.comment.CommentId;
 import ch.heigvd.amt.stack.domain.comment.CommentNotFoundException;
 import ch.heigvd.amt.stack.domain.comment.CommentRepository;
+import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
 import ch.heigvd.amt.stack.domain.vote.Vote;
@@ -27,6 +28,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
@@ -66,6 +68,20 @@ public class AnswerFacade {
     };
 
     /**
+     * An implementation of {@link Comparator} that takes care of ordering {@link AnswerDTO} instances based on their
+     * selection status as well as their vote counts.
+     */
+    private static final Comparator<AnswerDTO> COMPARATOR = (f, s) -> {
+        int comp = Boolean.compare(s.isSelected(), f.isSelected()); // reversed.
+        if (comp != 0) {
+            return comp;
+        } else {
+            return (s.getPositiveVotesCount() - s.getNegativeVotesCount()) -
+                    (f.getPositiveVotesCount() - f.getNegativeVotesCount());
+        }
+    };
+
+    /**
      * Answers a certain question, provided that the user is properly authenticated and that the question they want to
      * answer to actually exists.
      *
@@ -97,8 +113,8 @@ public class AnswerFacade {
      * Comments a certain answer, provided that the user is properly authenticated and that the answer they want to
      * comment on actually exists.
      *
-     * @return {@link CommentId} id of the comment created
      * @param command the {@link CommentAnswerCommand} that should be fulfilled.
+     * @return {@link CommentId} id of the comment created
      * @throws AuthenticationFailedException if the user is not properly authenticated.
      * @throws AnswerNotFoundException       if the answer does not actually exist.
      */
@@ -109,7 +125,7 @@ public class AnswerFacade {
                 .orElseThrow(AuthenticationFailedException::new);
         var answer = answerRepository.findById(command.getAnswer())
                 .orElseThrow(AnswerNotFoundException::new);
-        CommentId id=CommentId.create();
+        CommentId id = CommentId.create();
         commentRepository.save(
                 Comment.builder()
                         .id(id)
@@ -211,6 +227,67 @@ public class AnswerFacade {
     }
 
     /**
+     * Selects a certain answer, provided that the user is properly authenticated.
+     *
+     * @param command the {@link SelectAnswerCommand} that should be fulfilled.
+     * @throws AuthenticationFailedException if the user is not properly authenticated.
+     * @throws QuestionNotFoundException     if the question could not be found.
+     */
+    public void select(SelectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
+        var session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+        var question = questionRepository.findById(command.getForQuestion())
+                .orElseThrow(QuestionNotFoundException::new);
+
+        if (!question.getAuthor().equals(session.getUser())) {
+            throw new AuthenticationFailedException();
+        }
+
+        var updated = Question.builder()
+                .author(question.getAuthor())
+                .creation(question.getCreation())
+                .description(question.getDescription())
+                .id(question.getId())
+                .title(question.getTitle())
+                .selectedAnswer(command.getAnswer())
+                .build();
+        questionRepository.save(updated);
+    }
+
+    /**
+     * Unselects a certain answer, provided that the user is properly authenticated.
+     *
+     * @param command the {@link UnselectAnswerCommand} that should be fulfilled.
+     * @throws AuthenticationFailedException if the user is not properly authenticated.
+     * @throws QuestionNotFoundException     if the question couldd not be found.
+     */
+    public void unselect(UnselectAnswerCommand command) throws AuthenticationFailedException, QuestionNotFoundException {
+        var session = sessionRepository.findBy(SessionQuery.builder()
+                .tag(command.getTag())
+                .build())
+                .orElseThrow(AuthenticationFailedException::new);
+
+        var question = questionRepository.findById(command.getForQuestion())
+                .orElseThrow(QuestionNotFoundException::new);
+
+        if (!question.getAuthor().equals(session.getUser())) {
+            throw new AuthenticationFailedException();
+        }
+
+        var updated = Question.builder()
+                .author(question.getAuthor())
+                .creation(question.getCreation())
+                .description(question.getDescription())
+                .id(question.getId())
+                .title(question.getTitle())
+                .selectedAnswer(null)
+                .build();
+        questionRepository.save(updated);
+    }
+
+    /**
      * Returns a list of all the answers for a certain question.
      *
      * @param query the {@link AnswerQuery} that should be fulfilled.
@@ -223,60 +300,65 @@ public class AnswerFacade {
                         .build()).stream())
                 .map(Session::getUser)
                 .findAny();
+        // Retrieve the question.
         var answers = answerRepository.findBy(query).stream()
-                .map(answer -> AnswerDTO.builder()
-                        .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
-                        .body(answer.getBody())
-                        .creation(answer.getCreation())
-                        .id(answer.getId())
-                        .positiveVotesCount(voteRepository.count(VoteCountQuery.builder()
-                                .forAnswer(answer.getId())
-                                .isUpvote(true)
-                                .build()))
-                        .negativeVotesCount(voteRepository.count(VoteCountQuery.builder()
-                                .forAnswer(answer.getId())
-                                .isUpvote(false)
-                                .build()))
-                        .hasPositiveVote(
-                                user.isPresent() && voteRepository.findById(VoteId.builder()
-                                        .answer(answer.getId())
-                                        .voter(user.get())
-                                        .build())
-                                        // True if user has upvote.
-                                        .map(Vote::isUpvote)
-                                        // Otherwise nothing
-                                        .orElse(false)
-                        )
-                        .hasNegativeVote(
-                                user.isPresent() && voteRepository.findById(VoteId.builder()
-                                        .answer(answer.getId())
-                                        .voter(user.get())
-                                        .build())
-                                        // True if user has downvote.
-                                        .map(Vote::isUpvote)
-                                        .map(up -> !up)
-                                        // Otherwise nothing.
-                                        .orElse(false)
-                        )
-                        .comments(
-                                // Fetch all the comments for the given answer.
-                                commentRepository.findBy(CommentQuery.builder()
-                                        .forAnswer(answer.getId())
-                                        .build()).stream()
-                                        // Map all the individual comments.
-                                        .map(comment -> {
-                                            var credential = user.orElse(null);
-                                            // Enable deletions for comments owned by this user or the answer creator.
-                                            var deletionEnabled = credential != null && (
-                                                    credential.equals(comment.getCreator()) ||
-                                                            credential.equals(answer.getCreator())
-                                            );
-                                            return commentToDTO.apply(deletionEnabled, comment);
-                                        }).collect(Collectors.toList()))
-                        .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
-                        .build()
-                )
-                .sorted(Comparator.comparing(a -> a.getNegativeVotesCount() - a.getPositiveVotesCount()))
+                .map(answer -> {
+                    var question = questionRepository.findById(answer.getQuestion());
+                    return AnswerDTO.builder()
+                            .author(credentialRepository.findById(answer.getCreator()).get().getUsername())
+                            .body(answer.getBody())
+                            .creation(answer.getCreation())
+                            .id(answer.getId())
+                            .positiveVotesCount(voteRepository.count(VoteCountQuery.builder()
+                                    .forAnswer(answer.getId())
+                                    .isUpvote(true)
+                                    .build()))
+                            .negativeVotesCount(voteRepository.count(VoteCountQuery.builder()
+                                    .forAnswer(answer.getId())
+                                    .isUpvote(false)
+                                    .build()))
+                            .hasPositiveVote(
+                                    user.isPresent() && voteRepository.findById(VoteId.builder()
+                                            .answer(answer.getId())
+                                            .voter(user.get())
+                                            .build())
+                                            // True if user has upvote.
+                                            .map(Vote::isUpvote)
+                                            // Otherwise nothing
+                                            .orElse(false)
+                            )
+                            .hasNegativeVote(
+                                    user.isPresent() && voteRepository.findById(VoteId.builder()
+                                            .answer(answer.getId())
+                                            .voter(user.get())
+                                            .build())
+                                            // True if user has downvote.
+                                            .map(Vote::isUpvote)
+                                            .map(up -> !up)
+                                            // Otherwise nothing.
+                                            .orElse(false)
+                            )
+                            .comments(
+                                    // Fetch all the comments for the given answer.
+                                    commentRepository.findBy(CommentQuery.builder()
+                                            .forAnswer(answer.getId())
+                                            .build()).stream()
+                                            // Map all the individual comments.
+                                            .map(comment -> {
+                                                var credential = user.orElse(null);
+                                                // Enable deletions for comments owned by this user or the answer creator.
+                                                var deletionEnabled = credential != null && (
+                                                        credential.equals(comment.getCreator()) ||
+                                                                credential.equals(answer.getCreator())
+                                                );
+                                                return commentToDTO.apply(deletionEnabled, comment);
+                                            }).collect(Collectors.toList()))
+                            .deletionEnabled(user.isPresent() && user.get().equals(answer.getCreator()))
+                            .selectionEnabled(question.isPresent() && question.map(Question::getAuthor).equals(user))
+                            .selected(question.isPresent() && Objects.equals(question.get().getSelectedAnswer(), answer.getId()))
+                            .build();
+                })
+                .sorted(COMPARATOR)
                 .collect(Collectors.toUnmodifiableList());
         return AnswerListDTO.builder()
                 .answers(answers)

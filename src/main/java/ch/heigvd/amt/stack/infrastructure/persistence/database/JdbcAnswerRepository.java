@@ -56,6 +56,7 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
             statement.setTimestamp(5, Timestamp.from(answer.getCreation()));
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not add answer " + answer.getId());
         }
     }
@@ -69,6 +70,7 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
             statement.setString(1, answerId.toString());
             statement.execute();
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not remove answer " + answerId);
         }
     }
@@ -95,6 +97,7 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
             }
 
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not find answer " + answerId);
         }
         return Optional.empty();
@@ -120,6 +123,7 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
                 result.add(newA);
             }
         } catch (SQLException ex) {
+            ex.printStackTrace();
             Logger.getLogger("JDBC").log(Level.WARNING, "Could not findAll()");
             return Collections.emptyList();
         }
