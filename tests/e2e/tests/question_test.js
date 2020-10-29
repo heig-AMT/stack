@@ -66,3 +66,16 @@ Scenario('Filter questions', (I, profilePage, questionsPage) => {
   I.dontSee(question3.description);
   I.dontSee(question4.description);
 });
+
+Scenario('When a user deletes his profile, his questions are deleted', (I, profilePage, questionsPage) => {
+  const register = profilePage.register();
+  const question = questionsPage.addQuestion();
+
+  I.amOnPage('/questions');
+  I.see(question.title);
+
+  profilePage.deleteAccount(register.password);
+
+  I.amOnPage('/questions');
+  I.dontSee(question.title);
+});

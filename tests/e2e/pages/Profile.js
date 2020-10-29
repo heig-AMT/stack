@@ -49,5 +49,13 @@ module.exports = {
     I.click("Change password");
 
     return newPassword;
+  },
+
+  deleteAccount(password) {
+    I.amOnPage('/profile');
+
+    I.fillField("form[action='deleteAccount.do'] #password", password);
+
+    I.click("Delete account");
   }
 }
