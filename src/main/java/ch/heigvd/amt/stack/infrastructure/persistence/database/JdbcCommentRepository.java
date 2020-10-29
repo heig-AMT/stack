@@ -29,7 +29,7 @@ public class JdbcCommentRepository extends JdbcRepository<Comment, CommentId> im
     @Resource(name = "database")
     private DataSource dataSource;
 
-    private Comment parseComment(ResultSet resultSet) throws SQLException {
+    private static Comment parseComment(ResultSet resultSet) throws SQLException {
         return Comment.builder()
                 .id(CommentId.from(resultSet.getString("idComment")))
                 .answer(AnswerId.from(resultSet.getString("idxAnswer")))

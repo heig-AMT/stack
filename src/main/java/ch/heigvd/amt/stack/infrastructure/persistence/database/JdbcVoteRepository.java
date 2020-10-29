@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,16 @@ import java.util.logging.Logger;
 public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements VoteRepository {
     @Resource(name = "database")
     private DataSource dataSource;
+
+    private static Vote parseVote(ResultSet resultSet) throws SQLException {
+        return Vote.builder()
+                .id(VoteId.builder()
+                        .answer(AnswerId.from(resultSet.getString("idxAnswer")))
+                        .voter(CredentialId.from(resultSet.getString("idxCredential")))
+                        .build())
+                .isUpvote(resultSet.getBoolean("isUpvote"))
+                .build();
+    }
 
     @Override
     public int count(VoteCountQuery query) {
@@ -91,13 +102,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             var rs = statement.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(Vote.builder()
-                        .id(VoteId.builder()
-                                .answer(AnswerId.from(rs.getString("idxAnswer")))
-                                .voter(CredentialId.from(rs.getString("idxCredential")))
-                                .build())
-                        .isUpvote(rs.getBoolean("isUpvote"))
-                        .build());
+                return Optional.of(parseVote(rs));
             } else {
                 return Optional.empty();
             }
@@ -119,14 +124,7 @@ public class JdbcVoteRepository extends JdbcRepository<Vote, VoteId> implements 
             var statement = connection.prepareStatement(select);
             var rs = statement.executeQuery();
             while (rs.next()) {
-                var vote = Vote.builder()
-                        .id(VoteId.builder()
-                                .answer(AnswerId.from(rs.getString("idxAnswer")))
-                                .voter(CredentialId.from(rs.getString("idxCredential")))
-                                .build())
-                        .isUpvote(rs.getBoolean("isUpvote"))
-                        .build();
-                result.add(vote);
+                result.add(parseVote(rs));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();

@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,6 +25,14 @@ public class JdbcSessionRepository extends JdbcRepository<Session, SessionId> im
 
     @Resource(name = "database")
     private DataSource dataSource;
+
+    private static Session parseSession(ResultSet resultSet) throws SQLException {
+        return Session.builder()
+                .id(SessionId.from(resultSet.getString("idSession")))
+                .user(CredentialId.from(resultSet.getString("idxCredential")))
+                .tag(resultSet.getString("tag"))
+                .build();
+    }
 
     @Override
     public Optional<Session> findBy(SessionQuery query) {

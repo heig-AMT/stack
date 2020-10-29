@@ -33,7 +33,7 @@ public class JdbcAnswerRepository extends JdbcRepository<Answer, AnswerId> imple
      * @return the returned {@link Answer}.
      * @throws SQLException if an {@link Answer} could not be built.
      */
-    private Answer parseAnswer(ResultSet resultSet) throws SQLException {
+    private static Answer parseAnswer(ResultSet resultSet) throws SQLException {
         return Answer.builder()
                 .id(AnswerId.from(resultSet.getString("idAnswer")))
                 .question(QuestionId.from(resultSet.getString("idxQuestion")))
