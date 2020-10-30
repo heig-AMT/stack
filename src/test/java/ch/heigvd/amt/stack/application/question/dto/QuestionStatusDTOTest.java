@@ -26,7 +26,7 @@ public class QuestionStatusDTOTest {
     @Test
     public void testQuestionStatusQuestionCreatedRecentlyIsNew() {
         var now = Instant.now();
-        var creation = now.minus(1, ChronoUnit.DAYS);
+        var creation = now.minus(3, ChronoUnit.HOURS);
         var question = Question.builder()
                 .id(QuestionId.create())
                 .creation(creation)

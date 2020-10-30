@@ -28,7 +28,7 @@ public enum QuestionStatusDTO {
     public static QuestionStatusDTO from(Question question, Instant now) {
         if (question.getSelectedAnswer() != null) {
             return Resolved;
-        } else if (now.minus(2, ChronoUnit.DAYS).isBefore(question.getCreation())) {
+        } else if (now.minus(6, ChronoUnit.HOURS).isBefore(question.getCreation())) {
             return New;
         } else {
             return Open;
