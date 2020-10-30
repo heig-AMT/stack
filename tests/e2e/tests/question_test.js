@@ -46,17 +46,17 @@ Scenario('Filter questions', ({ I, profilePage, questionsPage }) => {
   const question4 = questionsPage.addQuestion();
 
   // Verify title search
-  I.fillField("Search by content in the title, description or tags !", question1.title.substring(1,3));
+  I.fillField("Search by content in the title or in the description !", question1.title.substring(1,3));
   I.click("input[alt=submit]");
   I.see(question1.title);
 
   // Verify description search
-  I.fillField("Search by content in the title, description or tags !", question1.description.substring(1,3));
+  I.fillField("Search by content in the title or in the description !", question1.description.substring(1,3));
   I.click("input[alt=submit]");
   I.see(question1.description);
 
   // Verify that the other tasks are not shown
-  I.fillField("Search by content in the title, description or tags !", question2.title);
+  I.fillField("Search by content in the title or in the description !", question2.title);
   I.click("input[alt=submit]");
   I.see(question2.title);
   I.dontSee(question1.title);
