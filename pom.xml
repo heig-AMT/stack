@@ -65,11 +65,6 @@
 
     <!-- Unit and integration testing. -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.1</version>
-    </dependency>
-    <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.6.2</version>
@@ -259,7 +254,7 @@
                 <apiPackage>ch.heigvd.gamify.api</apiPackage>
                 <dateLibrary>java8</dateLibrary>
               </configOptions>
-              <output>target/generated-sources/openapi</output>
+              <output>src/gen/java</output>
             </configuration>
           </execution>
         </executions>

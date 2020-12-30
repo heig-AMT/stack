@@ -1,0 +1,5 @@
+# Ignore gen/ folder.
+gen/java/*
+
+# Keep OpenAPI generator .ignore
+!gen/java/.openapi-generator-ignore

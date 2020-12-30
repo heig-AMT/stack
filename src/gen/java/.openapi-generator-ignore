@@ -1,0 +1,16 @@
+api
+api/**
+gradle/**
+src/**
+src
+
+git_push.sh
+
+.travis.yml
+build.gradle
+build.sbt
+gradle.properties
+gradlew
+gradlew.bat
+settings.gradle
+pom.xml
