@@ -1,0 +1,617 @@
+openapi: '3.0.3'
+info:
+  version: 'InDev'
+  title: Gamify API
+  description: An API that manages application-specific events, and lets you define rules to find user scores.
+servers:
+  - url: http://heig-amt-gamify.herokuapp.com
+
+tags:
+  - name: account
+    description: Everything about your account
+  - name: categories
+    description: Everything about categories
+  - name: badges
+    description: Everything about badges
+  - name: events
+    description: Everything about events
+  - name: rules
+    description: Everything about rules
+  - name: aggregates
+    description: Everything about aggregates
+
+paths:
+  # account
+  /account:
+    post:
+      tags:
+        - account
+      description: register a new account
+      operationId: registerAccount
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Registration'
+      responses:
+        '201':
+          description: success
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/AuthenticationSuccess'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+
+    put:
+      tags:
+        - account
+      description: update an account's password
+      operationId: updateAccount
+      security:
+        - basicAuth: [ ]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Password'
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/AuthenticationSuccess'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+
+    delete:
+      tags:
+        - account
+      description: delete an account
+      operationId: deleteAccount
+      security:
+        - basicAuth: [ ]
+      responses:
+        '204':
+          description: success
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '404':
+          description: not found
+
+  /account/token:
+    post:
+      tags:
+        - account
+      description: login to an account
+      operationId: login
+      security:
+        - basicAuth: [ ]
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/AuthenticationSuccess'
+        '401':
+          description: unauthorized
+
+  # categories
+  /categories:
+    get:
+      tags:
+        - categories
+      description: get all the categories
+      operationId: getCategories
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '403':
+          description: forbidden
+    post:
+      tags:
+        - categories
+      description: creates a new category
+      operationId: postCategory
+      security:
+        - apiKeyAuth: [ ]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '201':
+          description: success
+        '403':
+          description: forbidden
+        '409':
+          description: conflict
+
+  /categories/{name}:
+    parameters:
+      - name: name
+        in: path
+        description: name of the category
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - categories
+      description: get a specific category
+      operationId: getCategory
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Category'
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+
+    put:
+      tags:
+        - categories
+      description: update a category or create it if it doesn't exist
+      operationId: putCategory
+      security:
+        - apiKeyAuth: [ ]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '204':
+          description: success
+        '403':
+          description: forbidden
+
+    delete:
+      tags:
+        - categories
+      description: delete a category
+      operationId: deleteCategory
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '204':
+          description: success
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+
+  # badges
+  /badges:
+    get:
+      tags:
+        - badges
+      description: get all the badges
+      operationId: getBadges
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Badge'
+        '403':
+          description: forbidden
+
+  /badges/{name}:
+    parameters:
+      - name: name
+        in: path
+        description: name of the badge
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - badges
+      description: get a specific badge
+      operationId: getBadge
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Badge'
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+
+    put:
+      tags:
+        - badges
+      description: update a badge or create it if it doesn't exist
+      operationId: putBadge
+      security:
+        - apiKeyAuth: [ ]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Badge'
+      responses:
+        '204':
+          description: success
+        '403':
+          description: forbidden
+
+    delete:
+      tags:
+        - badges
+      description: delete a badge
+      operationId: deleteBadge
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '204':
+          description: success
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+
+  # events
+  /events:
+    post:
+      tags:
+        - events
+      description: post an event for a certain userId
+      operationId: addEvent
+      security:
+        - apiKeyAuth: [ ]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Event'
+      responses:
+        '200':
+          description: success
+        '403':
+          description: forbidden
+
+  # rules
+  /rules:
+    get:
+      tags:
+        - rules
+      description: get all the rules
+      operationId: getRules
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Rule'
+        '403':
+          description: forbidden
+
+    post:
+      tags:
+        - rules
+      description: creates a new rule
+      operationId: postRule
+      security:
+        - apiKeyAuth: [ ]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Rule'
+      responses:
+        '201':
+          description: success
+        '403':
+          description: forbidden
+        '409':
+          description: conflict
+
+  /rules/{name}:
+    parameters:
+      - name: name
+        in: path
+        description: name of the rule
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - rules
+      description: get a specific rule
+      operationId: getRule
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Rule'
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+
+    put:
+      tags:
+        - rules
+      description: update a rule or create it if it doesn't exist
+      operationId: putRule
+      security:
+        - apiKeyAuth: [ ]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Rule'
+      responses:
+        '204':
+          description: success
+        '403':
+          description: forbidden
+
+    delete:
+      tags:
+        - rules
+      description: delete a rule
+      operationId: deleteRule
+      security:
+        - apiKeyAuth: [ ]
+      responses:
+        '204':
+          description: success
+        '403':
+          description: forbidden
+        '404':
+          description: not found
+
+  # aggregates
+  /leaderboards/{name}:
+    get:
+      tags:
+        - aggregates
+      description: get the leaderboard for a category
+      operationId: getLeaderboard
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - name: name
+          in: path
+          description: name of the category
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ranking'
+        '403':
+          description: forbidden
+
+  /users/{id}:
+    get:
+      tags:
+        - aggregates
+      description: get a specific user information for specified categories and/or his badges
+      operationId: getUserAggregate
+      security:
+        - apiKeyAuth: [ ]
+      parameters:
+        - name: id
+          in: path
+          description: id of the end user
+          required: true
+          schema:
+            type: string
+        - name: categories
+          in: query
+          description: array of categories to be fetches for the user
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: success
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ranking'
+        '403':
+          description: forbidden
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+    basicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    Category:
+      type: object
+      properties:
+        name:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+
+    Badge:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        pointsLower:
+          type: integer
+          nullable: true
+        pointsUpper:
+          type: integer
+          nullable: true
+
+    Event:
+      type: object
+      properties:
+        type:
+          type: string
+        userId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    Rule:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        event:
+          type: string
+        points:
+          type: integer
+
+    Ranking:
+      type: object
+      properties:
+        category:
+          type: string
+        userId:
+          type: string
+        rank:
+          type: integer
+        points:
+          type: integer
+        badges:
+          nullable: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Badge'
+
+    Registration:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+
+    Password:
+      type: object
+      properties:
+        newPassword:
+          type: string
+
+    AuthenticationSuccess:
+      type: object
+      properties:
+        token:
+          type: string
