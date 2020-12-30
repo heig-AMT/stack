@@ -12,6 +12,8 @@ import ch.heigvd.amt.stack.application.question.query.SingleQuestionQuery;
 import ch.heigvd.amt.stack.domain.answer.Answer;
 import ch.heigvd.amt.stack.domain.answer.AnswerRepository;
 import ch.heigvd.amt.stack.domain.authentication.*;
+import ch.heigvd.amt.stack.domain.gamification.GamificationEvent;
+import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
@@ -34,6 +36,8 @@ public class QuestionFacade {
     AnswerRepository answerRepository;
     @Inject
     CredentialRepository credentialRepository;
+    @Inject
+    GamificationRepository gamificationRepository;
     @Inject
     QuestionRepository repository;
     @Inject
@@ -75,6 +79,7 @@ public class QuestionFacade {
                 .creation(Instant.now())
                 .build()
         );
+        gamificationRepository.post(session.getUser(), GamificationEvent.NEW_POST);
         return id;
     }
 
