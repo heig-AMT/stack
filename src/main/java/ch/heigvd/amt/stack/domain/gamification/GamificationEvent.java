@@ -6,4 +6,5 @@ public enum GamificationEvent {
   NEW_COMMENT,
   UPVOTE,
   DOWNVOTE,
+  SELECTION
 }

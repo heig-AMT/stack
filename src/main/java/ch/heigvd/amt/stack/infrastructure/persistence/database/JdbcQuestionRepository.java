@@ -3,6 +3,7 @@ package ch.heigvd.amt.stack.infrastructure.persistence.database;
 import ch.heigvd.amt.stack.application.question.query.QuestionQuery;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
+import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 
 @ApplicationScoped
 @Default
