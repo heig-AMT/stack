@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 
 @RequestScoped
 public class AnswerFacade {
-
     @Inject
     CommentRepository commentRepository;
 

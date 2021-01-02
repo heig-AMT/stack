@@ -4,6 +4,7 @@ import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.gamification.GamificationEvent;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.gamify.ApiException;
+import ch.heigvd.gamify.Configuration;
 import ch.heigvd.gamify.api.EventsApi;
 import ch.heigvd.gamify.api.dto.Event;
 import java.time.OffsetDateTime;
@@ -13,8 +14,12 @@ import javax.enterprise.inject.Default;
 @ApplicationScoped
 @Default
 public class RemoteGamificationRepository implements GamificationRepository {
-
   private final EventsApi eventsApi = new EventsApi();
+
+  private RemoteGamificationRepository(){
+    Configuration.getDefaultApiClient().setApiKey(System.getenv("APP_KEY"));
+    Configuration.getDefaultApiClient().setBasePath("http://localhost:8080");
+  }
 
   @Override
   public void post(CredentialId user, GamificationEvent event) {
@@ -23,8 +28,10 @@ public class RemoteGamificationRepository implements GamificationRepository {
           .userId(user.toString())
           .timestamp(OffsetDateTime.now())
           .type(event.name());
-      eventsApi.addEventAsync(payload, new ApiCallbackAdapter<>() {
-      });
+      eventsApi.addEvent(payload);
+      System.out.println("Posted an event");
+      //eventsApi.addEventAsync(payload, new ApiCallbackAdapter<>() {}):
+
     } catch (ApiException exception) {
       exception.printStackTrace();
     }
