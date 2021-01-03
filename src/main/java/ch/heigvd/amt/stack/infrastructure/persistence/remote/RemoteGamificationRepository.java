@@ -24,7 +24,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final RulesApi rulesApi = new RulesApi();
 
   private RemoteGamificationRepository() {
-    Configuration.getDefaultApiClient().setApiKey(("162c3412-45a6-4ccd-92b9-a5b15b9e70e8"));
+    Configuration.getDefaultApiClient().setApiKey(("GAMIFY_API_TOKEN"));
     Configuration.getDefaultApiClient().setBasePath(System.getenv("GAMIFY_SERVER"));
 
     this.addCategory("questions", "Questions", "Addition of new questions");
