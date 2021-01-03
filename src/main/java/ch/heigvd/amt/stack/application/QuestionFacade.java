@@ -79,7 +79,7 @@ public class QuestionFacade {
                 .creation(Instant.now())
                 .build()
         );
-        gamificationRepository.post(session.getUser(), GamificationEvent.NEW_POST);
+        gamificationRepository.postEvent(session.getUser(), GamificationEvent.NEW_QUESTION);
         return id;
     }
 

@@ -1,8 +1,10 @@
 package ch.heigvd.amt.stack.domain.gamification;
 
 public enum GamificationEvent {
-  NEW_POST,
+  NEW_QUESTION,
+  NEW_ANSWER,
   NEW_COMMENT,
   UPVOTE,
   DOWNVOTE,
+  SELECTION
 }

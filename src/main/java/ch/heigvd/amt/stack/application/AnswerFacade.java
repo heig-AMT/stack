@@ -17,6 +17,8 @@ import ch.heigvd.amt.stack.domain.comment.Comment;
 import ch.heigvd.amt.stack.domain.comment.CommentId;
 import ch.heigvd.amt.stack.domain.comment.CommentNotFoundException;
 import ch.heigvd.amt.stack.domain.comment.CommentRepository;
+import ch.heigvd.amt.stack.domain.gamification.GamificationEvent;
+import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.amt.stack.domain.question.Question;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionRepository;
@@ -35,24 +37,20 @@ import java.util.stream.Collectors;
 
 @RequestScoped
 public class AnswerFacade {
-
     @Inject
     CommentRepository commentRepository;
-
     @Inject
     CredentialRepository credentialRepository;
-
     @Inject
     AnswerRepository answerRepository;
-
     @Inject
     QuestionRepository questionRepository;
-
     @Inject
     SessionRepository sessionRepository;
-
     @Inject
     VoteRepository voteRepository;
+    @Inject
+    GamificationRepository gamificationRepository;
 
     private final BiFunction<Boolean, Comment, CommentDTO> commentToDTO = new BiFunction<>() {
         @Override
@@ -113,6 +111,7 @@ public class AnswerFacade {
                         .creator(session.getUser())
                         .build()
         );
+        gamificationRepository.postEvent(session.getUser(), GamificationEvent.NEW_ANSWER);
         return id;
     }
 
@@ -139,6 +138,7 @@ public class AnswerFacade {
                         .creator(session.getUser())
                         .build()
         );
+        gamificationRepository.postEvent(session.getUser(), GamificationEvent.NEW_COMMENT);
         return id;
     }
 
@@ -199,6 +199,7 @@ public class AnswerFacade {
                         .build())
                 .isUpvote(true)
                 .build());
+        gamificationRepository.postEvent(session.getUser(), GamificationEvent.UPVOTE);
     }
 
     /**
@@ -216,6 +217,7 @@ public class AnswerFacade {
                         .build())
                 .isUpvote(false)
                 .build());
+        gamificationRepository.postEvent(session.getUser(), GamificationEvent.DOWNVOTE);
     }
 
     /**
@@ -243,6 +245,7 @@ public class AnswerFacade {
                 .selectedAnswer(command.getAnswer())
                 .build();
         questionRepository.save(updated);
+        gamificationRepository.postEvent(session.getUser(), GamificationEvent.SELECTION);
     }
 
     /**
