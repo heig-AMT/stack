@@ -9,3 +9,8 @@ services:
       - GAMIFY_API_TOKEN=$GAMIFY_API_TOKEN
     ports:
       - "8080:1234"
+
+networks:
+  default:
+    external:
+      name: stack-net

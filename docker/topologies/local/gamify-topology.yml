@@ -18,3 +18,8 @@ services:
       - POSTGRES_PASSWORD=123456
     ports:
       - "5432:5432"
+
+networks:
+  default:
+    external:
+      name: stack-net
