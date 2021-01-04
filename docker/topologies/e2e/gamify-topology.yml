@@ -1,7 +1,7 @@
 version: '3'
 services:
   gamify:
-    image: gamify-openjdk
+    image: docker.pkg.github.com/heig-amt/gamify/openjdk
     depends_on:
       - "database"
     environment:
