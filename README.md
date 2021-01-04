@@ -28,8 +28,20 @@ Assuming you have Docker installed locally, you can run the following scripts to
 
 ```bash
 sh ./build-image.sh
-sh ./run-image.sh
+sh ./run-locally.sh
 ```
+
+This will launch:
+* a postgres image with a service named "database"
+* our gamification server with a service named "gamify"
+* our stackunderflow server with a service named "openliberty"
+
+| Container | Inside port | Outside port |
+|----------------------------------------|
+| database | 5432 | 5432 |
+| gamify | 1234 | 8081 |
+| openliberty | 1234 | 8080 |
+
 
 ## Mockups
 
