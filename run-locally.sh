@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-source ./utils.sh
+. ./utils.sh
 
 network="stack-net"
 
@@ -19,7 +19,7 @@ fi
 
 # Be sure everything is down
 docker network rm $network
-docker-compose -f stack-topology.yml down
+GAMIFY_API_TOKEN="empty" GAMIFY_SERVER="empty" docker-compose -f stack-topology.yml down
 docker-compose -f gamify-topology.yml down
 
 # Create external network
@@ -34,4 +34,3 @@ waitOnPort $gamifyOutsidePort
 GAMIFY_API_TOKEN=$(getApiToken $gamifyOutsidePort $user $pass) \
 GAMIFY_SERVER="http://gamify:${gamifyInsidePort}" \
 sh -c 'docker-compose -f stack-topology.yml up --build --force-recreate --no-deps'
-

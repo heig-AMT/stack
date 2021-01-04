@@ -7,7 +7,7 @@ exports.config = {
   output: './output',
   helpers: {
     WebDriver: {
-      url: 'http://openliberty:1234',
+      url: 'http://localhost:8080',
       browser: 'chrome',
       host: '127.0.0.1',
       port: 4444,
@@ -33,8 +33,8 @@ exports.config = {
   name: 'e2e',
   plugins: {
     retryFailedStep: {
-      enabled: true,
-      retries: 20,
+      enabled: false,
+      retries: 0,
     },
     screenshotOnFail: {
       enabled: true

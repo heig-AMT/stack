@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 waitOnPort() {
   port=$1

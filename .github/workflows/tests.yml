@@ -47,7 +47,7 @@ jobs:
         run: sh build-image.sh
 
       - name: Run image in bg
-        run: sh run-locally.sh "e2e" &
+        run: sh run-locally.sh "e2e"
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -64,6 +64,13 @@ jobs:
           ./e2e-tests.sh
         env:
           CI: true
+
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: screenshots
+          path: tests/e2e/output/
 
       - name: Run Arquillian tests 🛸
         run: |
