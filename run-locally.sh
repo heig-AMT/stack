@@ -2,8 +2,6 @@
 
 source ./utils.sh
 
-cd docker/topologies/local
-
 network="stack-net"
 
 gamifyOutsidePort=8081
@@ -11,6 +9,13 @@ gamifyInsidePort=1234
 
 user="stack"
 pass="1234thisisapassword"
+
+if [ $1 = "e2e" ]
+then
+  cd docker/topologies/e2e
+else
+  cd docker/topologies/local
+fi
 
 # Be sure everything is down
 docker network rm $network

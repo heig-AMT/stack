@@ -1,21 +1,15 @@
 version: '3'
 services:
-  # payara:
-  #   build: ../../images/payara
-  #   environment:
-  #    - PORT=8080
-  #   ports:
-  #    - "8081:8080"
-
-  openliberty:
-    build: ../../images/openliberty
+  gamify:
+    image: gamify-openjdk
     depends_on:
       - "database"
     environment:
       - PORT=1234
       - DATABASE_URL=postgres://root:123456@database:5432/root
     ports:
-      - "8080:1234"
+      - "8081:1234"
+
 
   database:
     image: postgres:13.0
@@ -25,8 +19,7 @@ services:
     ports:
       - "5432:5432"
 
-  selenium:
-    image: selenium/standalone-chrome
-    network_mode: "host"
-    #ports:
-      #- "4444:4444"
+networks:
+  default:
+    external:
+      name: stack-net

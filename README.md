@@ -42,6 +42,15 @@ This will launch:
 | gamify | 1234 | 8081 |
 | openliberty | 1234 | 8080 |
 
+To run the e2e tests, run
+
+```bash
+sh ./build-image.sh
+sh ./run-locally.sh "e2e"
+```
+
+The same setup will be available, but in addition, the selenium image will be running too.
+
 
 ## Mockups
 
