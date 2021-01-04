@@ -47,7 +47,7 @@ jobs:
         run: sh build-image.sh
 
       - name: Run image in bg
-        run: sh run-compose.sh &
+        run: sh run-locally.sh "e2e" &
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
