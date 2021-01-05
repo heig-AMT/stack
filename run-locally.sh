@@ -10,11 +10,13 @@ gamifyInsidePort=1234
 user="stack"
 pass="1234thisisapassword"
 
+stackTopology="stack-topology.yml"
+
+cd docker/topologies/local
+
 if [ $1 = "e2e" ]
 then
-  cd docker/topologies/e2e
-else
-  cd docker/topologies/local
+  stackTopology="e2e-stack-topology.yml"
 fi
 
 # Be sure everything is down
@@ -33,4 +35,4 @@ waitOnPort $gamifyOutsidePort
 # Run Stack Underflow
 GAMIFY_API_TOKEN=$(getApiToken $gamifyOutsidePort $user $pass) \
 GAMIFY_SERVER="http://gamify:${gamifyInsidePort}" \
-sh -c 'docker-compose -f stack-topology.yml up --build --force-recreate --no-deps'
+docker-compose -f $stackTopology up --build --force-recreate --no-deps
