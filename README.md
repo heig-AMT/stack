@@ -52,10 +52,6 @@ sh ./run-locally.sh "e2e"
 
 The same setup will be available, but in addition, the selenium image will be running too.
 
-**Note**: The e2e topology uses the gamify container that is stored on GitHub repository. The local topology uses the
-local gamify container.
-
-
 ## Mockups
 
 Our prototypes are visible on [Figma](https://www.figma.com/file/gR04fKmQQZCZzwVC8SAbx3/Web?node-id=1%3A117).
