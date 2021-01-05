@@ -24,7 +24,8 @@ This repository contains our version of the first project of the AMT class of HE
 
 ## Running the app (locally)
 
-Assuming you have Docker installed locally, you can run the following scripts to get the app running on your `8080` port :
+Assuming you have Docker installed locally, you can run the following scripts to get the app running on your `8080`
+port:
 
 ```bash
 sh ./build-image.sh
@@ -51,6 +52,9 @@ sh ./run-locally.sh "e2e"
 
 The same setup will be available, but in addition, the selenium image will be running too.
 
+**Note**: The e2e topology uses the gamify container that is stored on GitHub repository. The local topology uses the
+local gamify container.
+
 
 ## Mockups
 
@@ -58,4 +62,5 @@ Our prototypes are visible on [Figma](https://www.figma.com/file/gR04fKmQQZCZzwV
 
 ## Deployments
 
-A live version of our site is available on [Heroku](https://heig-amt-stackunderflow.herokuapp.com). We're using a free plan, so it may need a few seconds to start up if the instance was previously paused :smile:
+A live version of our site is available on [Heroku](https://heig-amt-stackunderflow.herokuapp.com). We're using a free
+plan, so it may need a few seconds to start up if the instance was previously paused :smile:
