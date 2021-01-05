@@ -24,12 +24,33 @@ This repository contains our version of the first project of the AMT class of HE
 
 ## Running the app (locally)
 
-Assuming you have Docker installed locally, you can run the following scripts to get the app running on your `8080` port :
+Assuming you have Docker installed locally, you can run the following scripts to get the app running on your `8080`
+port:
 
 ```bash
 sh ./build-image.sh
-sh ./run-image.sh
+sh ./run-locally.sh
 ```
+
+This will launch:
+* a postgres image with a service named "database";
+* our gamification server with a service named "gamify"; and
+* our stackunderflow server with a service named "openliberty".
+
+| Container | Inside port | Outside port |
+|----------------------------------------|
+| database | 5432 | 5432 |
+| gamify | 1234 | 8081 |
+| openliberty | 1234 | 8080 |
+
+To run the e2e tests, run
+
+```bash
+sh ./build-image.sh
+sh ./run-locally.sh "e2e"
+```
+
+The same setup will be available, but in addition, the selenium image will be running too.
 
 ## Mockups
 
@@ -37,4 +58,5 @@ Our prototypes are visible on [Figma](https://www.figma.com/file/gR04fKmQQZCZzwV
 
 ## Deployments
 
-A live version of our site is available on [Heroku](https://heig-amt-stackunderflow.herokuapp.com). We're using a free plan, so it may need a few seconds to start up if the instance was previously paused :smile:
+A live version of our site is available on [Heroku](https://heig-amt-stackunderflow.herokuapp.com). We're using a free
+plan, so it may need a few seconds to start up if the instance was previously paused :smile:

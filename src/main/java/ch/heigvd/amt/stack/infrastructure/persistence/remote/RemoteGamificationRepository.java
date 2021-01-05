@@ -11,7 +11,6 @@ import ch.heigvd.gamify.api.RulesApi;
 import ch.heigvd.gamify.api.dto.Category;
 import ch.heigvd.gamify.api.dto.Event;
 import ch.heigvd.gamify.api.dto.Rule;
-import java.lang.reflect.InvocationTargetException;
 import java.time.OffsetDateTime;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
@@ -25,8 +24,8 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final RulesApi rulesApi = new RulesApi();
 
   private RemoteGamificationRepository() {
-    Configuration.getDefaultApiClient().setApiKey(("c5a76cf5-e618-4039-b484-96fe15f04414"));
-    Configuration.getDefaultApiClient().setBasePath("http://localhost:8080");
+    Configuration.getDefaultApiClient().setApiKey(System.getenv("GAMIFY_API_TOKEN"));
+    Configuration.getDefaultApiClient().setBasePath(System.getenv("GAMIFY_SERVER"));
 
     this.addCategory("questions", "Questions", "Addition of new questions");
     this.addCategory("answers", "Answers", "Addition of new answers");

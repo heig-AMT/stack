@@ -1,3 +1,3 @@
 #!/bin/sh
 
-npx codeceptjs run --plugins retryFailedStep --steps
+npx codeceptjs run --plugins screenshotOnFail --steps
