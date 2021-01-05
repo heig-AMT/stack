@@ -13,7 +13,7 @@ pass="1234thisisapassword"
 cd docker/topologies/e2e
 
 # Retrieve gamify
-echo $TOKEN_GITHUB | docker login https://docker.pkg.github.com --username heig-AMT-bot --password-stdin
+docker login https://docker.pkg.github.com -u heig-AMT-bot -p $TOKEN_GITHUB
 
 # Be sure everything is down
 docker network rm $network
@@ -31,4 +31,4 @@ waitOnPort $gamifyOutsidePort
 # Run Stack Underflow
 GAMIFY_API_TOKEN=$(getApiToken $gamifyOutsidePort $user $pass) \
 GAMIFY_SERVER="http://gamify:${gamifyInsidePort}" \
-sh -c 'docker-compose -f stack-topology.yml up --build --force-recreate --no-deps'
+docker-compose -f stack-topology.yml up --build --force-recreate --no-deps
