@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<jsp:useBean scope="request" id="badges" type="ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO"/>
+
 <html>
 <jsp:include page="fragments/head.jsp">
     <jsp:param name="pageTitle" value="Profile"/>
@@ -25,6 +27,12 @@
             <span class="text-sm">
                 Here you can see your username, but not change it.
             </span>
+
+            <div >
+                <c:forEach items="${badges.badges}" var="badge">
+                    <span><c:out value="${badge.title}"/></span>
+                </c:forEach>
+            </div>
 
             <div class="mt-4">
                 <label for="username" class="block uppercase text-xs font-bold text-gray-700">Username</label>
@@ -76,6 +84,7 @@
             </h1>
             <span class="text-sm">
                 Here you can delete your account. We're sad to see you leave, but you must have your reasons.
+                Don't worry, we'll sell your data to the NSA.
             </span>
         </div>
 
