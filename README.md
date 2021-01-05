@@ -33,9 +33,9 @@ sh ./run-locally.sh
 ```
 
 This will launch:
-* a postgres image with a service named "database"
-* our gamification server with a service named "gamify"
-* our stackunderflow server with a service named "openliberty"
+* a postgres image with a service named "database";
+* our gamification server with a service named "gamify"; and
+* our stackunderflow server with a service named "openliberty".
 
 | Container | Inside port | Outside port |
 |----------------------------------------|
