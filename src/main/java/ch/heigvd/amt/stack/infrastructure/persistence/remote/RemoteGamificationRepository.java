@@ -31,7 +31,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final AggregatesApi aggregatesApi=new AggregatesApi();
 
   private RemoteGamificationRepository() {
-    Configuration.getDefaultApiClient().setApiKey(("e48338c8-532c-4225-b63f-affdc074ec67"));
+    Configuration.getDefaultApiClient().setApiKey(("edd2983b-a92a-4060-8eeb-185efbe85499"));
     Configuration.getDefaultApiClient().setBasePath("http://localhost:8080");
 
     this.addCategory("questions", "Questions", "Addition of new questions");
@@ -49,8 +49,10 @@ public class RemoteGamificationRepository implements GamificationRepository {
         "First questions badge", 0, 29);
     this.addBadge("QBadge2", "questions", "Wizard of questions",
         "Second questions badge", 30, 100 );
-    this.addBadge("QBadge3", "questions", "Very grand wizard of questions",
+    this.addBadge("QBadge3", "questions", "Grand wizard of questions",
         "Third questions badge", 101, 1000);
+    this.addBadge("QBadge4", "questions", "Very grand wizard of questions",
+        "Fourth questions badge", 1001, 10000);
   }
 
   public void postEvent(CredentialId user, GamificationEvent event) {
@@ -103,13 +105,16 @@ public class RemoteGamificationRepository implements GamificationRepository {
     List<Badge> result= new java.util.ArrayList<>(List.of());
     try {
       var agg=aggregatesApi.getUserAggregate(user.toString(), List.of("questions"));
+      System.out.println("Agg "+agg);
       for (var a : agg){
+        System.out.println("level2 "+a);
         assert a.getBadges() != null;
         result.addAll(a.getBadges());
       }
     } catch (ApiException e) {
       e.printStackTrace();
     }
+    System.out.println("succeed "+result);
     return result;
   }
 }
