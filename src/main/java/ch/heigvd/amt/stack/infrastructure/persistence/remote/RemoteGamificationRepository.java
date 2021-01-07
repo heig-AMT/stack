@@ -31,7 +31,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final AggregatesApi aggregatesApi=new AggregatesApi();
 
   private RemoteGamificationRepository() {
-    Configuration.getDefaultApiClient().setApiKey(("edd2983b-a92a-4060-8eeb-185efbe85499"));
+    Configuration.getDefaultApiClient().setApiKey(("85606704-af4f-451e-b74c-92ae226dc9a4"));
     Configuration.getDefaultApiClient().setBasePath("http://localhost:8080");
 
     this.addCategory("questions", "Questions", "Addition of new questions");
@@ -46,13 +46,13 @@ public class RemoteGamificationRepository implements GamificationRepository {
     this.addRule("acceptAnswerRule", "answers", GamificationEvent.SELECTION, 25);
 
     this.addBadge("QBadge1", "questions", "Apprentice of questions",
-        "First questions badge", 0, 29);
+        "First questions badge", 0, 30);
     this.addBadge("QBadge2", "questions", "Wizard of questions",
-        "Second questions badge", 30, 100 );
+        "Second questions badge", 29, 100 );
     this.addBadge("QBadge3", "questions", "Grand wizard of questions",
-        "Third questions badge", 101, 1000);
+        "Third questions badge", 99, 1000);
     this.addBadge("QBadge4", "questions", "Very grand wizard of questions",
-        "Fourth questions badge", 1001, 10000);
+        "Fourth questions badge", 999, 10000);
   }
 
   public void postEvent(CredentialId user, GamificationEvent event) {
@@ -105,16 +105,14 @@ public class RemoteGamificationRepository implements GamificationRepository {
     List<Badge> result= new java.util.ArrayList<>(List.of());
     try {
       var agg=aggregatesApi.getUserAggregate(user.toString(), List.of("questions"));
-      System.out.println("Agg "+agg);
       for (var a : agg){
-        System.out.println("level2 "+a);
         assert a.getBadges() != null;
         result.addAll(a.getBadges());
       }
     } catch (ApiException e) {
       e.printStackTrace();
     }
-    System.out.println("succeed "+result);
+    System.out.println("badges obtained: "+result);
     return result;
   }
 }

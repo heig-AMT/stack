@@ -25,9 +25,7 @@ public class ProfilePageView extends HttpServlet {
         BadgeListDTO badges=badgeFacade.getUserBadges(
             BadgeQuery.builder().username(req.getSession().getId()).build()
         );
-        req.setAttribute("badges",
-            BadgeListDTO.builder().badges(
-            List.of(new Badge().title("badge1").name("badge1"))).build());
+        req.setAttribute("badges", badges);
         req.getRequestDispatcher("WEB-INF/views/profile.jsp").forward(req, resp);
     }
 }
