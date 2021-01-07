@@ -8,5 +8,5 @@ import lombok.Value;
 @Builder
 @Value
 public class BadgeListDTO {
-  List<Badge> badges;
+  List<BadgeDTO> badges;
 }

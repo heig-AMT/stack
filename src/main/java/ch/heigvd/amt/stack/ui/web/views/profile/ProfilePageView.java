@@ -1,11 +1,8 @@
 package ch.heigvd.amt.stack.ui.web.views.profile;
 
-import ch.heigvd.amt.stack.application.BadgeFacade;
+import ch.heigvd.amt.stack.application.GamificationFacade;
 import ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO;
 import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
-import ch.heigvd.amt.stack.infrastructure.persistence.remote.RemoteGamificationRepository;
-import ch.heigvd.gamify.api.dto.Badge;
-import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +15,11 @@ import java.io.IOException;
 public class ProfilePageView extends HttpServlet {
 
     @Inject
-    BadgeFacade badgeFacade;
+    GamificationFacade gamificationFacade;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BadgeListDTO badges=badgeFacade.getUserBadges(
+        BadgeListDTO badges= gamificationFacade.getUserBadges(
             BadgeQuery.builder().username(req.getSession().getId()).build()
         );
         req.setAttribute("badges", badges);

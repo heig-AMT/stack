@@ -19,6 +19,12 @@
             </h1>
         </div>
 
+        <div class="text-center" >
+            <c:forEach items="${badges.badges}" var="badge">
+                <span><c:out value="${badge.title}"/></span>
+            </c:forEach>
+        </div>
+
         <!-- Username section -->
         <div class="mt-8 border-t-2 color-white">
             <h1 class="text-2xl">
@@ -27,12 +33,6 @@
             <span class="text-sm">
                 Here you can see your username, but not change it.
             </span>
-
-            <div >
-                <c:forEach items="${badges.badges}" var="badge">
-                    <span><c:out value="${badge.title}"/></span>
-                </c:forEach>
-            </div>
 
             <div class="mt-4">
                 <label for="username" class="block uppercase text-xs font-bold text-gray-700">Username</label>

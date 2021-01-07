@@ -16,7 +16,9 @@ import ch.heigvd.gamify.api.dto.Event;
 import ch.heigvd.gamify.api.dto.Rule;
 import java.lang.reflect.InvocationTargetException;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 
@@ -30,29 +32,50 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final BadgesApi badgesApi=new BadgesApi();
   private final AggregatesApi aggregatesApi=new AggregatesApi();
 
+  private final List<Category> categories= new ArrayList<>(List.of(
+      new Category().name("questions").title("Questions").description("Addition of new questions"),
+      new Category().name("answers").title("Answers").description("Addition of new answers"),
+      new Category().name("comments").title("Comments").description("Addition of new comments and votes for them")));
+  private final List<Rule> rules=new ArrayList<>(List.of(
+      new Rule().name("questionRule").category("questions").event(GamificationEvent.NEW_QUESTION.name()).points(10),
+      new Rule().name("answerRule").category("answers").event(GamificationEvent.NEW_ANSWER.name()).points(20),
+      new Rule().name("commentRule").category("comments").event(GamificationEvent.NEW_COMMENT.name()).points(25),
+      new Rule().name("upvoteRule").category("comments").event(GamificationEvent.UPVOTE.name()).points(10),
+      new Rule().name("downvoteRule").category("comments").event(GamificationEvent.DOWNVOTE.name()).points(0),
+      new Rule().name("acceptAnswerRule").category("questions").event(GamificationEvent.SELECTION.name()).points(5)));
+  private final List<Badge> badges=new ArrayList<>(List.of(
+      new Badge().name("QBadge1").category("questions").title("Apprentice of questions")
+          .description("First questions badge").pointsLower(0).pointsUpper(30),
+      new Badge().name("QBadge2").category("questions").title("Wizard of questions")
+          .description("Second questions badge").pointsLower(29).pointsUpper(100),
+      new Badge().name("QBadge3").category("questions").title("Grand wizard of questions")
+          .description("Third questions badge").pointsLower(99).pointsUpper(1000),
+      new Badge().name("QBadge4").category("questions").title("Very grand wizard of questions")
+          .description("Fourth questions badge").pointsLower(999).pointsUpper(10000),
+
+      new Badge().name("ABadge1").category("answers").title("Apprentice of answers")
+          .description("First answers badge").pointsLower(0).pointsUpper(30),
+      new Badge().name("ABadge2").category("answers").title("Maester of answers")
+          .description("Second answers badge").pointsLower(29).pointsUpper(100),
+      new Badge().name("ABadge3").category("answers").title("Archimaester of answers")
+          .description("Third answers badge").pointsLower(99).pointsUpper(1000),
+      new Badge().name("ABadge4").category("answers").title("Grand maester of answers")
+          .description("Fourth answers badge").pointsLower(999).pointsUpper(10000)
+  ));
+
   private RemoteGamificationRepository() {
     Configuration.getDefaultApiClient().setApiKey(("85606704-af4f-451e-b74c-92ae226dc9a4"));
     Configuration.getDefaultApiClient().setBasePath("http://localhost:8080");
 
-    this.addCategory("questions", "Questions", "Addition of new questions");
-    this.addCategory("answers", "Answers", "Addition of new answers");
-    this.addCategory("comments", "Comments", "Addition of new comments and votes for them");
-
-    this.addRule("questionRule", "questions", GamificationEvent.NEW_QUESTION, 10);
-    this.addRule("answerRule", "answers", GamificationEvent.NEW_ANSWER, 30);
-    this.addRule("commentRule", "comments", GamificationEvent.NEW_COMMENT, 20);
-    this.addRule("upvoteRule", "comments", GamificationEvent.UPVOTE, 10);
-    this.addRule("downvoteRule", "comments", GamificationEvent.DOWNVOTE, 0);
-    this.addRule("acceptAnswerRule", "answers", GamificationEvent.SELECTION, 25);
-
-    this.addBadge("QBadge1", "questions", "Apprentice of questions",
-        "First questions badge", 0, 30);
-    this.addBadge("QBadge2", "questions", "Wizard of questions",
-        "Second questions badge", 29, 100 );
-    this.addBadge("QBadge3", "questions", "Grand wizard of questions",
-        "Third questions badge", 99, 1000);
-    this.addBadge("QBadge4", "questions", "Very grand wizard of questions",
-        "Fourth questions badge", 999, 10000);
+    for(var c: categories){
+      this.addCategory(c);
+    }
+    for(var c: rules){
+      this.addRule(c);
+    }
+    for(var b:badges){
+      this.addBadge(b);
+    }
   }
 
   public void postEvent(CredentialId user, GamificationEvent event) {
@@ -67,21 +90,15 @@ public class RemoteGamificationRepository implements GamificationRepository {
     }
   }
 
-  public void addCategory(String name, String title, String description) {
-    Category newCategory = new Category()
-        .name(name).title(title).description(description);
+  public void addCategory(Category category) {
     try {
-      categoriesApi.putCategory(name, newCategory);
+      categoriesApi.putCategory(category.getName(), category);
     } catch (ApiException e) {
       e.printStackTrace();
     }
   }
 
-  public void addRule(String name, String categoryName, GamificationEvent eventType,
-      Integer points) {
-    Rule newRule = new Rule()
-        .name(name).category(categoryName)
-        .event(eventType.name()).points(points);
+  public void addRule(Rule newRule) {
     try {
       rulesApi.postRule(newRule);
     } catch (ApiException e) {
@@ -89,13 +106,9 @@ public class RemoteGamificationRepository implements GamificationRepository {
     }
   }
 
-  public void addBadge(String name, String categoryName, String title,
-      String description, int pointsLower, int pointsUpper){
-    Badge newBadge= new Badge()
-        .name(name).category(categoryName).title(title).description(description)
-        .pointsLower(pointsLower).pointsUpper(pointsUpper);
+  public void addBadge(Badge newBadge){
     try {
-      badgesApi.putBadge(name, newBadge);
+      badgesApi.putBadge(newBadge.getName(), newBadge);
     } catch (ApiException e) {
       e.printStackTrace();
     }
@@ -104,7 +117,8 @@ public class RemoteGamificationRepository implements GamificationRepository {
   public List<Badge> getBadges(CredentialId user){
     List<Badge> result= new java.util.ArrayList<>(List.of());
     try {
-      var agg=aggregatesApi.getUserAggregate(user.toString(), List.of("questions"));
+      var agg=aggregatesApi.getUserAggregate(user.toString(),
+          categories.stream().map(Category::getName).collect(Collectors.toList()));
       for (var a : agg){
         assert a.getBadges() != null;
         result.addAll(a.getBadges());
@@ -112,7 +126,6 @@ public class RemoteGamificationRepository implements GamificationRepository {
     } catch (ApiException e) {
       e.printStackTrace();
     }
-    System.out.println("badges obtained: "+result);
     return result;
   }
 }

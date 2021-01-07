@@ -1,6 +1,7 @@
 package ch.heigvd.amt.stack.application;
 
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
+import ch.heigvd.amt.stack.application.badges.dto.BadgeDTO;
 import ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO;
 import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
@@ -9,11 +10,12 @@ import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.gamify.api.dto.Badge;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
 @RequestScoped
-public class BadgeFacade {
+public class GamificationFacade {
   @Inject
   GamificationRepository gamificationRepository;
   @Inject
@@ -30,6 +32,14 @@ public class BadgeFacade {
   public BadgeListDTO getUserBadges(BadgeQuery query){
     List<Badge> badges=gamificationRepository.getBadges(getCredential(query.getUsername()));
 
-    return BadgeListDTO.builder().badges(badges).build();
+    return BadgeListDTO.builder().badges(badges.stream().map(
+        badge -> BadgeDTO.builder()
+        .name(badge.getName())
+        .category(badge.getCategory())
+        .title(badge.getTitle())
+        .description(badge.getDescription())
+        .pointsLower(badge.getPointsLower())
+        .pointsUpper(badge.getPointsUpper()).build()
+    ).collect(Collectors.toList())).build();
   }
 }
