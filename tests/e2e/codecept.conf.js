@@ -33,8 +33,8 @@ exports.config = {
   name: 'e2e',
   plugins: {
     retryFailedStep: {
-      enabled: true,
-      retries: 20,
+      enabled: false,
+      retries: 0,
     },
     screenshotOnFail: {
       enabled: true
