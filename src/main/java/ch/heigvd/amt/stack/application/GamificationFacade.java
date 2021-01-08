@@ -47,8 +47,8 @@ public class GamificationFacade {
   enum BadgesImagesUrl{
     QBadge1("https://external-preview.redd.it/Qn69GDdv7jSIicPYwmHF0FWqDNvFBkpJ9_yW_dw_bkk.jpg?auto=webp&s=a80ec851a760e2980fc87eec529dfd452fcf55f6"),
     QBadge2("https://preview.redd.it/3lakntnj85f41.jpg?width=497&format=pjpg&auto=webp&s=b6fe3116d52198c1b3a35f073f568e8b5d1f202a"),
-    QBadge3("https://static.wikia.nocookie.net/witcher/images/7/72/Gwent_cardart_skellige_coral.jpg/revision/latest?cb=20180608203051"),
-    QBadge4("https://i.pinimg.com/originals/c4/ea/81/c4ea810b5b83b2b5c1f553541c05f5c1.jpg"),
+    QBadge3("https://preview.redd.it/oojwlz0zb2w31.png?width=298&format=png&auto=webp&s=4efe79f4e9395b9e2e41a2a7e4dda25ef792515b"),
+    QBadge4("https://preview.redd.it/eh6fafytbuy01.gif?format=png8&s=3554b6470c9b9192406e275a19e50dda102ac2dd"),
     ABadge1("https://i.pinimg.com/originals/9a/29/86/9a29868ac1db20a3656a5412a61abc86.jpg"),
     ABadge2("https://preview.redd.it/v9vnqdh5a0h31.png?width=298&format=png&auto=webp&s=a70f957661055a5be0b91652f86aef2e19e0c7c2"),
     ABadge3("https://i.pinimg.com/originals/46/1d/79/461d79668f54a02da43f99dfcfc7e3be.jpg"),
