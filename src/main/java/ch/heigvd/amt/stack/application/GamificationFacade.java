@@ -39,7 +39,22 @@ public class GamificationFacade {
         .title(badge.getTitle())
         .description(badge.getDescription())
         .pointsLower(badge.getPointsLower())
-        .pointsUpper(badge.getPointsUpper()).build()
+        .pointsUpper(badge.getPointsUpper())
+        .imageUrl(BadgesImagesUrl.valueOf(badge.getName()).url).build()
     ).collect(Collectors.toList())).build();
+  }
+
+  enum BadgesImagesUrl{
+    QBadge1("https://external-preview.redd.it/Qn69GDdv7jSIicPYwmHF0FWqDNvFBkpJ9_yW_dw_bkk.jpg?auto=webp&s=a80ec851a760e2980fc87eec529dfd452fcf55f6"),
+    QBadge2("https://i.pinimg.com/originals/a5/60/a6/a560a6474795078925dd428f81591606.jpg"),
+    QBadge3("https://static.wikia.nocookie.net/witcher/images/7/72/Gwent_cardart_skellige_coral.jpg/revision/latest?cb=20180608203051"),
+    QBadge4("https://i.pinimg.com/originals/c4/ea/81/c4ea810b5b83b2b5c1f553541c05f5c1.jpg"),
+    ABadge1("url.com"),
+    ABadge2("url.com"),
+    ABadge3("url.com"),
+    ABadge4("url.com");
+
+    private String url;
+    BadgesImagesUrl(String url) {this.url=url;}
   }
 }

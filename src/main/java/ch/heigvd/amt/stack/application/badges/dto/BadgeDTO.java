@@ -1,6 +1,5 @@
 package ch.heigvd.amt.stack.application.badges.dto;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.Builder;
 import lombok.Value;
 
@@ -13,4 +12,5 @@ public class BadgeDTO {
   String description;
   Integer pointsLower;
   Integer pointsUpper;
+  String imageUrl;
 }

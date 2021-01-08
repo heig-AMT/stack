@@ -19,9 +19,10 @@
             </h1>
         </div>
 
-        <div class="text-center" >
+        <div class="flex items-center justify-center" >
             <c:forEach items="${badges.badges}" var="badge">
-                <span><c:out value="${badge.title}"/></span>
+                <img class="object-cover h-24 rounded-lg border-solid border-4 border-red-600"
+                     src=<c:out value="${badge.imageUrl}"/> />
             </c:forEach>
         </div>
 

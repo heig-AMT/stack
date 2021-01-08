@@ -29,21 +29,47 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final EventsApi eventsApi = new EventsApi();
   private final CategoriesApi categoriesApi = new CategoriesApi();
   private final RulesApi rulesApi = new RulesApi();
-  private final BadgesApi badgesApi=new BadgesApi();
-  private final AggregatesApi aggregatesApi=new AggregatesApi();
+  private final BadgesApi badgesApi = new BadgesApi();
+  private final AggregatesApi aggregatesApi = new AggregatesApi();
 
-  private final List<Category> categories= new ArrayList<>(List.of(
+  private final List<Category> categories = new ArrayList<>(List.of(
       new Category().name("questions").title("Questions").description("Addition of new questions"),
       new Category().name("answers").title("Answers").description("Addition of new answers"),
-      new Category().name("comments").title("Comments").description("Addition of new comments and votes for them")));
-  private final List<Rule> rules=new ArrayList<>(List.of(
-      new Rule().name("questionRule").category("questions").event(GamificationEvent.NEW_QUESTION.name()).points(10),
-      new Rule().name("answerRule").category("answers").event(GamificationEvent.NEW_ANSWER.name()).points(20),
-      new Rule().name("commentRule").category("comments").event(GamificationEvent.NEW_COMMENT.name()).points(25),
-      new Rule().name("upvoteRule").category("comments").event(GamificationEvent.UPVOTE.name()).points(10),
-      new Rule().name("downvoteRule").category("comments").event(GamificationEvent.DOWNVOTE.name()).points(0),
-      new Rule().name("acceptAnswerRule").category("questions").event(GamificationEvent.SELECTION.name()).points(5)));
-  private final List<Badge> badges=new ArrayList<>(List.of(
+      new Category().name("comments").title("Comments")
+          .description("Addition of new comments and votes for them")));
+  private final List<Rule> rules = new ArrayList<>(List.of(
+      new Rule()
+          .name("questionRule")
+          .category("questions")
+          .event(GamificationEvent.NEW_QUESTION.name())
+          .points(10),
+      new Rule()
+          .name("answerRule")
+          .category("answers")
+          .event(GamificationEvent.NEW_ANSWER.name())
+          .points(20),
+      new Rule()
+          .name("commentRule")
+          .category("comments")
+          .event(GamificationEvent.NEW_COMMENT.name())
+          .points(25),
+      new Rule()
+          .name("upvoteRule")
+          .category("comments")
+          .event(GamificationEvent.UPVOTE.name())
+          .points(10),
+      new Rule()
+          .name("downvoteRule")
+          .category("comments")
+          .event(GamificationEvent.DOWNVOTE.name())
+          .points(0),
+      new Rule()
+          .name("acceptAnswerRule")
+          .category("questions")
+          .event(GamificationEvent.SELECTION.name())
+          .points(5)));
+
+  private final List<Badge> badges = new ArrayList<>(List.of(
       new Badge().name("QBadge1").category("questions").title("Apprentice of questions")
           .description("First questions badge").pointsLower(0).pointsUpper(30),
       new Badge().name("QBadge2").category("questions").title("Wizard of questions")
@@ -51,7 +77,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
       new Badge().name("QBadge3").category("questions").title("Grand wizard of questions")
           .description("Third questions badge").pointsLower(99).pointsUpper(1000),
       new Badge().name("QBadge4").category("questions").title("Very grand wizard of questions")
-          .description("Fourth questions badge").pointsLower(999).pointsUpper(10000),
+          .description("Fourth questions badge").pointsLower(999),
 
       new Badge().name("ABadge1").category("answers").title("Apprentice of answers")
           .description("First answers badge").pointsLower(0).pointsUpper(30),
@@ -60,20 +86,20 @@ public class RemoteGamificationRepository implements GamificationRepository {
       new Badge().name("ABadge3").category("answers").title("Archimaester of answers")
           .description("Third answers badge").pointsLower(99).pointsUpper(1000),
       new Badge().name("ABadge4").category("answers").title("Grand maester of answers")
-          .description("Fourth answers badge").pointsLower(999).pointsUpper(10000)
+          .description("Fourth answers badge").pointsLower(999)
   ));
 
   private RemoteGamificationRepository() {
-    Configuration.getDefaultApiClient().setApiKey(("85606704-af4f-451e-b74c-92ae226dc9a4"));
+    Configuration.getDefaultApiClient().setApiKey(("e704fbe0-0e80-4f2b-99ec-c2428b3479ff"));
     Configuration.getDefaultApiClient().setBasePath("http://localhost:8080");
 
-    for(var c: categories){
+    for (var c : categories) {
       this.addCategory(c);
     }
-    for(var c: rules){
+    for (var c : rules) {
       this.addRule(c);
     }
-    for(var b:badges){
+    for (var b : badges) {
       this.addBadge(b);
     }
   }
@@ -106,7 +132,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
     }
   }
 
-  public void addBadge(Badge newBadge){
+  public void addBadge(Badge newBadge) {
     try {
       badgesApi.putBadge(newBadge.getName(), newBadge);
     } catch (ApiException e) {
@@ -114,12 +140,12 @@ public class RemoteGamificationRepository implements GamificationRepository {
     }
   }
 
-  public List<Badge> getBadges(CredentialId user){
-    List<Badge> result= new java.util.ArrayList<>(List.of());
+  public List<Badge> getBadges(CredentialId user) {
+    List<Badge> result = new java.util.ArrayList<>(List.of());
     try {
-      var agg=aggregatesApi.getUserAggregate(user.toString(),
+      var agg = aggregatesApi.getUserAggregate(user.toString(),
           categories.stream().map(Category::getName).collect(Collectors.toList()));
-      for (var a : agg){
+      for (var a : agg) {
         assert a.getBadges() != null;
         result.addAll(a.getBadges());
       }
