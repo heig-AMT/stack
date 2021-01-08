@@ -6,6 +6,7 @@ import lombok.Value;
 @Builder
 @Value
 public class BadgeDTO {
+
   String name;
   String category;
   String title;

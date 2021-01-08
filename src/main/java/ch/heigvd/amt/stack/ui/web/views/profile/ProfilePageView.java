@@ -14,15 +14,16 @@ import java.io.IOException;
 @WebServlet(name = "ProfilePageView", urlPatterns = "/profile")
 public class ProfilePageView extends HttpServlet {
 
-    @Inject
-    GamificationFacade gamificationFacade;
+  @Inject
+  GamificationFacade gamificationFacade;
 
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BadgeListDTO badges= gamificationFacade.getUserBadges(
-            BadgeQuery.builder().username(req.getSession().getId()).build()
-        );
-        req.setAttribute("badges", badges);
-        req.getRequestDispatcher("WEB-INF/views/profile.jsp").forward(req, resp);
-    }
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    BadgeListDTO badges = gamificationFacade.getUserBadges(
+        BadgeQuery.builder().username(req.getSession().getId()).build()
+    );
+    req.setAttribute("badges", badges);
+    req.getRequestDispatcher("WEB-INF/views/profile.jsp").forward(req, resp);
+  }
 }
