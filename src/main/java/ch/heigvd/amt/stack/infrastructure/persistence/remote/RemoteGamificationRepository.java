@@ -14,7 +14,6 @@ import ch.heigvd.gamify.api.dto.Badge;
 import ch.heigvd.gamify.api.dto.Category;
 import ch.heigvd.gamify.api.dto.Event;
 import ch.heigvd.gamify.api.dto.Rule;
-import java.lang.reflect.InvocationTargetException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,8 +89,8 @@ public class RemoteGamificationRepository implements GamificationRepository {
   ));
 
   private RemoteGamificationRepository() {
-    Configuration.getDefaultApiClient().setApiKey(("e704fbe0-0e80-4f2b-99ec-c2428b3479ff"));
-    Configuration.getDefaultApiClient().setBasePath("http://localhost:8080");
+    Configuration.getDefaultApiClient().setApiKey(System.getenv("GAMIFY_API_TOKEN"));
+    Configuration.getDefaultApiClient().setBasePath(System.getenv("GAMIFY_SERVER"));
 
     for (var c : categories) {
       this.addCategory(c);

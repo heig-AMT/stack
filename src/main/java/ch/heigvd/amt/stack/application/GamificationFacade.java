@@ -49,10 +49,10 @@ public class GamificationFacade {
     QBadge2("https://i.pinimg.com/originals/a5/60/a6/a560a6474795078925dd428f81591606.jpg"),
     QBadge3("https://static.wikia.nocookie.net/witcher/images/7/72/Gwent_cardart_skellige_coral.jpg/revision/latest?cb=20180608203051"),
     QBadge4("https://i.pinimg.com/originals/c4/ea/81/c4ea810b5b83b2b5c1f553541c05f5c1.jpg"),
-    ABadge1("url.com"),
-    ABadge2("url.com"),
-    ABadge3("url.com"),
-    ABadge4("url.com");
+    ABadge1("https://i.pinimg.com/originals/9a/29/86/9a29868ac1db20a3656a5412a61abc86.jpg"),
+    ABadge2("https://preview.redd.it/v9vnqdh5a0h31.png?width=298&format=png&auto=webp&s=a70f957661055a5be0b91652f86aef2e19e0c7c2"),
+    ABadge3("https://i.pinimg.com/originals/46/1d/79/461d79668f54a02da43f99dfcfc7e3be.jpg"),
+    ABadge4("https://i.pinimg.com/originals/dc/4c/0b/dc4c0b475f0167b4e1a08e75a56ba1fc.jpg");
 
     private String url;
     BadgesImagesUrl(String url) {this.url=url;}

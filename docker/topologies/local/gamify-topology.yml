@@ -1,0 +1,25 @@
+version: '3'
+services:
+  gamify:
+    image: gamify-openjdk
+    depends_on:
+      - "database"
+    environment:
+      - PORT=1234
+      - DATABASE_URL=postgres://root:123456@database:5432/root
+    ports:
+      - "8081:1234"
+
+
+  database:
+    image: postgres:13.0
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - "5432:5432"
+
+networks:
+  default:
+    external:
+      name: stack-net
