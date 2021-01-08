@@ -85,7 +85,16 @@ public class RemoteGamificationRepository implements GamificationRepository {
       new Badge().name("ABadge3").category("answers").title("Archimaester of answers")
           .description("Third answers badge").pointsLower(99).pointsUpper(1000),
       new Badge().name("ABadge4").category("answers").title("Grand maester of answers")
-          .description("Fourth answers badge").pointsLower(999)
+          .description("Fourth answers badge").pointsLower(999),
+
+      new Badge().name("CBadge1").category("comments").title("Beast of comments")
+          .description("First comments badge").pointsLower(0).pointsUpper(30),
+      new Badge().name("CBadge2").category("comments").title("Monster of comments")
+          .description("Second comments badge").pointsLower(29).pointsUpper(100),
+      new Badge().name("CBadge3").category("comments").title("Big monster of comments")
+          .description("Third comments badge").pointsLower(99).pointsUpper(1000),
+      new Badge().name("CBadge4").category("comments").title("Terrifying monster of comments")
+          .description("Fourth comments badge").pointsLower(999)
   ));
 
   private RemoteGamificationRepository() {
