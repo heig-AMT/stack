@@ -206,7 +206,6 @@ public class RemoteGamificationRepository implements GamificationRepository {
           categories.stream().map(Category::getName).collect(Collectors.toList())
       );
       for (var a : agg) {
-        assert a.getBadges() != null;
         result.addAll(a.getBadges());
       }
     } catch (ApiException e) {

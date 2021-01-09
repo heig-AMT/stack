@@ -86,7 +86,6 @@
             </h1>
             <span class="text-sm">
                 Here you can delete your account. We're sad to see you leave, but you must have your reasons.
-                Don't worry, we'll sell your data to the NSA.
             </span>
         </div>
 
