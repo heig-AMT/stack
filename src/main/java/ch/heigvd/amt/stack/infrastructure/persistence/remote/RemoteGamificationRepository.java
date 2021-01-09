@@ -157,15 +157,9 @@ public class RemoteGamificationRepository implements GamificationRepository {
     Configuration.getDefaultApiClient().setApiKey(System.getenv("GAMIFY_API_TOKEN"));
     Configuration.getDefaultApiClient().setBasePath(System.getenv("GAMIFY_SERVER"));
 
-    for (var c : categories) {
-      this.addCategory(c);
-    }
-    for (var c : rules) {
-      this.addRule(c);
-    }
-    for (var b : badges) {
-      this.addBadge(b);
-    }
+    categories.forEach(this::addCategory);
+    rules.forEach(this::addRule);
+    badges.forEach(this::addBadge);
   }
 
   public void postEvent(CredentialId user, GamificationEvent event) {
