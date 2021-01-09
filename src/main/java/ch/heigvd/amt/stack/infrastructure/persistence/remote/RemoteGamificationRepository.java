@@ -151,8 +151,10 @@ public class RemoteGamificationRepository implements GamificationRepository {
   public List<Badge> getBadges(CredentialId user) {
     List<Badge> result = new java.util.ArrayList<>(List.of());
     try {
-      var agg = aggregatesApi.getUserAggregate(user.toString(),
-          categories.stream().map(Category::getName).collect(Collectors.toList()));
+      var agg = aggregatesApi.getUserAggregate(
+          user.toString(),
+          categories.stream().map(Category::getName).collect(Collectors.toList())
+      );
       for (var a : agg) {
         assert a.getBadges() != null;
         result.addAll(a.getBadges());
