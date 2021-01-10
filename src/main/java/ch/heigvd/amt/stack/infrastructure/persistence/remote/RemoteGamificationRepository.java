@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
+import lombok.Getter;
+import lombok.Value;
 
 @ApplicationScoped
 @Default
@@ -216,16 +218,18 @@ public class RemoteGamificationRepository implements GamificationRepository {
   }
 
 
-  public List<List<Ranking>> getRankings(){
-    List<List<Ranking>> result = new ArrayList<>(List.of(List.of()));
-    for(var c: categories){
+  public List<Ranking> getRankings(String categoryName){
+    List<Ranking> result = new ArrayList<>(List.of());
       try {
-        result.add(aggregatesApi.getLeaderboard(c.getName(),null,null));
+        result=(aggregatesApi.getLeaderboard(categoryName,null,null));
       }catch (ApiException e){
         e.printStackTrace();
       }
-    }
     result.forEach(System.out::println);
     return result;
+  }
+
+  public List<Category> getCategories(){
+    return categories;
   }
 }

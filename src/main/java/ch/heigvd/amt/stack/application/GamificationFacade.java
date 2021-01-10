@@ -6,12 +6,16 @@ import ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO;
 import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
 import ch.heigvd.amt.stack.application.rankings.RankingDTO;
 import ch.heigvd.amt.stack.application.rankings.RankingListDTO;
+import ch.heigvd.amt.stack.application.rankings.SubRankingDTO;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.gamify.api.dto.Badge;
+import ch.heigvd.gamify.api.dto.Ranking;
+import java.lang.ref.SoftReference;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -23,6 +27,7 @@ public class GamificationFacade {
   GamificationRepository gamificationRepository;
   @Inject
   SessionRepository sessionRepository;
+
 
   private CredentialId getCredential(String forTag) {
     return sessionRepository.findBy(SessionQuery.builder()
@@ -48,10 +53,42 @@ public class GamificationFacade {
   }
 
   public RankingListDTO getAllCategoriesRankings(){
-    return RankingListDTO.builder().rankingDTOS(
+    RankingListDTO result= RankingListDTO.builder().build();
+    for(var c: gamificationRepository.getCategories()){
+      List<Ranking> catR=gamificationRepository.getRankings(c.getName());
+      result.add(
+          RankingDTO.builder()
+              .categoryName(c.getName())
+              .rankings(
+                  catR.stream().map(subRank ->{
+                    if(subRank.getRank()!=null
+                        && subRank.getPoints()!=null
+                        && subRank.getUserId()!=null){
+                      return SubRankingDTO.builder()
+                          .rank(subRank.getRank())
+                          .username((subRank.getUserId())) //TODO fetch username
+                          .points(subRank.getPoints()).build();}
+                    else return SubRankingDTO.builder().build();
+                  }).collect(Collectors.toList())
+              ).build()
+      );
+    }
+    return result;
+    /*return RankingListDTO.builder().rankingDTOS(
         gamificationRepository.getRankings().stream().map(
-            ranking -> RankingDTO.builder().rankings(ranking).build()
-        ).collect(Collectors.toList())).build();
+            ranking -> RankingDTO.builder().rankings(
+                ranking.stream().map(subRank ->{
+                  if(subRank.getRank()!=null
+                  && subRank.getPoints()!=null
+                  && subRank.getUserId()!=null){
+                    return SubRankingDTO.builder()
+                        .rank(subRank.getRank())
+                        .username((subRank.getUserId())) //TODO fetch username
+                        .points(subRank.getPoints()).build();}
+                  else return SubRankingDTO.builder().build();
+                }).collect(Collectors.toList())
+            ).categoryName().build()
+        ).collect(Collectors.toList())).build();*/
   }
 
   enum BadgesImagesUrl {
