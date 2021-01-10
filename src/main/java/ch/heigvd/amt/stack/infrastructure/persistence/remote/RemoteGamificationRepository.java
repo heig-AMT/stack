@@ -79,21 +79,21 @@ public class RemoteGamificationRepository implements GamificationRepository {
       new Badge()
           .name("QBadge2")
           .category("questions")
-          .title("Wizard of questions")
+          .title("Mage of questions")
           .description("Second questions badge")
           .pointsLower(29)
           .pointsUpper(100),
       new Badge()
           .name("QBadge3")
           .category("questions")
-          .title("Grand wizard of questions")
+          .title("Grand mage of questions")
           .description("Third questions badge")
           .pointsLower(99)
           .pointsUpper(1000),
       new Badge()
           .name("QBadge4")
           .category("questions")
-          .title("Very grand wizard of questions")
+          .title("Very grand mage of questions")
           .description("Fourth questions badge")
           .pointsLower(999),
       
