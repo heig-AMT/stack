@@ -12,7 +12,10 @@
 <div class="pt-16"/>
 <div class="max-w-4xl m-auto flex flex-col">
     <c:forEach items="${rankings.rankingDTOS}" var="rank">
-        <span><c:out value="${rank}"/></span>
+        <span class="text-lg px-4 py-2"><c:out value="${rank.categoryName}"/></span>
+        <c:forEach items="${rank.rankings}" var="rank2">
+            <span><c:out value="${rank2}"/></span>
+        </c:forEach>
     </c:forEach>
 </div>
 

@@ -33,7 +33,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final RulesApi rulesApi = new RulesApi();
   private final BadgesApi badgesApi = new BadgesApi();
   private final AggregatesApi aggregatesApi = new AggregatesApi();
-
+  @Getter
   private final List<Category> categories = new ArrayList<>(List.of(
       new Category().name("questions").title("Questions").description("Addition of new questions"),
       new Category().name("answers").title("Answers").description("Addition of new answers"),
@@ -217,7 +217,6 @@ public class RemoteGamificationRepository implements GamificationRepository {
     return result;
   }
 
-
   public List<Ranking> getRankings(String categoryName){
     List<Ranking> result = new ArrayList<>(List.of());
       try {
@@ -227,9 +226,5 @@ public class RemoteGamificationRepository implements GamificationRepository {
       }
     result.forEach(System.out::println);
     return result;
-  }
-
-  public List<Category> getCategories(){
-    return categories;
   }
 }
