@@ -13,6 +13,7 @@ import ch.heigvd.gamify.api.RulesApi;
 import ch.heigvd.gamify.api.dto.Badge;
 import ch.heigvd.gamify.api.dto.Category;
 import ch.heigvd.gamify.api.dto.Event;
+import ch.heigvd.gamify.api.dto.Ranking;
 import ch.heigvd.gamify.api.dto.Rule;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -211,6 +212,20 @@ public class RemoteGamificationRepository implements GamificationRepository {
     } catch (ApiException e) {
       e.printStackTrace();
     }
+    return result;
+  }
+
+
+  public List<List<Ranking>> getRankings(){
+    List<List<Ranking>> result = new ArrayList<>(List.of(List.of()));
+    for(var c: categories){
+      try {
+        result.add(aggregatesApi.getLeaderboard(c.getName(),null,null));
+      }catch (ApiException e){
+        e.printStackTrace();
+      }
+    }
+    result.forEach(System.out::println);
     return result;
   }
 }

@@ -4,6 +4,8 @@ import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.badges.dto.BadgeDTO;
 import ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO;
 import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
+import ch.heigvd.amt.stack.application.rankings.RankingDTO;
+import ch.heigvd.amt.stack.application.rankings.RankingListDTO;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.Session;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
@@ -43,6 +45,13 @@ public class GamificationFacade {
             .pointsUpper(badge.getPointsUpper())
             .imageUrl(BadgesImagesUrl.valueOf(badge.getName()).url).build()
     ).collect(Collectors.toList())).build();
+  }
+
+  public RankingListDTO getAllCategoriesRankings(){
+    return RankingListDTO.builder().rankingDTOS(
+        gamificationRepository.getRankings().stream().map(
+            ranking -> RankingDTO.builder().rankings(ranking).build()
+        ).collect(Collectors.toList())).build();
   }
 
   enum BadgesImagesUrl {
