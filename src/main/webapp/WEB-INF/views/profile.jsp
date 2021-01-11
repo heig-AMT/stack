@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<jsp:useBean scope="request" id="badges" type="ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO"/>
+
 <html>
 <jsp:include page="fragments/head.jsp">
     <jsp:param name="pageTitle" value="Profile"/>
@@ -15,6 +17,14 @@
             <h1 class="text-4xl">
                 Your profile
             </h1>
+        </div>
+
+        <div class="flex items-center justify-center" >
+            <c:forEach items="${badges.badges}" var="badge">
+                <img class="h-24 rounded-lg border-solid border-4 border-red-600 mx-4"
+                     src="<c:out value="${badge.imageUrl}"/>"
+                     title="<c:out value="${badge.title}"/>" />
+            </c:forEach>
         </div>
 
         <!-- Username section -->
