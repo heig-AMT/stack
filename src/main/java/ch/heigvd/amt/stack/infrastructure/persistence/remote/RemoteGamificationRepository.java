@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
 import lombok.Getter;
-import lombok.Value;
 
 @ApplicationScoped
 @Default
@@ -99,7 +98,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
           .title("Very grand mage of questions")
           .description("Fourth questions badge")
           .pointsLower(999),
-      
+
       new Badge()
           .name("ABadge1")
           .category("answers")
@@ -217,13 +216,16 @@ public class RemoteGamificationRepository implements GamificationRepository {
     return result;
   }
 
-  public List<Ranking> getRankings(String categoryName){
+  public List<Ranking> getRankings(String categoryName, int page, int size) {
     List<Ranking> result = new ArrayList<>(List.of());
-      try {
-        result=(aggregatesApi.getLeaderboard(categoryName,null,null));
-      }catch (ApiException e){
-        e.printStackTrace();
-      }
+    try {
+      result = (aggregatesApi.getLeaderboard(
+          categoryName,
+          (page < 0 ? null : page),
+          (size < 0 ? null : size)));
+    } catch (ApiException e) {
+      e.printStackTrace();
+    }
     return result;
   }
 }

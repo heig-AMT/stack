@@ -11,7 +11,7 @@
     </a>
     <a class="hover:text-blue-500 text-lg px-4 py-2" href="${pageContext.request.contextPath}/">Home</a>
     <a class="hover:text-blue-500 text-lg px-4 py-2" href="${pageContext.request.contextPath}/questions">Questions</a>
-    <a class="hover:text-blue-500 text-lg px-4 py-2" href="${pageContext.request.contextPath}/rankings?category=answers">Rankings</a>
+    <a class="hover:text-blue-500 text-lg px-4 py-2" href="${pageContext.request.contextPath}/rankings?category=answers&page=null&size=null">Rankings</a>
 
     <form
             action="${pageContext.request.contextPath}/questions"

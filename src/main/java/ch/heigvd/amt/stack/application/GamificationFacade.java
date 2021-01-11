@@ -5,7 +5,6 @@ import ch.heigvd.amt.stack.application.badges.dto.BadgeDTO;
 import ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO;
 import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
 import ch.heigvd.amt.stack.application.rankings.RankingDTO;
-import ch.heigvd.amt.stack.application.rankings.RankingListDTO;
 import ch.heigvd.amt.stack.application.rankings.SubRankingDTO;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.Session;
@@ -13,9 +12,7 @@ import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.gamify.api.dto.Badge;
 import ch.heigvd.gamify.api.dto.Ranking;
-import java.lang.ref.SoftReference;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -52,8 +49,9 @@ public class GamificationFacade {
     ).collect(Collectors.toList())).build();
   }
 
-  public RankingDTO getCategoryRankings(String categoryName){
-    List<Ranking> catR=gamificationRepository.getRankings(categoryName);
+  public RankingDTO getCategoryRankings(String categoryName, int page, int size){
+    List<Ranking> catR=gamificationRepository.getRankings(
+        categoryName,page, size);
     return (
         RankingDTO.builder()
             .categoryName(categoryName)

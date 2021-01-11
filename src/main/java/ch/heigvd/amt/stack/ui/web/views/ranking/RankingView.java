@@ -17,7 +17,12 @@ public class RankingView extends HttpServlet {
   @Override
   protected void doGet(
       HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.setAttribute("rankings", gamificationFacade.getCategoryRankings(req.getParameter("category")));
+    var page =req.getParameter("page");
+    var size=req.getParameter("size");
+    req.setAttribute("rankings", gamificationFacade.getCategoryRankings(
+        req.getParameter("category"),
+        (page.equals("null") ? -1 : Integer.parseInt(page)),
+        (size.equals("null") ? -1 : Integer.parseInt(size))));
     req.getRequestDispatcher("WEB-INF/views/rankings.jsp").forward(req, resp);
   }
 }
