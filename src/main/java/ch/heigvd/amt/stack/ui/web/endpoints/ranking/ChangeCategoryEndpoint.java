@@ -1,4 +1,4 @@
-package ch.heigvd.amt.stack.ui.web.views.ranking;
+package ch.heigvd.amt.stack.ui.web.endpoints.ranking;
 
 import ch.heigvd.amt.stack.application.GamificationFacade;
 import java.io.IOException;
@@ -9,15 +9,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "RankingView", urlPatterns = "/rankings")
-public class RankingView extends HttpServlet {
+@WebServlet(name="ChangeCategoryEndpoint", urlPatterns = "/changeCategory.do")
+public class ChangeCategoryEndpoint extends HttpServlet {
   @Inject
-  GamificationFacade gamificationFacade;
+  private GamificationFacade gamificationFacade;
 
   @Override
-  protected void doGet(
+  protected void doPost(
       HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    req.setAttribute("rankings", gamificationFacade.getCategoryRankings(req.getParameter("category")));
-    req.getRequestDispatcher("WEB-INF/views/rankings.jsp").forward(req, resp);
+        String newCategory=req.getParameter("newCategory");
+    String path = getServletContext().getContextPath() + "/rankings?category="+newCategory;
+    resp.sendRedirect(path);
   }
 }

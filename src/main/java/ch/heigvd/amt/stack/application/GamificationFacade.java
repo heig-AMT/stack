@@ -52,44 +52,25 @@ public class GamificationFacade {
     ).collect(Collectors.toList())).build();
   }
 
-  public RankingListDTO getAllCategoriesRankings(){
-    RankingListDTO result= RankingListDTO.builder().build();
-    for(var c: gamificationRepository.getCategories()){
-      List<Ranking> catR=gamificationRepository.getRankings(c.getName());
-      result.add(
-          RankingDTO.builder()
-              .categoryName(c.getName())
-              .rankings(
-                  catR.stream().map(subRank ->{
-                    if(subRank.getRank()!=null
-                        && subRank.getPoints()!=null
-                        && subRank.getUserId()!=null){
-                      return SubRankingDTO.builder()
-                          .rank(subRank.getRank())
-                          .username((subRank.getUserId())) //TODO fetch username
-                          .points(subRank.getPoints()).build();}
-                    else return SubRankingDTO.builder().build();
-                  }).collect(Collectors.toList())
-              ).build()
-      );
-    }
-    return result;
-    /*return RankingListDTO.builder().rankingDTOS(
-        gamificationRepository.getRankings().stream().map(
-            ranking -> RankingDTO.builder().rankings(
-                ranking.stream().map(subRank ->{
+  public RankingDTO getCategoryRankings(String categoryName){
+    List<Ranking> catR=gamificationRepository.getRankings(categoryName);
+    return (
+        RankingDTO.builder()
+            .categoryName(categoryName)
+            .rankings(
+                catR.stream().map(subRank ->{
                   if(subRank.getRank()!=null
-                  && subRank.getPoints()!=null
-                  && subRank.getUserId()!=null){
+                      && subRank.getPoints()!=null
+                      && subRank.getUserId()!=null){
                     return SubRankingDTO.builder()
                         .rank(subRank.getRank())
                         .username((subRank.getUserId())) //TODO fetch username
                         .points(subRank.getPoints()).build();}
                   else return SubRankingDTO.builder().build();
                 }).collect(Collectors.toList())
-            ).categoryName().build()
-        ).collect(Collectors.toList())).build();*/
-  }
+            ).build()
+    );
+    }
 
   enum BadgesImagesUrl {
     QBadge1(

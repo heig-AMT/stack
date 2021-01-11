@@ -224,7 +224,6 @@ public class RemoteGamificationRepository implements GamificationRepository {
       }catch (ApiException e){
         e.printStackTrace();
       }
-    result.forEach(System.out::println);
     return result;
   }
 }
