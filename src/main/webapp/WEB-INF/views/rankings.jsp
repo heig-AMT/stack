@@ -26,5 +26,11 @@
     <input type="submit" value="Search"/>
 </form>
 
+<form action="changePage.do" method="post">
+    <input name="pageBack" type="submit" value="<<">
+    <input name="pageNav" type="submit" value="1">
+    <input name="pageNext" type="submit" value=">>">
+</form>
+
 </body>
 </html>

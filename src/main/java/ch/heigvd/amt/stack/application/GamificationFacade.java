@@ -7,7 +7,9 @@ import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
 import ch.heigvd.amt.stack.application.rankings.RankingDTO;
 import ch.heigvd.amt.stack.application.rankings.SubRankingDTO;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
+import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
 import ch.heigvd.amt.stack.domain.authentication.Session;
+import ch.heigvd.amt.stack.domain.authentication.SessionId;
 import ch.heigvd.amt.stack.domain.authentication.SessionRepository;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.gamify.api.dto.Badge;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import lombok.Getter;
 
 @RequestScoped
 public class GamificationFacade {
@@ -24,7 +27,11 @@ public class GamificationFacade {
   GamificationRepository gamificationRepository;
   @Inject
   SessionRepository sessionRepository;
+  @Inject
+  CredentialRepository credentialRepository;
 
+  @Getter
+  private int lastRankingPage;
 
   private CredentialId getCredential(String forTag) {
     return sessionRepository.findBy(SessionQuery.builder()
@@ -49,9 +56,10 @@ public class GamificationFacade {
     ).collect(Collectors.toList())).build();
   }
 
-  public RankingDTO getCategoryRankings(String categoryName, int page, int size){
+  public RankingDTO getCategoryRankings(String categoryName, int page){
     List<Ranking> catR=gamificationRepository.getRankings(
-        categoryName,page, size);
+        categoryName,page, 25);
+    lastRankingPage=(Math.max(page, -1));
     return (
         RankingDTO.builder()
             .categoryName(categoryName)
@@ -62,7 +70,10 @@ public class GamificationFacade {
                       && subRank.getUserId()!=null){
                     return SubRankingDTO.builder()
                         .rank(subRank.getRank())
-                        .username((subRank.getUserId())) //TODO fetch username
+                        .username(
+                            subRank.getUserId())
+                            //credentialRepository.findById(sessionRepository.findById(SessionId.from(
+                                //subRank.getUserId())).get().getUser()).get().getUsername()) //TODO fetch username
                         .points(subRank.getPoints()).build();}
                   else return SubRankingDTO.builder().build();
                 }).collect(Collectors.toList())
