@@ -20,15 +20,12 @@ public class ChangePageEndpoint extends HttpServlet {
       HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String newCategory = req.getParameter("category");
     int paramPage;
-    System.out.println("Last page : "+gamificationFacade.getLastRankingPage());
-    if (req.getParameter("pageBack") != null) {
-      paramPage = gamificationFacade.getLastRankingPage() - 1;
-    } else {
-      paramPage = gamificationFacade.getLastRankingPage() + 1;
-    }
+    //TODO: make this to work
+   // System.out.println("Last page : "+gamificationFacade.getLastRankingPage());
 
-    String path = getServletContext().getContextPath() + "/rankings?category=" + newCategory
+
+    /*String path = getServletContext().getContextPath() + "/rankings?category=" + newCategory
         + "&page=" + paramPage;
-    resp.sendRedirect(path);
+    resp.sendRedirect(path);*/
   }
 }
