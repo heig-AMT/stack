@@ -18,13 +18,17 @@
                 Your profile
             </h1>
         </div>
-
-        <div class="flex items-center justify-center" >
-            <c:forEach items="${badges.badges}" var="badge">
-                <img class="h-24 rounded-lg border-solid border-4 border-red-600 mx-4"
-                     src="<c:out value="${badge.imageUrl}"/>"
-                     title="<c:out value="${badge.title}"/>" />
-            </c:forEach>
+        <div class="w-full flex flex-row justify-center" >
+            <div class="flex flex-wrap" >
+                <c:forEach items="${badges.badges}" var="badge">
+                    <div class="inline-flex items-center">
+                        <img class="h-24 rounded-lg m-2"
+                             src="<c:out value="${badge.imageUrl}"/>"
+                             alt="<c:out value="${badge.title}"/>" />
+                        <span><c:out value="${badge.title}"/></span>
+                    </div>
+                </c:forEach>
+            </div>
         </div>
 
         <!-- Username section -->

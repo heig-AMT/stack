@@ -13,6 +13,7 @@ public class ChangeCategoryEndpoint extends HttpServlet {
   @Override
   protected void doPost(
       HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    //var username =req.getParameter("username");
         String newCategory=req.getParameter("newCategory").toLowerCase();
     String path = getServletContext().getContextPath() + "/rankings?category="+newCategory
         +"&page=null";

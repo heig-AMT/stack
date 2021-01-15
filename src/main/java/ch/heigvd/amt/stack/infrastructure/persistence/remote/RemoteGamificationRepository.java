@@ -18,6 +18,7 @@ import ch.heigvd.gamify.api.dto.Rule;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
@@ -228,4 +229,13 @@ public class RemoteGamificationRepository implements GamificationRepository {
     }
     return result;
   }
+
+  /*@Override
+  public Optional<Ranking> getOneUserRanking(String userId, String categoryName) {
+    Optional<Ranking> result=Optional.empty();
+
+    this.getRankings(categoryName, -1, -1).forEach((c) ->{
+        if(c.)
+    });
+  }*/
 }
