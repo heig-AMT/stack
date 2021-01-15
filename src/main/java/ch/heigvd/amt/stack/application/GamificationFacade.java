@@ -6,6 +6,7 @@ import ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO;
 import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
 import ch.heigvd.amt.stack.application.rankings.RankingDTO;
 import ch.heigvd.amt.stack.application.rankings.SubRankingDTO;
+import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
 import ch.heigvd.amt.stack.domain.authentication.Session;
@@ -14,6 +15,8 @@ import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
 import ch.heigvd.gamify.api.dto.Badge;
 import ch.heigvd.gamify.api.dto.Ranking;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -60,34 +63,30 @@ public class GamificationFacade {
         categoryName, page, 25);
     lastRankingPage = (Math.max(page, -1));
 
-    return (
-        RankingDTO.builder()
-            .categoryName(categoryName)
-            .rankings(
-                catR.stream().map(subRank -> {
-                  if (subRank.getRank() != null
-                      && subRank.getPoints() != null
-                      && subRank.getUserId() != null) {
-                    return SubRankingDTO.builder()
-                        .rank(subRank.getRank())
-                        .username(
-                            getUsername(subRank.getUserId()))
-                        .points(subRank.getPoints()).build();
-                  } else {
-                    return SubRankingDTO.builder().build();
-                  }
-                }).collect(Collectors.toList())
-            ).build()
-    );
+    var rankingList = catR.stream()
+        .filter(subRank -> subRank.getRank() != null && subRank.getPoints() != null
+            && subRank.getUserId() != null)
+        .map(subRank -> {
+              var user = credentialRepository.findById(CredentialId.from(subRank.getUserId()));
+              return user.map(credential -> SubRankingDTO.builder()
+                  .rank(subRank.getRank())
+                  .username(credential.getUsername())
+                  .points(subRank.getPoints())
+                  .build())
+                  .orElse(null);
+            }
+        ).filter(Objects::nonNull)
+        .collect(Collectors.toList());
+
+    return RankingDTO.builder()
+        .categoryName(categoryName)
+        .rankings(rankingList)
+        .build();
   }
 
-  private String getUsername(String userId){
-    var result=credentialRepository.findById(CredentialId.from(userId));
-    if(result.isEmpty()){
-      return "There is a problem";
-    } else{
-      return result.get().getUsername();
-    }
+  private String getUsername(String userId) {
+    return credentialRepository.findById(CredentialId.from(userId))
+        .orElseThrow(NullPointerException::new).getUsername();
   }
 
   enum BadgesImagesUrl {

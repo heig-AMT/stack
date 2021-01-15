@@ -1,7 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:useBean scope="request" id="badges" type="ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO"/>
+<jsp:useBean scope="request" id="badges"
+             type="ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO"/>
 
 <html>
 <jsp:include page="fragments/head.jsp">
@@ -18,17 +19,22 @@
                 Your profile
             </h1>
         </div>
-        <div class="w-full flex flex-row justify-center" >
-            <div class="flex flex-wrap" >
-                <c:forEach items="${badges.badges}" var="badge">
-                    <div class="inline-flex items-center">
-                        <img class="h-24 rounded-lg m-2"
-                             src="<c:out value="${badge.imageUrl}"/>"
-                             alt="<c:out value="${badge.title}"/>" />
-                        <span><c:out value="${badge.title}"/></span>
-                    </div>
-                </c:forEach>
-            </div>
+
+        <div class="w-full flex flex-wrap flex-row justify-center items-center">
+            <c:forEach items="${badges.badges}" var="badge">
+                <div class="w-64 block flex flex-row items-center">
+                    <img class="h-24 rounded-lg m-2"
+                         src="<c:out value="${badge.imageUrl}"/>"
+                         alt="<c:out value="${badge.title}"/>"/>
+                    <span><c:out value="${badge.title}"/></span>
+                </div>
+                <div class="w-64 block flex flex-row items-center">
+                    <img class="h-24 rounded-lg m-2"
+                         src="<c:out value="${badge.imageUrl}"/>"
+                         alt="<c:out value="${badge.title}"/>"/>
+                    <span><c:out value="${badge.title}"/></span>
+                </div>
+            </c:forEach>
         </div>
 
         <!-- Username section -->
@@ -42,7 +48,8 @@
 
             <div class="mt-4">
                 <label for="username" class="block uppercase text-xs font-bold text-gray-700">Username</label>
-                <span id="username" class="mt-2 p-3 block w-full bg-white text-gray-400 font-medium border border-gray-400 rounded-lg">
+                <span id="username"
+                      class="mt-2 p-3 block w-full bg-white text-gray-400 font-medium border border-gray-400 rounded-lg">
                     <c:out value="${connected.username}"/>
                 </span>
             </div>
@@ -61,19 +68,26 @@
                   method="POST"
                   class="mt-4">
                 <div class="flex flex-col">
-                    <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
+                    <input type="hidden" name="username"
+                           value="<c:out value="${connected.username}"/>"/>
                     <div class="">
-                        <label for="currentPassword" class="block uppercase text-xs font-bold text-gray-700">Current password</label>
+                        <label for="currentPassword"
+                               class="block uppercase text-xs font-bold text-gray-700">Current
+                            password</label>
                         <input id="currentPassword"
                                class="mt-2 p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
-                               type="password" name="currentPassword" placeholder="Current password" required>
+                               type="password" name="currentPassword" placeholder="Current password"
+                               required>
                     </div>
 
                     <div class="mt-4">
-                        <label for="newPassword" class="block uppercase text-xs font-bold text-gray-700">New password</label>
+                        <label for="newPassword"
+                               class="block uppercase text-xs font-bold text-gray-700">New
+                            password</label>
                         <input id="newPassword"
                                class="mt-2 p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
-                               type="password" name="newPassword" placeholder="New password" required>
+                               type="password" name="newPassword" placeholder="New password"
+                               required>
                     </div>
 
                 </div>
@@ -97,9 +111,11 @@
               method="POST"
               class="mt-4">
             <div class="flex flex-col">
-                <input type="hidden" name="username" value="<c:out value="${connected.username}"/>"/>
+                <input type="hidden" name="username"
+                       value="<c:out value="${connected.username}"/>"/>
                 <div class="">
-                    <label for="password" class="block uppercase text-xs font-bold text-gray-700">Confirm password</label>
+                    <label for="password" class="block uppercase text-xs font-bold text-gray-700">Confirm
+                        password</label>
                     <input id="password"
                            class="mt-2 p-3 block w-full bg-white text-gray-900 font-medium border border-gray-400 rounded-lg"
                            type="password" name="password" placeholder="Password" required>
