@@ -230,12 +230,11 @@ public class RemoteGamificationRepository implements GamificationRepository {
     return result;
   }
 
-  /*@Override
-  public Optional<Ranking> getOneUserRanking(String userId, String categoryName) {
-    Optional<Ranking> result=Optional.empty();
-
-    this.getRankings(categoryName, -1, -1).forEach((c) ->{
-        if(c.)
-    });
-  }*/
+  @Override
+  public Optional<Ranking> getOneUserRanking(CredentialId userId, String categoryName) {
+    return (this.getRankings(categoryName, -1, -1).stream()
+        .filter(c -> c.getRank() != null && c.getPoints() != null
+            && c.getUserId() != null)
+        .filter(c -> c.getUserId().equals(userId.toString())).findFirst());
+  }
 }

@@ -12,5 +12,5 @@ public interface GamificationRepository {
   void postEvent(CredentialId user, GamificationEvent event);
   List<Badge> getBadges(CredentialId user);
   List<Ranking> getRankings(String categoryName, int page, int size);
-  //Optional<Ranking> getOneUserRanking(String user, String categoryName);
+  Optional<Ranking> getOneUserRanking(CredentialId userId, String categoryName);
 }

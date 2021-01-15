@@ -1,12 +1,12 @@
 package ch.heigvd.amt.stack.application;
 
+import ch.heigvd.amt.stack.application.authentication.query.CredentialQuery;
 import ch.heigvd.amt.stack.application.authentication.query.SessionQuery;
 import ch.heigvd.amt.stack.application.badges.dto.BadgeDTO;
 import ch.heigvd.amt.stack.application.badges.dto.BadgeListDTO;
 import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
 import ch.heigvd.amt.stack.application.rankings.RankingDTO;
 import ch.heigvd.amt.stack.application.rankings.SubRankingDTO;
-import ch.heigvd.amt.stack.domain.authentication.Credential;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
 import ch.heigvd.amt.stack.domain.authentication.Session;
@@ -17,6 +17,7 @@ import ch.heigvd.gamify.api.dto.Ranking;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ public class GamificationFacade {
   @Getter
   private int lastRankingPage;
 
-  private CredentialId getCredential(String forTag) {
+  public CredentialId getCredential(String forTag) {
     return sessionRepository.findBy(SessionQuery.builder()
         .tag(forTag)
         .build())
@@ -59,10 +60,14 @@ public class GamificationFacade {
   }
 
   public RankingDTO getCategoryRankings(String username, String categoryName, int page) {
+    AtomicBoolean addUser= new AtomicBoolean(true);
+
+    //fetch the base rankings
     List<Ranking> catR = gamificationRepository.getRankings(
         categoryName, page, 25);
     lastRankingPage = (Math.max(page, -1));
 
+    //transform rankings in a SubRankingDTO and list them
     var rankingList = catR.stream()
         .filter(subRank -> subRank.getRank() != null && subRank.getPoints() != null
             && subRank.getUserId() != null)
@@ -78,13 +83,30 @@ public class GamificationFacade {
         ).filter(Objects::nonNull)
         .collect(Collectors.toList());
 
+    //verify if user is in the rankings
+    rankingList.forEach(c ->{
+        if(c.getUsername().equals(username)) addUser.set(false);
+    });
+
+    //add user if not in the rankings fetched but existing further in leaderboard
+    Optional<Ranking> userRank=gamificationRepository.getOneUserRanking(
+        credentialRepository.findBy(CredentialQuery.builder().username(username).build()).get().getId(), categoryName);
+    if(addUser.get()) {
+      userRank.ifPresent(ranking -> rankingList.add(SubRankingDTO.builder().rank(
+          ranking.getRank())
+          .username(username)
+          .points(ranking.getPoints()).build()));
+    }
+
+    //return all turned in a RankingDTO
     return RankingDTO.builder()
         .categoryName(categoryName)
         .rankings(rankingList)
         .build();
   }
 
-  private String getUsername(String userId) {
+  //Convert a userId to a username
+  public String getUsername(String userId) {
     return credentialRepository.findById(CredentialId.from(userId))
         .orElseThrow(NullPointerException::new).getUsername();
   }

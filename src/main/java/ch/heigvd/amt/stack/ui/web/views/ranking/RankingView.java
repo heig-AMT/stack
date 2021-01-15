@@ -11,15 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "RankingView", urlPatterns = "/rankings")
 public class RankingView extends HttpServlet {
+
   @Inject
   GamificationFacade gamificationFacade;
 
   @Override
   protected void doGet(
       HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    var username =req.getParameter("username");
-    var page =req.getParameter("page");
-    req.setAttribute("rankings", gamificationFacade.getCategoryRankings(username,
+    var page = req.getParameter("page");
+    req.setAttribute("rankings", gamificationFacade.getCategoryRankings(
+        gamificationFacade.getUsername(
+            gamificationFacade.getCredential(req.getSession().getId()).toString()),
         req.getParameter("category"),
         (page.equals("null") ? -1 : Integer.parseInt(page))));
     req.getRequestDispatcher("WEB-INF/views/rankings.jsp").forward(req, resp);

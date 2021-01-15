@@ -28,12 +28,6 @@
                          alt="<c:out value="${badge.title}"/>"/>
                     <span><c:out value="${badge.title}"/></span>
                 </div>
-                <div class="w-64 block flex flex-row items-center">
-                    <img class="h-24 rounded-lg m-2"
-                         src="<c:out value="${badge.imageUrl}"/>"
-                         alt="<c:out value="${badge.title}"/>"/>
-                    <span><c:out value="${badge.title}"/></span>
-                </div>
             </c:forEach>
         </div>
 
