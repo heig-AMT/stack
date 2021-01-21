@@ -38,7 +38,7 @@ This will launch:
 * our stackunderflow server with a service named "openliberty".
 
 | Container | Inside port | Outside port |
-|----------------------------------------|
+|-----------|-------------|--------------|
 | database | 5432 | 5432 |
 | gamify | 1234 | 8081 |
 | openliberty | 1234 | 8080 |
