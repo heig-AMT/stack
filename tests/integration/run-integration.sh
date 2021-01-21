@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+# Throw if there are some script errors.
+set -e
 
 # Move to the root of the repository
 cd ../..
