@@ -105,9 +105,8 @@ public class GamificationFacade {
     return LeaderboardDTO.builder()
         .categoryName(category.getTitle())
         .leaderboard(query.getLeaderboard())
-        // TODO (alex) : Implement this.
-        .hasPreviousPage(true)
-        .hasFollowingPage(true)
+        .hasPreviousPage(query.getPage() != 0)
+        .hasFollowingPage(ranking.size() == DEFAULT_PAGE_SIZE)
         .page(query.getPage())
         .rankings(ranking)
         .build();
