@@ -1,10 +1,10 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.mock;
 
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
+import ch.heigvd.amt.stack.domain.gamification.GamificationBadge;
 import ch.heigvd.amt.stack.domain.gamification.GamificationEvent;
+import ch.heigvd.amt.stack.domain.gamification.GamificationRank;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
-import ch.heigvd.gamify.api.dto.Badge;
-import ch.heigvd.gamify.api.dto.Ranking;
 import java.util.List;
 import java.util.Optional;
 import javax.enterprise.inject.Alternative;
@@ -16,23 +16,35 @@ import javax.enterprise.inject.Alternative;
 @Alternative
 public class MockGamificationRepository implements GamificationRepository {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public void postEvent(CredentialId user, GamificationEvent event) {
-
+  public void saveEvent(CredentialId user, GamificationEvent event) {
+    // Ignored.
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public List<Badge> getBadges(CredentialId user) {
+  public List<GamificationBadge> findAllBadges(CredentialId user) {
     return List.of();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public List<Ranking> getRankings(String categoryName, int page, int size) {
+  public List<GamificationRank> findAllRank(String categoryName, Integer page, Integer size) {
     return List.of();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public Optional<Ranking> getOneUserRanking(CredentialId userId, String categoryName) {
+  public Optional<GamificationRank> findRankByUser(String categoryName, CredentialId userId) {
     return Optional.empty();
   }
 }

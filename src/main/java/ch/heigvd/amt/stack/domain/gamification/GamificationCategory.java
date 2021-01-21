@@ -1,5 +1,8 @@
 package ch.heigvd.amt.stack.domain.gamification;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum GamificationCategory {
   Questions(
       "questions",
@@ -11,6 +14,11 @@ public enum GamificationCategory {
   private final String name;
   private final String description;
   private final String title;
+
+  public static Optional<GamificationCategory> forName(String name) {
+    return Arrays.stream(GamificationCategory.values()).filter(it -> it.name.equals(name))
+        .findFirst();
+  }
 
   /* private */ GamificationCategory(
       String name,

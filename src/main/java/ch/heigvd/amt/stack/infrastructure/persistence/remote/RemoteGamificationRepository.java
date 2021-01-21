@@ -17,6 +17,7 @@ import ch.heigvd.gamify.api.RulesApi;
 import ch.heigvd.gamify.api.dto.Badge;
 import ch.heigvd.gamify.api.dto.Category;
 import ch.heigvd.gamify.api.dto.Event;
+import ch.heigvd.gamify.api.dto.Ranking;
 import ch.heigvd.gamify.api.dto.Rule;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -74,26 +75,30 @@ public class RemoteGamificationRepository implements GamificationRepository {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public List<GamificationRank> findAllRank(String categoryName, Integer page, Integer size) {
     try {
       return aggregatesApi.getLeaderboard(categoryName, page, size)
           .stream()
-          // TODO : Change the Ranking type.
-          .map(ranking -> new GamificationRank())
+          .map(RemoteGamificationRepository::fromRanking)
+          .flatMap(Optional::stream)
           .collect(Collectors.toList());
     } catch (ApiException apiException) {
       return List.of();
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Optional<GamificationRank> findRankByUser(String categoryName, CredentialId userId) {
     // TODO : Use a more efficient query than this.
     return findAllRank(categoryName, null, null).stream()
-        .filter(r -> r.getUserId().equals(userId))
-        // TODO : Change the Ranking type.
-        .map(ranking -> new GamificationRank())
+        .filter(r -> r.getUser().equals(userId))
         .findFirst();
   }
 
@@ -150,5 +155,28 @@ public class RemoteGamificationRepository implements GamificationRepository {
     } catch (ApiException e) {
       e.printStackTrace();
     }
+  }
+
+  private static Optional<GamificationRank> fromRanking(Ranking dto) {
+
+    var badges = Optional.ofNullable(dto.getBadges()).orElse(List.of())
+        .stream()
+        .map(Badge::getName)
+        .map(GamificationBadge::forName)
+        .flatMap(Optional::stream)
+        .distinct()
+        .collect(Collectors.toList());
+
+    var category = GamificationCategory.forName(dto.getCategory());
+
+    return category.map(cat ->
+        GamificationRank.builder()
+            .user(CredentialId.from(dto.getUserId()))
+            .badges(badges)
+            .category(cat)
+            .points(dto.getPoints())
+            .rank(dto.getRank())
+            .build()
+    );
   }
 }
