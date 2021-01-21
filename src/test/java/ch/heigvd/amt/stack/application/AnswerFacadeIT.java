@@ -10,6 +10,7 @@ import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
 import ch.heigvd.amt.stack.domain.answer.Answer;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
+import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.comment.CommentId;
 import ch.heigvd.amt.stack.domain.comment.CommentNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
@@ -44,6 +45,8 @@ public class AnswerFacadeIT {
     private void register() {
         try {
             unregister();
+        } catch (AuthenticationFailedException ignored) {
+            // Ignored.
         } finally {
             authenticationFacade.register(RegisterCommand.builder()
                 .username("ciri")
