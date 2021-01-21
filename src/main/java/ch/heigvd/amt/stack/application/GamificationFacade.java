@@ -17,7 +17,6 @@ import ch.heigvd.gamify.api.dto.Ranking;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -36,12 +35,11 @@ public class GamificationFacade {
   @Getter
   private int lastRankingPage;
 
-  public CredentialId getCredential(String forTag) {
+  private Optional<CredentialId> getCredential(String forTag) {
     return sessionRepository.findBy(SessionQuery.builder()
         .tag(forTag)
         .build())
-        .map(Session::getUser)
-        .orElse(null);
+        .map(Session::getUser);
   }
 
   public BadgeListDTO getUserBadges(BadgeQuery query) {
@@ -59,9 +57,11 @@ public class GamificationFacade {
     ).collect(Collectors.toList())).build();
   }
 
-  public RankingDTO getCategoryRankings(String username, String categoryName, int page) {
-    AtomicBoolean addUser= new AtomicBoolean(true);
-
+  public RankingDTO getCategoryRankings(
+      String username,
+      String categoryName,
+      int page
+  ) {
     //fetch the base rankings
     List<Ranking> catR = gamificationRepository.getRankings(
         categoryName, page, 25);
@@ -84,14 +84,13 @@ public class GamificationFacade {
         .collect(Collectors.toList());
 
     //verify if user is in the rankings
-    rankingList.forEach(c ->{
-        if(c.getUsername().equals(username)) addUser.set(false);
-    });
+    var missingUser = rankingList.stream()
+        .noneMatch(ranking -> ranking.getUsername().equals(username));
 
     //add user if not in the rankings fetched but existing further in leaderboard
     Optional<Ranking> userRank=gamificationRepository.getOneUserRanking(
         credentialRepository.findBy(CredentialQuery.builder().username(username).build()).get().getId(), categoryName);
-    if(addUser.get()) {
+    if(missingUser) {
       userRank.ifPresent(ranking -> rankingList.add(SubRankingDTO.builder().rank(
           ranking.getRank())
           .username(username)
@@ -103,12 +102,6 @@ public class GamificationFacade {
         .categoryName(categoryName)
         .rankings(rankingList)
         .build();
-  }
-
-  //Convert a userId to a username
-  public String getUsername(String userId) {
-    return credentialRepository.findById(CredentialId.from(userId))
-        .orElseThrow(NullPointerException::new).getUsername();
   }
 
   enum BadgesImagesUrl {
