@@ -7,6 +7,7 @@ import ch.heigvd.amt.stack.application.badges.query.BadgeQuery;
 import ch.heigvd.amt.stack.application.rankings.dto.LeaderboardDTO;
 import ch.heigvd.amt.stack.application.rankings.dto.UserRankingDTO;
 import ch.heigvd.amt.stack.application.rankings.query.LeaderboardQuery;
+import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.authentication.CredentialRepository;
 import ch.heigvd.amt.stack.domain.authentication.Session;
@@ -18,8 +19,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.mail.AuthenticationFailedException;
-import lombok.Getter;
 
 @RequestScoped
 public class GamificationFacade {
@@ -30,9 +29,6 @@ public class GamificationFacade {
   SessionRepository sessionRepository;
   @Inject
   CredentialRepository credentialRepository;
-
-  @Getter
-  private int lastRankingPage;
 
   private Optional<CredentialId> getCredential(String forTag) {
     return sessionRepository.findBy(SessionQuery.builder()

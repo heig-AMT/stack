@@ -1,6 +1,8 @@
 package ch.heigvd.amt.stack.ui.web.views.ranking;
 
 import ch.heigvd.amt.stack.application.GamificationFacade;
+import ch.heigvd.amt.stack.application.rankings.query.Leaderboard;
+import ch.heigvd.amt.stack.application.rankings.query.LeaderboardQuery;
 import java.io.IOException;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -17,13 +19,16 @@ public class RankingView extends HttpServlet {
 
   @Override
   protected void doGet(
-      HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    var page = req.getParameter("page");
-    req.setAttribute("rankings", gamificationFacade.getCategoryRankings(
-        gamificationFacade.getUsername(
-            gamificationFacade.getCredential(req.getSession().getId()).toString()),
-        req.getParameter("category"),
-        (page.equals("null") ? -1 : Integer.parseInt(page))));
+      HttpServletRequest req,
+      HttpServletResponse resp
+  ) throws ServletException, IOException {
+    var query = LeaderboardQuery.builder()
+        .leaderboard(Leaderboard.Questions)
+        // TODO (matthieu) : Change this
+        .page(0)
+        .tag(req.getSession().getId())
+        .build();
+    req.setAttribute("rankings", gamificationFacade.getLeaderboard(query));
     req.getRequestDispatcher("WEB-INF/views/rankings.jsp").forward(req, resp);
   }
 }
