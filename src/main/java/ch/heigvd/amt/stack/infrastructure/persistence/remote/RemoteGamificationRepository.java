@@ -71,6 +71,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
           .collect(Collectors.toList());
 
     } catch (ApiException apiException) {
+      apiException.printStackTrace();
       return List.of();
     }
   }
@@ -87,6 +88,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
           .flatMap(Optional::stream)
           .collect(Collectors.toList());
     } catch (ApiException apiException) {
+      apiException.printStackTrace();
       return List.of();
     }
   }
