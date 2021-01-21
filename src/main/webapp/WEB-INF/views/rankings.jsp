@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:useBean scope="request" id="rankings"
-             type="ch.heigvd.amt.stack.application.rankings.RankingDTO"/>
+             type="ch.heigvd.amt.stack.application.rankings.dto.LeaderboardDTO"/>
 
 <html>
 <jsp:include page="fragments/head.jsp">
