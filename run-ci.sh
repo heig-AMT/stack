@@ -13,7 +13,7 @@ pass="1234thisisapassword"
 cd docker/topologies/e2e
 
 # Retrieve gamify
-docker login https://docker.pkg.github.com -u heig-AMT-bot -p $TOKEN_GITHUB
+docker login ghcr.io -u heig-AMT-bot -p $TOKEN_GITHUB
 
 # Be sure everything is down
 docker network rm $network

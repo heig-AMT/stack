@@ -32,13 +32,15 @@ sh ./build-image.sh
 sh ./run-locally.sh
 ```
 
+Please note that this will only work if you have the `gamify-openjdk` image available locally ! To build that image, [follow these instructions first](https://github.com/heig-AMT/gamify#running-the-service-locally). We decided that, since folks usually prefer running specific development versions of Gamify during Stack development, it makes more sense to let you use a local `gamify-openjdk` image rather than always pull GitHub's one.
+
 This will launch:
 * a postgres image with a service named "database";
 * our gamification server with a service named "gamify"; and
 * our stackunderflow server with a service named "openliberty".
 
 | Container | Inside port | Outside port |
-|----------------------------------------|
+|-----------|-------------|--------------|
 | database | 5432 | 5432 |
 | gamify | 1234 | 8081 |
 | openliberty | 1234 | 8080 |
