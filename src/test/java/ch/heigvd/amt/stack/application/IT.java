@@ -13,6 +13,7 @@ public class IT {
         .addPackages(true, "org.mindrot.jbcrypt")
         // Gamify API.
         .addPackages(true, "ch.heigvd.gamify")
+        .addPackages(true, "com.google.gson")
         .addPackages(true, "okhttp3", "okio");
   }
 }
