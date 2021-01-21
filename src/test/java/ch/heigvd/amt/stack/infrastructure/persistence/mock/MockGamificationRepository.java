@@ -7,11 +7,13 @@ import ch.heigvd.gamify.api.dto.Badge;
 import ch.heigvd.gamify.api.dto.Ranking;
 import java.util.List;
 import java.util.Optional;
+import javax.enterprise.inject.Alternative;
 
 /**
  * An implementation of a {@link GamificationRepository} that's empty. It is used to provide mocks
  * in the tests of the application.
  */
+@Alternative
 public class MockGamificationRepository implements GamificationRepository {
 
   @Override
