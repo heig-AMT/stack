@@ -31,7 +31,7 @@ public class QuestionFacadeIntegrationIT {
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "arquillian-managed.war")
                 .addPackages(true, "ch.heigvd", "org.mindrot.jbcrypt")
-                .addPackages(true, "okhttp");
+                .addPackages(true, "okhttp3");
     }
 
     @Test
