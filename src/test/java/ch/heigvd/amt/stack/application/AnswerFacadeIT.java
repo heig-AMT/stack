@@ -42,23 +42,27 @@ public class AnswerFacadeIT {
     }
 
     private void register() {
-        authenticationFacade.register(RegisterCommand.builder()
+        try {
+            unregister();
+        } finally {
+            authenticationFacade.register(RegisterCommand.builder()
                 .username("ciri")
                 .password("lioncub")
                 .tag("zirael")
                 .build());
 
-        authenticationFacade.register(RegisterCommand.builder()
+            authenticationFacade.register(RegisterCommand.builder()
                 .username("geralt")
                 .password("gwynbleidd")
                 .tag("witcher")
                 .build());
 
-        authenticationFacade.register(RegisterCommand.builder()
+            authenticationFacade.register(RegisterCommand.builder()
                 .username("yennefer")
                 .password("vengerberg")
                 .tag("magic")
                 .build());
+        }
     }
 
 
