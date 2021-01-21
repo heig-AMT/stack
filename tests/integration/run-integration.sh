@@ -15,6 +15,10 @@ export JDBC_DATABASE_PASSWORD=123456
 export JDBC_DATABASE_USERNAME=root
 export WLP_HOME=$PWD/target/liberty/wlp/
 
+# (intentionally invalid) Gamify credentials.
+export GAMIFY_API_TOKEN=Toky
+export GAMIFY_SERVER=http://example.org
+
 # Cleanup and package.
 mvn liberty:stop
 mvn clean package
