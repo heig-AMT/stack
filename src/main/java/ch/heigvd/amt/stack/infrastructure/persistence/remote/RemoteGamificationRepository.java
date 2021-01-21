@@ -156,7 +156,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
           .pointsLower(999)
   ));
 
-  private RemoteGamificationRepository() {
+  public RemoteGamificationRepository() {
     Configuration.getDefaultApiClient().setApiKey(System.getenv("GAMIFY_API_TOKEN"));
     Configuration.getDefaultApiClient().setBasePath(System.getenv("GAMIFY_SERVER"));
 
