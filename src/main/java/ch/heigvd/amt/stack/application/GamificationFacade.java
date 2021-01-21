@@ -23,6 +23,8 @@ import javax.inject.Inject;
 @RequestScoped
 public class GamificationFacade {
 
+  private static final int DEFAULT_PAGE_SIZE = 10;
+
   @Inject
   GamificationRepository gamificationRepository;
   @Inject
@@ -76,7 +78,11 @@ public class GamificationFacade {
       default:
         throw new IllegalArgumentException("Missing leaderboard category.");
     }
-    var ranks = gamificationRepository.findAllRank(category.getName(), query.getPage(), 25);
+    var ranks = gamificationRepository.findAllRank(
+        category.getName(),
+        query.getPage(),
+        DEFAULT_PAGE_SIZE
+    );
     var credential = getCredential(query.getTag());
 
     // Add the current user to the ranking, if any.
