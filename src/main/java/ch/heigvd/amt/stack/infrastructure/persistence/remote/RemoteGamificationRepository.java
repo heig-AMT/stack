@@ -187,7 +187,7 @@ public class RemoteGamificationRepository implements GamificationRepository {
 
   public void addRule(Rule newRule) {
     try {
-      rulesApi.postRule(newRule);
+      rulesApi.putRule(newRule.getName(), newRule);
     } catch (ApiException e) {
       e.printStackTrace();
     }
