@@ -10,6 +10,7 @@ import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
 import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
+import ch.heigvd.amt.stack.infrastructure.persistence.mock.MockGamificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +30,7 @@ public class CommentIntegration {
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
         var votes = new InMemoryVoteRepository();
+        var games = new MockGamificationRepository();
 
         this.answerFacade = new AnswerFacade();
         this.answerFacade.answerRepository = answers;
@@ -37,6 +39,7 @@ public class CommentIntegration {
         this.answerFacade.questionRepository = questions;
         this.answerFacade.sessionRepository = sessions;
         this.answerFacade.voteRepository = votes;
+        this.answerFacade.gamificationRepository = games;
 
         this.authenticationFacade = new AuthenticationFacade();
         this.authenticationFacade.credentials = credentials;
@@ -47,6 +50,7 @@ public class CommentIntegration {
         this.questionFacade.credentialRepository = credentials;
         this.questionFacade.sessionRepository = sessions;
         this.questionFacade.repository = questions;
+        this.questionFacade.gamificationRepository = games;
     }
 
     @Test

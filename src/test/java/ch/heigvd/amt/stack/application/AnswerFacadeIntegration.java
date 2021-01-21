@@ -10,6 +10,7 @@ import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.question.QuestionId;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
+import ch.heigvd.amt.stack.infrastructure.persistence.mock.MockGamificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,6 +32,7 @@ public class AnswerFacadeIntegration {
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
         var votes = new InMemoryVoteRepository();
+        var games = new MockGamificationRepository();
 
         this.answerFacade = new AnswerFacade();
         this.answerFacade.answerRepository = answers;
@@ -39,6 +41,7 @@ public class AnswerFacadeIntegration {
         this.answerFacade.questionRepository = questions;
         this.answerFacade.sessionRepository = sessions;
         this.answerFacade.voteRepository = votes;
+        this.answerFacade.gamificationRepository = games;
 
         this.authenticationFacade = new AuthenticationFacade();
         this.authenticationFacade.credentials = credentials;
@@ -49,6 +52,7 @@ public class AnswerFacadeIntegration {
         this.questionFacade.credentialRepository = credentials;
         this.questionFacade.repository = questions;
         this.questionFacade.sessionRepository = sessions;
+        this.questionFacade.gamificationRepository = games;
     }
 
     @Test
