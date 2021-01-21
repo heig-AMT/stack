@@ -5,8 +5,38 @@ public enum GamificationRule {
   NewQuestionGrantsQuestionPoints(
       "newQuestionGrantsQuestionPoints",
       GamificationCategory.Questions,
-      GamificationEvent.NEW_COMMENT,
+      GamificationEvent.NEW_QUESTION,
       10
+  ),
+  NewAnswersGrantsAnswerPoints(
+      "newAnswerGrantsAnswerPoints",
+      GamificationCategory.Answers,
+      GamificationEvent.NEW_ANSWER,
+      20
+  ),
+  NewCommentGrantsCommentPoints(
+      "newCommentGrantsCommentPoints",
+      GamificationCategory.Comments,
+      GamificationEvent.NEW_COMMENT,
+      25
+  ),
+  UpvoteGrantsUpvotePoints(
+      "upvoteGrantsUpvotePoints",
+      GamificationCategory.Comments,
+      GamificationEvent.UPVOTE,
+      10
+  ),
+  DownvoteGrantsDownvotePoints(
+      "downvoteGrantsDownvotePoints",
+      GamificationCategory.Comments,
+      GamificationEvent.DOWNVOTE,
+      0
+  ),
+  AcceptAnswerGrantsSelectionPoints(
+      "acceptAnswerGrantsSelectionPoints",
+      GamificationCategory.Questions,
+      GamificationEvent.SELECTION,
+      5
   ),
   ;
 

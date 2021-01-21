@@ -6,6 +6,16 @@ public enum GamificationCategory {
       "Questions",
       "Addition of new questions"
   ),
+  Answers(
+      "answers",
+      "Answers",
+      "Addition of new answers"
+  ),
+  Comments(
+      "comments",
+      "Comments",
+      "Addition of new comments and votes for them"
+  ),
   ;
 
   private final String name;
