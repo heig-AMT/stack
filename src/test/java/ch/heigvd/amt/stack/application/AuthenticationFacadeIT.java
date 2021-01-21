@@ -27,7 +27,7 @@ public class AuthenticationFacadeIT {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "arquillian-managed.war")
-                .addPackages(true, "ch.heigvd.amt", "org.mindrot.jbcrypt");
+                .addPackages(true, "ch.heigvd", "org.mindrot.jbcrypt");
     }
 
     @Test
