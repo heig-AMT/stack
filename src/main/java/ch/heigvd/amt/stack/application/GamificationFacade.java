@@ -65,15 +65,13 @@ public class GamificationFacade {
     final GamificationCategory category;
     switch (query.getLeaderboard()) {
       case Answers:
-        // TODO : Change this.
-        category = GamificationCategory.Questions;
+        category = GamificationCategory.Answers;
         break;
       case Questions:
         category = GamificationCategory.Questions;
         break;
       case Comments:
-        // TODO : Change this.
-        category = GamificationCategory.Questions;
+        category = GamificationCategory.Comments;
         break;
       default:
         throw new IllegalArgumentException("Missing leaderboard category.");
