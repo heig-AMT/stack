@@ -6,5 +6,5 @@ import lombok.Value;
 @Builder
 @Value
 public class BadgeQuery {
-  String username;
+  String tag;
 }

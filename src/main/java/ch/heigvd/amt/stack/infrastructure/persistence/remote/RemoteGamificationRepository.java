@@ -1,8 +1,12 @@
 package ch.heigvd.amt.stack.infrastructure.persistence.remote;
 
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
+import ch.heigvd.amt.stack.domain.gamification.GamificationBadge;
+import ch.heigvd.amt.stack.domain.gamification.GamificationCategory;
 import ch.heigvd.amt.stack.domain.gamification.GamificationEvent;
+import ch.heigvd.amt.stack.domain.gamification.GamificationRank;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
+import ch.heigvd.amt.stack.domain.gamification.GamificationRule;
 import ch.heigvd.gamify.ApiException;
 import ch.heigvd.gamify.Configuration;
 import ch.heigvd.gamify.api.AggregatesApi;
@@ -13,10 +17,12 @@ import ch.heigvd.gamify.api.RulesApi;
 import ch.heigvd.gamify.api.dto.Badge;
 import ch.heigvd.gamify.api.dto.Category;
 import ch.heigvd.gamify.api.dto.Event;
+import ch.heigvd.gamify.api.dto.Ranking;
 import ch.heigvd.gamify.api.dto.Rule;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Default;
@@ -31,138 +37,11 @@ public class RemoteGamificationRepository implements GamificationRepository {
   private final BadgesApi badgesApi = new BadgesApi();
   private final AggregatesApi aggregatesApi = new AggregatesApi();
 
-  private final List<Category> categories = new ArrayList<>(List.of(
-      new Category().name("questions").title("Questions").description("Addition of new questions"),
-      new Category().name("answers").title("Answers").description("Addition of new answers"),
-      new Category().name("comments").title("Comments")
-          .description("Addition of new comments and votes for them")));
-  private final List<Rule> rules = new ArrayList<>(List.of(
-      new Rule()
-          .name("questionRule")
-          .category("questions")
-          .event(GamificationEvent.NEW_QUESTION.name())
-          .points(10),
-      new Rule()
-          .name("answerRule")
-          .category("answers")
-          .event(GamificationEvent.NEW_ANSWER.name())
-          .points(20),
-      new Rule()
-          .name("commentRule")
-          .category("comments")
-          .event(GamificationEvent.NEW_COMMENT.name())
-          .points(25),
-      new Rule()
-          .name("upvoteRule")
-          .category("comments")
-          .event(GamificationEvent.UPVOTE.name())
-          .points(10),
-      new Rule()
-          .name("downvoteRule")
-          .category("comments")
-          .event(GamificationEvent.DOWNVOTE.name())
-          .points(0),
-      new Rule()
-          .name("acceptAnswerRule")
-          .category("questions")
-          .event(GamificationEvent.SELECTION.name())
-          .points(5)));
-
-  private final List<Badge> badges = new ArrayList<>(List.of(
-      new Badge()
-          .name("QBadge1")
-          .category("questions")
-          .title("Apprentice of questions")
-          .description("First questions badge")
-          .pointsLower(0)
-          .pointsUpper(30),
-      new Badge()
-          .name("QBadge2")
-          .category("questions")
-          .title("Mage of questions")
-          .description("Second questions badge")
-          .pointsLower(29)
-          .pointsUpper(100),
-      new Badge()
-          .name("QBadge3")
-          .category("questions")
-          .title("Grand mage of questions")
-          .description("Third questions badge")
-          .pointsLower(99)
-          .pointsUpper(1000),
-      new Badge()
-          .name("QBadge4")
-          .category("questions")
-          .title("Very grand mage of questions")
-          .description("Fourth questions badge")
-          .pointsLower(999),
-      
-      new Badge()
-          .name("ABadge1")
-          .category("answers")
-          .title("Apprentice of answers")
-          .description("First answers badge")
-          .pointsLower(0)
-          .pointsUpper(30),
-      new Badge()
-          .name("ABadge2")
-          .category("answers")
-          .title("Maester of answers")
-          .description("Second answers badge")
-          .pointsLower(29)
-          .pointsUpper(100),
-      new Badge().name("ABadge3")
-          .category("answers")
-          .title("Archimaester of answers")
-          .description("Third answers badge")
-          .pointsLower(99)
-          .pointsUpper(1000),
-      new Badge()
-          .name("ABadge4")
-          .category("answers")
-          .title("Grand maester of answers")
-          .description("Fourth answers badge")
-          .pointsLower(999),
-
-      new Badge()
-          .name("CBadge1")
-          .category("comments")
-          .title("Beast of comments")
-          .description("First comments badge")
-          .pointsLower(0)
-          .pointsUpper(30),
-      new Badge()
-          .name("CBadge2")
-          .category("comments")
-          .title("Monster of comments")
-          .description("Second comments badge")
-          .pointsLower(29)
-          .pointsUpper(100),
-      new Badge()
-          .name("CBadge3")
-          .category("comments")
-          .title("Big monster of comments")
-          .description("Third comments badge")
-          .pointsLower(99)
-          .pointsUpper(1000),
-      new Badge()
-          .name("CBadge4")
-          .category("comments")
-          .title("Terrifying monster of comments")
-          .description("Fourth comments badge")
-          .pointsLower(999)
-  ));
-
-  private RemoteGamificationRepository() {
-    Configuration.getDefaultApiClient().setApiKey(System.getenv("GAMIFY_API_TOKEN"));
-    Configuration.getDefaultApiClient().setBasePath(System.getenv("GAMIFY_SERVER"));
-
-    categories.forEach(this::addCategory);
-    rules.forEach(this::addRule);
-    badges.forEach(this::addBadge);
-  }
-
-  public void postEvent(CredentialId user, GamificationEvent event) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void saveEvent(CredentialId user, GamificationEvent event) {
     try {
       var payload = new Event()
           .userId(user.toString())
@@ -174,43 +53,132 @@ public class RemoteGamificationRepository implements GamificationRepository {
     }
   }
 
-  public void addCategory(Category category) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<GamificationBadge> findAllBadges(CredentialId user) {
     try {
-      categoriesApi.putCategory(category.getName(), category);
-    } catch (ApiException e) {
-      e.printStackTrace();
+      var categories = Arrays.stream(GamificationCategory.values())
+          .map(GamificationCategory::getName)
+          .collect(Collectors.toList());
+
+      return aggregatesApi.getUserAggregate(user.toString(), categories).stream()
+          .flatMap(ranking -> ranking.getBadges().stream())
+          .map(Badge::getName)
+          .flatMap(name -> GamificationBadge.forName(name).stream())
+          .distinct()
+          .collect(Collectors.toList());
+
+    } catch (ApiException apiException) {
+      apiException.printStackTrace();
+      return List.of();
     }
   }
 
-  public void addRule(Rule newRule) {
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public List<GamificationRank> findAllRank(String categoryName, Integer page, Integer size) {
     try {
-      rulesApi.postRule(newRule);
-    } catch (ApiException e) {
-      e.printStackTrace();
+      return aggregatesApi.getLeaderboard(categoryName, page, size)
+          .stream()
+          .map(RemoteGamificationRepository::fromRanking)
+          .flatMap(Optional::stream)
+          .collect(Collectors.toList());
+    } catch (ApiException apiException) {
+      apiException.printStackTrace();
+      return List.of();
     }
   }
 
-  public void addBadge(Badge newBadge) {
-    try {
-      badgesApi.putBadge(newBadge.getName(), newBadge);
-    } catch (ApiException e) {
-      e.printStackTrace();
-    }
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public Optional<GamificationRank> findRankByUser(String categoryName, CredentialId userId) {
+    // TODO : Use a more efficient query than this.
+    return findAllRank(categoryName, null, null).stream()
+        .filter(r -> r.getUser().equals(userId))
+        .findFirst();
   }
 
-  public List<Badge> getBadges(CredentialId user) {
-    List<Badge> result = new ArrayList<>();
+  /**
+   * Builds a new {@link RemoteGamificationRepository}. This starts by inserting all the categories,
+   * rules and badges that are defined for our current application.
+   */
+  public RemoteGamificationRepository() {
+    Configuration.getDefaultApiClient().setApiKey(System.getenv("GAMIFY_API_TOKEN"));
+    Configuration.getDefaultApiClient().setBasePath(System.getenv("GAMIFY_SERVER"));
+
+    Arrays.stream(GamificationCategory.values()).forEach(this::addCategory);
+    Arrays.stream(GamificationRule.values()).forEach(this::addRule);
+    Arrays.stream(GamificationBadge.values()).forEach(this::addBadge);
+  }
+
+  // Private utilities.
+
+  private void addCategory(GamificationCategory category) {
     try {
-      var agg = aggregatesApi.getUserAggregate(
-          user.toString(),
-          categories.stream().map(Category::getName).collect(Collectors.toList())
+      categoriesApi.putCategory(category.getName(), new Category()
+          .name(category.getName())
+          .description(category.getDescription())
+          .title(category.getTitle())
       );
-      for (var a : agg) {
-        result.addAll(a.getBadges());
-      }
     } catch (ApiException e) {
       e.printStackTrace();
     }
-    return result;
+  }
+
+  private void addRule(GamificationRule newRule) {
+    try {
+      rulesApi.putRule(newRule.getName(), new Rule()
+          .name(newRule.getName())
+          .category(newRule.getCategory().getName())
+          .event(newRule.getEvent().name())
+          .points(newRule.getPoints())
+      );
+    } catch (ApiException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void addBadge(GamificationBadge newBadge) {
+    try {
+      badgesApi.putBadge(newBadge.getName(), new Badge()
+          .name(newBadge.getName())
+          .category(newBadge.getCategory().getName())
+          .description(newBadge.getDescription())
+          .title(newBadge.getTitle())
+          .pointsLower(newBadge.getMinPoints().orElse(null))
+          .pointsUpper(newBadge.getMaxPoints().orElse(null))
+      );
+    } catch (ApiException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static Optional<GamificationRank> fromRanking(Ranking dto) {
+
+    var badges = Optional.ofNullable(dto.getBadges()).orElse(List.of())
+        .stream()
+        .map(Badge::getName)
+        .map(GamificationBadge::forName)
+        .flatMap(Optional::stream)
+        .distinct()
+        .collect(Collectors.toList());
+
+    var category = GamificationCategory.forName(dto.getCategory());
+
+    return category.map(cat ->
+        GamificationRank.builder()
+            .user(CredentialId.from(dto.getUserId()))
+            .badges(badges)
+            .category(cat)
+            .points(dto.getPoints())
+            .rank(dto.getRank())
+            .build()
+    );
   }
 }

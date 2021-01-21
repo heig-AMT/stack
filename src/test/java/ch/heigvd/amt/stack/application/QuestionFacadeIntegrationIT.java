@@ -29,8 +29,7 @@ public class QuestionFacadeIntegrationIT {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, "arquillian-managed.war")
-                .addPackages(true, "ch.heigvd.amt", "org.mindrot.jbcrypt");
+        return IT.dependencies();
     }
 
     @Test

@@ -111,7 +111,7 @@ public class AnswerFacade {
                         .creator(session.getUser())
                         .build()
         );
-        gamificationRepository.postEvent(session.getUser(), GamificationEvent.NEW_ANSWER);
+        gamificationRepository.saveEvent(session.getUser(), GamificationEvent.NEW_ANSWER);
         return id;
     }
 
@@ -138,7 +138,7 @@ public class AnswerFacade {
                         .creator(session.getUser())
                         .build()
         );
-        gamificationRepository.postEvent(session.getUser(), GamificationEvent.NEW_COMMENT);
+        gamificationRepository.saveEvent(session.getUser(), GamificationEvent.NEW_COMMENT);
         return id;
     }
 
@@ -199,7 +199,7 @@ public class AnswerFacade {
                         .build())
                 .isUpvote(true)
                 .build());
-        gamificationRepository.postEvent(session.getUser(), GamificationEvent.UPVOTE);
+        gamificationRepository.saveEvent(session.getUser(), GamificationEvent.UPVOTE);
     }
 
     /**
@@ -217,7 +217,7 @@ public class AnswerFacade {
                         .build())
                 .isUpvote(false)
                 .build());
-        gamificationRepository.postEvent(session.getUser(), GamificationEvent.DOWNVOTE);
+        gamificationRepository.saveEvent(session.getUser(), GamificationEvent.DOWNVOTE);
     }
 
     /**
@@ -245,7 +245,7 @@ public class AnswerFacade {
                 .selectedAnswer(command.getAnswer())
                 .build();
         questionRepository.save(updated);
-        gamificationRepository.postEvent(session.getUser(), GamificationEvent.SELECTION);
+        gamificationRepository.saveEvent(session.getUser(), GamificationEvent.SELECTION);
     }
 
     /**

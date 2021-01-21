@@ -1,11 +1,16 @@
 package ch.heigvd.amt.stack.domain.gamification;
 
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
-import ch.heigvd.gamify.api.dto.Badge;
 import java.util.List;
+import java.util.Optional;
 
 public interface GamificationRepository {
 
-  void postEvent(CredentialId user, GamificationEvent event);
-  List<Badge> getBadges(CredentialId user);
+  void saveEvent(CredentialId user, GamificationEvent event);
+
+  List<GamificationBadge> findAllBadges(CredentialId user);
+
+  List<GamificationRank> findAllRank(String categoryName, Integer page, Integer size);
+
+  Optional<GamificationRank> findRankByUser(String categoryName, CredentialId userId);
 }

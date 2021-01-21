@@ -15,6 +15,7 @@ import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryAnswerRepos
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryCredentialRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemoryQuestionRepository;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.InMemorySessionRepository;
+import ch.heigvd.amt.stack.infrastructure.persistence.mock.MockGamificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,7 @@ public class QuestionFacadeIntegration {
         var credentials = new InMemoryCredentialRepository();
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
+        var games = new MockGamificationRepository();
 
         authenticationFacade = new AuthenticationFacade();
         authenticationFacade.credentials = credentials;
@@ -44,6 +46,7 @@ public class QuestionFacadeIntegration {
         questionFacade.credentialRepository = credentials;
         questionFacade.sessionRepository = sessions;
         questionFacade.repository = questions;
+        questionFacade.gamificationRepository = games;
     }
 
     @Test

@@ -5,6 +5,7 @@ import ch.heigvd.amt.stack.application.authentication.command.RegisterCommand;
 import ch.heigvd.amt.stack.application.question.command.AskQuestionCommand;
 import ch.heigvd.amt.stack.application.statistics.query.UsageStatisticsQuery;
 import ch.heigvd.amt.stack.infrastructure.persistence.memory.*;
+import ch.heigvd.amt.stack.infrastructure.persistence.mock.MockGamificationRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +27,7 @@ public class StatisticsFacadeIntegration {
         var questions = new InMemoryQuestionRepository();
         var sessions = new InMemorySessionRepository();
         var votes = new InMemoryVoteRepository();
+        var games = new MockGamificationRepository();
 
         this.answerFacade = new AnswerFacade();
         this.answerFacade.answerRepository = answers;
@@ -34,6 +36,7 @@ public class StatisticsFacadeIntegration {
         this.answerFacade.questionRepository = questions;
         this.answerFacade.sessionRepository = sessions;
         this.answerFacade.voteRepository = votes;
+        this.answerFacade.gamificationRepository = games;
 
         this.authenticationFacade = new AuthenticationFacade();
         this.authenticationFacade.credentials = credentials;
@@ -44,6 +47,7 @@ public class StatisticsFacadeIntegration {
         this.questionFacade.credentialRepository = credentials;
         this.questionFacade.sessionRepository = sessions;
         this.questionFacade.repository = questions;
+        this.questionFacade.gamificationRepository = games;
 
         this.statisticsFacade = new StatisticsFacade();
         this.statisticsFacade.answerRepository = answers;

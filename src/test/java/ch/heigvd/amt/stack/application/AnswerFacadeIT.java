@@ -10,6 +10,7 @@ import ch.heigvd.amt.stack.application.question.command.DeleteQuestionCommand;
 import ch.heigvd.amt.stack.domain.answer.Answer;
 import ch.heigvd.amt.stack.domain.answer.AnswerId;
 import ch.heigvd.amt.stack.domain.answer.AnswerNotFoundException;
+import ch.heigvd.amt.stack.domain.authentication.AuthenticationFailedException;
 import ch.heigvd.amt.stack.domain.comment.CommentId;
 import ch.heigvd.amt.stack.domain.comment.CommentNotFoundException;
 import ch.heigvd.amt.stack.domain.question.QuestionNotFoundException;
@@ -36,28 +37,33 @@ public class AnswerFacadeIT {
 
     @Deployment
     public static WebArchive createDeployment() {
-        return ShrinkWrap.create(WebArchive.class, "arquillian-managed.war")
-                .addPackages(true, "ch.heigvd.amt", "org.mindrot.jbcrypt");
+        return IT.dependencies();
     }
 
     private void register() {
-        authenticationFacade.register(RegisterCommand.builder()
+        try {
+            unregister();
+        } catch (AuthenticationFailedException ignored) {
+            // Ignored.
+        } finally {
+            authenticationFacade.register(RegisterCommand.builder()
                 .username("ciri")
                 .password("lioncub")
                 .tag("zirael")
                 .build());
 
-        authenticationFacade.register(RegisterCommand.builder()
+            authenticationFacade.register(RegisterCommand.builder()
                 .username("geralt")
                 .password("gwynbleidd")
                 .tag("witcher")
                 .build());
 
-        authenticationFacade.register(RegisterCommand.builder()
+            authenticationFacade.register(RegisterCommand.builder()
                 .username("yennefer")
                 .password("vengerberg")
                 .tag("magic")
                 .build());
+        }
     }
 
 
