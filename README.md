@@ -4,7 +4,7 @@
 [![Heroku App Status](http://heroku-shields.herokuapp.com/heig-amt-stackunderflow)](https://heig-amt-stackunderflow.herokuapp.com)
 [![Run tests](https://github.com/heig-AMT/stack/workflows/Run%20tests/badge.svg?branch=dev)]((https://github.com/heig-AMT/stack/actions))
 
-This repository contains our version of the first project of the AMT class of HEIG-VD. Information related to gamification can be found at the bottom of this `README.md.
+This repository contains our version of the first project of the AMT class of HEIG-VD. Information related to gamification can be found [at the bottom of this `README.md`](#addentum--project-3-gamification).
 
 ## Structure
 
