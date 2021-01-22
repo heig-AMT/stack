@@ -23,7 +23,7 @@ import javax.inject.Inject;
 @RequestScoped
 public class GamificationFacade {
 
-  private static final int DEFAULT_PAGE_SIZE = 10;
+  private static final int DEFAULT_PAGE_SIZE = 5;
 
   @Inject
   GamificationRepository gamificationRepository;

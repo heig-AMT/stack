@@ -36,7 +36,7 @@ abstract class RankingView extends HttpServlet {
     }
 
     var query = LeaderboardQuery.builder()
-        .leaderboard(Leaderboard.Questions)
+        .leaderboard(getLeaderboard())
         .page(page)
         .tag(req.getSession().getId())
         .build();
@@ -44,8 +44,8 @@ abstract class RankingView extends HttpServlet {
 
     // Populate the Servlet.
     req.setAttribute("rankings", response);
-    req.setAttribute("prevPageUrl", req.getServletPath() + "?page" + (page - 1));
-    req.setAttribute("nextPageUrl", req.getServletPath() + "?page" + (page + 1));
+    req.setAttribute("prevPageUrl", req.getServletPath() + "?page=" + (page - 1));
+    req.setAttribute("nextPageUrl", req.getServletPath() + "?page=" + (page + 1));
     req.getServletContext().getRequestDispatcher("WEB-INF/views/rankings.jsp").forward(req, resp);
   }
 
