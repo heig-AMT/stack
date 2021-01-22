@@ -9,8 +9,6 @@ import lombok.Value;
 @Value
 public class LeaderboardDTO {
 
-  @Deprecated // TODO (alex) : Remove this once the JSPs have been migrated properly.
-  String categoryName;
   Leaderboard leaderboard;
   List<UserRankingDTO> rankings;
 
