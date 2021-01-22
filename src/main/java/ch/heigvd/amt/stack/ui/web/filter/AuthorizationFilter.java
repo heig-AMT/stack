@@ -56,6 +56,10 @@ public class AuthorizationFilter implements Filter {
                         , "/register"
                         , "/questions"
                         , "/question"
+                        , "/rankings"
+                        , "/rankings/answers"
+                        , "/rankings/comments"
+                        , "/rankings/questions"
                         , "/error"
                         , "/teapot"
                 );
