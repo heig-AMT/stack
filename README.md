@@ -72,6 +72,13 @@ This project is integrated with the Gamify API. To achieve this, we've performed
 + Adding a new `GamificationRepository`. Rather than calling the API directly from our facades, we think that gamification should be considered a "business model feature". This means that its exact implementation details should be hidden from the facades, so it can be mocked during unit testing.
 + Creating some business-level entities for events, rules, categories and badges. Again, this will be exposed by our `GamificationRepository`, whose implementation details should remain hidden.
 
+### What works
+
++ [x] Rules, badges, categories are created (if needed) when the app is launched.
++ [x] Users who post questions, post comments, upvote posts, select them, etc. get awarded some points.
++ [x] Three leaderboards are available. **They're paginated**.
++ [x] Logged in users can see their current badges in their profile.
+
 ### API calls
 
 The Gamification API implementation is generated automatically from its OpenAPI spec. `POST` calls to `/event` are performed asynchronously, to ensure we're not blocking the application UI when performing common tasks such as commenting a post, or upvoting something. The implementation can be found in `ch.heigvd.amt.stack.infrastructure.persistence.remote.RemoteGamificationRepository`.
