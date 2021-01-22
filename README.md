@@ -72,7 +72,11 @@ This project is integrated with the Gamify API. To achieve this, we've performed
 + Adding a new `GamificationRepository`. Rather than calling the API directly from our facades, we think that gamification should be considered a "business model feature". This means that its exact implementation details should be hidden from the facades, so it can be mocked during unit testing.
 + Creating some business-level entities for events, rules, categories and badges. Again, this will be exposed by our `GamificationRepository`, whose implementation details should remain hidden.
 
-## Gamification business rules
+### API calls
+
+The Gamification API implementation is generated automatically from its OpenAPI spec. `POST` calls to `/event` are performed asynchronously, to ensure we're not blocking the application UI when performing common tasks such as commenting a post, or upvoting something. The implementation can be found in `ch.heigvd.amt.stack.infrastructure.persistence.remote.RemoteGamificationRepository`.
+
+### Gamification business rules
 
 We've defined the following enumerations and entities in the `ch.heigvd.amt.stack.domain.gamification` package :
 
@@ -89,3 +93,5 @@ Having enumerations allows us to ensure type-safety when accessing the API. Inde
 Additionally, this also gives use the ability to mock the `GamificationRepository` and replace it with a no-op implementation during unit testing. This would not be possible if we didn't have a domain-level repository.
 
 A last benefit of this approach is that it lets us add, remove, and change rules, badges and events with ease. It's just a matter of adding an enum case ! At some point, we may even be able to dynamically edit the applied badges, rules, to load them dynamically at runtime.
+
+> Of course, the three categories we've defined are simply dummies. In a real project, you'd want to reward users with medals, and really alter their experience based on their current score. Instead, we preferred showcasing that our events were properly dispatched to the API with "feature-specific rules" :wink:
