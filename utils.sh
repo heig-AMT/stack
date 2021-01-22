@@ -18,6 +18,6 @@ getApiToken() {
     -H "Content-Type: application/json" \
     -X POST \
     -d "{ \"username\": \"$user\", \"password\": \"$pass\"}" \
-    localhost:$port/account \
+    localhost:$port/accounts \
     | jq -r '.token'
 }

@@ -47,7 +47,8 @@ public class RemoteGamificationRepository implements GamificationRepository {
           .userId(user.toString())
           .timestamp(OffsetDateTime.now())
           .type(event.name());
-      eventsApi.addEvent(payload);
+      eventsApi.addEventAsync(payload, new ApiCallbackAdapter<>() {
+      });
     } catch (ApiException exception) {
       exception.printStackTrace();
     }
