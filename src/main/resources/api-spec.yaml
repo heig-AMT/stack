@@ -7,7 +7,7 @@ servers:
   - url: http://heig-amt-gamify.herokuapp.com
 
 tags:
-  - name: account
+  - name: accounts
     description: Everything about your account
   - name: categories
     description: Everything about categories
@@ -22,10 +22,10 @@ tags:
 
 paths:
   # account
-  /account:
+  /accounts:
     post:
       tags:
-        - account
+        - accounts
       description: register a new account
       operationId: registerAccount
       requestBody:
@@ -47,7 +47,7 @@ paths:
 
     put:
       tags:
-        - account
+        - accounts
       description: update an account's password
       operationId: updateAccount
       security:
@@ -73,7 +73,7 @@ paths:
 
     delete:
       tags:
-        - account
+        - accounts
       description: delete an account
       operationId: deleteAccount
       security:
@@ -88,10 +88,10 @@ paths:
         '404':
           description: not found
 
-  /account/token:
+  /accounts/token:
     post:
       tags:
-        - account
+        - accounts
       description: login to an account
       operationId: login
       security:
@@ -295,6 +295,8 @@ paths:
           description: success
         '403':
           description: forbidden
+        '404':
+          description: not found
 
     delete:
       tags:
@@ -591,7 +593,6 @@ components:
         points:
           type: integer
         badges:
-          nullable: true
           type: array
           items:
             $ref: '#/components/schemas/Badge'
