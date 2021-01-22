@@ -33,7 +33,7 @@
                href="${pageContext.request.contextPath}/ask">Ask something</a>
             <a class="mx-2 px-4 py-2 rounded border border-gray-400 bg-white text-black hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-300 focus:border-gray-400"
                href="${pageContext.request.contextPath}/profile">Profile</a>
-            <form action="logout.do"
+            <form action="${pageContext.request.contextPath}/logout.do"
                   class="m-0"
                   method="POST">
                 <input type="submit" value="Log out"
