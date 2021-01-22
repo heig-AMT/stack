@@ -3,6 +3,9 @@ package ch.heigvd.amt.stack.domain.gamification;
 import java.util.Arrays;
 import java.util.Optional;
 
+/**
+ * An enumeration of the categories of event. Useful to the gamification engine to attribute points.
+ */
 public enum GamificationCategory {
   Questions(
       "questions",
