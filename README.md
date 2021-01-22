@@ -101,4 +101,4 @@ Additionally, this also gives use the ability to mock the `GamificationRepositor
 
 A last benefit of this approach is that it lets us add, remove, and change rules, badges and events with ease. It's just a matter of adding an enum case ! At some point, we may even be able to dynamically edit the applied badges, rules, to load them dynamically at runtime.
 
-> Of course, the three categories we've defined are simply dummies. In a real project, you'd want to reward users with medals, and really alter their experience based on their current score. Instead, we preferred showcasing that our events were properly dispatched to the API with "feature-specific rules" :wink:
+_Of course, the three categories we've defined are simply dummies. In a real project, you'd want to reward users with medals, and really alter their experience based on their current score. Instead, we preferred showcasing that our events were properly dispatched to the API with "feature-specific rules" :wink:_
