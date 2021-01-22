@@ -1,5 +1,8 @@
 package ch.heigvd.amt.stack.domain.gamification;
 
+/**
+ * An enumeration of the rules used by the gamification engine. Specifies points attributed for an event.
+ */
 public enum GamificationRule {
 
   NewQuestionGrantsQuestionPoints(
