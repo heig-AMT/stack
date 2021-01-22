@@ -5,6 +5,9 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Value;
 
+/**
+ * Representation of an user's rank in leaderboard of the gamification engine.
+ */
 @Builder
 @Value
 public class GamificationRank {

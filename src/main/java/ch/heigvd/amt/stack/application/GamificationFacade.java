@@ -20,6 +20,9 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 
+/**
+ * Facade class to handle exchanges between frontend and server
+ */
 @RequestScoped
 public class GamificationFacade {
 
