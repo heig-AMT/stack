@@ -82,7 +82,7 @@ public class GamificationFacade {
         throw new IllegalArgumentException("Missing leaderboard category.");
     }
     var ranks = gamificationRepository.findAllRank(
-        category.getName(),
+        category,
         query.getPage(),
         DEFAULT_PAGE_SIZE
     );
@@ -90,7 +90,7 @@ public class GamificationFacade {
 
     // Add the current user to the ranking, if any.
     credential
-        .flatMap(cred -> gamificationRepository.findRankByUser(category.getName(), cred))
+        .flatMap(cred -> gamificationRepository.findRankByUser(category, cred))
         .ifPresent(ranks::add);
 
     var ranking = ranks.stream()
