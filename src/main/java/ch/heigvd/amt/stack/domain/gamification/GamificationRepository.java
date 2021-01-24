@@ -10,7 +10,7 @@ public interface GamificationRepository {
 
   List<GamificationBadge> findAllBadges(CredentialId user);
 
-  List<GamificationRank> findAllRank(String categoryName, Integer page, Integer size);
+  List<GamificationRank> findAllRank(GamificationCategory category, Integer page, Integer size);
 
-  Optional<GamificationRank> findRankByUser(String categoryName, CredentialId userId);
+  Optional<GamificationRank> findRankByUser(GamificationCategory category, CredentialId userId);
 }

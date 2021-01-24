@@ -22,6 +22,7 @@ import ch.heigvd.gamify.api.dto.Rule;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
@@ -81,9 +82,13 @@ public class RemoteGamificationRepository implements GamificationRepository {
    * {@inheritDoc}
    */
   @Override
-  public List<GamificationRank> findAllRank(String categoryName, Integer page, Integer size) {
+  public List<GamificationRank> findAllRank(
+      GamificationCategory category,
+      Integer page,
+      Integer size
+  ) {
     try {
-      return aggregatesApi.getLeaderboard(categoryName, page, size)
+      return aggregatesApi.getLeaderboard(category.getName(), page, size)
           .stream()
           .map(RemoteGamificationRepository::fromRanking)
           .flatMap(Optional::stream)
@@ -98,11 +103,19 @@ public class RemoteGamificationRepository implements GamificationRepository {
    * {@inheritDoc}
    */
   @Override
-  public Optional<GamificationRank> findRankByUser(String categoryName, CredentialId userId) {
-    // TODO : Use a more efficient query than this.
-    return findAllRank(categoryName, null, null).stream()
-        .filter(r -> r.getUser().equals(userId))
-        .findFirst();
+  public Optional<GamificationRank> findRankByUser(
+      GamificationCategory category,
+      CredentialId userId
+  ) {
+    try {
+      return aggregatesApi.getUserAggregate(userId.toString(), List.of(category.getName())).stream()
+          .filter(r -> Objects.equals(r.getCategory(), category.getName()))
+          .findFirst()
+          .flatMap(RemoteGamificationRepository::fromRanking);
+    } catch (ApiException apiException) {
+      apiException.printStackTrace();
+      return Optional.empty();
+    }
   }
 
   /**

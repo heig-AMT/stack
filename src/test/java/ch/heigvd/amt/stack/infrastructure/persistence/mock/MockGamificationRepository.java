@@ -2,6 +2,7 @@ package ch.heigvd.amt.stack.infrastructure.persistence.mock;
 
 import ch.heigvd.amt.stack.domain.authentication.CredentialId;
 import ch.heigvd.amt.stack.domain.gamification.GamificationBadge;
+import ch.heigvd.amt.stack.domain.gamification.GamificationCategory;
 import ch.heigvd.amt.stack.domain.gamification.GamificationEvent;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRank;
 import ch.heigvd.amt.stack.domain.gamification.GamificationRepository;
@@ -36,7 +37,7 @@ public class MockGamificationRepository implements GamificationRepository {
    * {@inheritDoc}
    */
   @Override
-  public List<GamificationRank> findAllRank(String categoryName, Integer page, Integer size) {
+  public List<GamificationRank> findAllRank(GamificationCategory c, Integer page, Integer size) {
     return List.of();
   }
 
@@ -44,7 +45,7 @@ public class MockGamificationRepository implements GamificationRepository {
    * {@inheritDoc}
    */
   @Override
-  public Optional<GamificationRank> findRankByUser(String categoryName, CredentialId userId) {
+  public Optional<GamificationRank> findRankByUser(GamificationCategory c, CredentialId userId) {
     return Optional.empty();
   }
 }
